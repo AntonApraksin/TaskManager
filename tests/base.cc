@@ -48,12 +48,12 @@ TEST(TestOrdering, Tests) {
     std::stringstream ss;
     for (int i = 0; i != 20; ++i) {
       ss << "Test task #" << i;
-      name = std::move(std::move(ss).str());
+      name = ss.str();
       if (i < 9) {
         ss << "0";
       }
       ss << i + 1 << "/11/2021";
-      date = std::move(std::move(ss).str());
+      date = ss.str();
       Task task = Task::Create(name, Task::Priority::HIGH, parse_date(date));
       tm.Add(task);
       tv.push_back(task);
@@ -79,12 +79,12 @@ TEST(TestExceptions, Tests) {
     std::stringstream ss;
     for (int i = 0; i != 20; ++i) {
       ss << "Test task #" << i;
-      name = std::move(std::move(ss).str());
+      name = ss.str();
       if (i < 9) {
         ss << "0";
       }
       ss << i + 1 << "/11/2021";
-      date = std::move(std::move(ss).str());
+      date = ss.str();
       Task task = Task::Create(name, Task::Priority::HIGH, parse_date(date));
       tm.Add(task);
     }

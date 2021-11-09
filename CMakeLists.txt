@@ -1,35 +1,24 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+project(TaskManager)
 
-project(pdtasks)
+set(REQUIRED_CXX_COMPILER "Clang")
+set(CXX_COMPILER_MIN_VERSION 10.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(src/Model)
+add_compile_options(-Wall -Wextra -Wpedantic)
 
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-)
+add_compile_options(-Werror -Wno-language-extension-token)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+add_compile_options(-stdlib=libc++)
+add_link_options(-stdlib=libc++)
 
 enable_testing()
 
-add_executable(
-  base_test
-  tests/base.cc
-)
-target_link_libraries(
-  base_test
-  gtest_main
-)
-
-include(GoogleTest)
-gtest_discover_tests(base_test)
+add_subdirectory(TaskManager)
+add_subdirectory(tests)

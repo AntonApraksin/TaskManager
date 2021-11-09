@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(TaskManager)
 
-set(REQUIRED_CXX_COMPILER "Clang")
-set(CXX_COMPILER_MIN_VERSION 10.0)
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 

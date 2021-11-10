@@ -1,14 +1,10 @@
 #include "Model/task_manager.h"
 
 void TaskManager::Add(Task task) {
-  if (tasks_.empty()) {
-    tasks_.insert({0, std::move(task)});
-  } else {
-    tasks_.insert({tasks_.rbegin()->first + 1, std::move(task)});
-  }
+    tasks_.insert({id_producer_.GetNextId(), std::move(task)});
 }
 
-void TaskManager::Edit(int id, Task task) {
+void TaskManager::Edit(TaskId id, Task task) {
   if (auto to_edit = tasks_.find(id); to_edit == tasks_.end()) {
     throw std::runtime_error("Given id is invalid");
   } else {
@@ -16,7 +12,7 @@ void TaskManager::Edit(int id, Task task) {
   }
 }
 
-void TaskManager::Complete(int id) {
+void TaskManager::Complete(TaskId id) {
   if (auto to_edit = tasks_.find(id); to_edit == tasks_.end()) {
     throw std::runtime_error("Given id is invalid");
   } else {
@@ -24,7 +20,7 @@ void TaskManager::Complete(int id) {
   }
 }
 
-void TaskManager::Delete(int id) {
+void TaskManager::Delete(TaskId id) {
   if (auto to_edit = tasks_.find(id); to_edit == tasks_.end()) {
     throw std::runtime_error("Given id is invalid");
   } else {
@@ -32,4 +28,4 @@ void TaskManager::Delete(int id) {
   }
 }
 
-std::map<int, Task> TaskManager::Show() { return tasks_; }
+const std::map<TaskId, Task>& TaskManager::Show() { return tasks_; }

@@ -1,26 +1,28 @@
-#ifndef TASK_MANAGER_SRC_MODEL_TASK_MANAGER_H_
-#define TASK_MANAGER_SRC_MODEL_TASK_MANAGER_H_
+#ifndef TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_
+#define TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_
 #pragma once
 
 #include <map>
 #include <stdexcept>
 
 #include "Model/task.h"
+#include "Model/id.h"
 
 class TaskManager {
  public:
   void Add(Task task);
 
-  void Edit(int id, Task task);
+  void Edit(TaskId id, Task task);
 
-  void Complete(int id);
+  void Complete(TaskId id);
 
-  void Delete(int id);
+  void Delete(TaskId id);
 
-  std::map<int, Task> Show();
+  const std::map<TaskId, Task>& Show();
 
  private:
-  std::map<int, Task> tasks_;
+  std::map<TaskId, Task> tasks_;
+  TaskIdProducer id_producer_;
 };
 
-#endif  // TASK_MANAGER_SRC_MODEL_TASK_MANAGER_H_
+#endif  // TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_

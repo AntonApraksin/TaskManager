@@ -1,6 +1,8 @@
 set(TaskManager_SRCS
+  src/Model/id.cc
   src/Model/task.cc
   src/Model/task_manager.cc
+  include/Model/id.h
   include/Model/task.h
   include/Model/task_manager.h
 )

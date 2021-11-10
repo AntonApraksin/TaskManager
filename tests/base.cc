@@ -31,7 +31,7 @@ TEST(BasicCreationAndEdition, Tests) {
 
   auto edited_task = Task::Create("Edited test task #1", Task::Priority::kMedium,
                                   parse_date("09/12/2021"));
-  tm.Edit(0, edited_task);
+  tm.Edit(TaskId::Create(0), edited_task);
 
   for (const auto& i : tm.Show()) {
     ASSERT_TRUE(TaskEquality(edited_task, i.second));
@@ -41,6 +41,7 @@ TEST(BasicCreationAndEdition, Tests) {
 TEST(TestOrdering, Tests) {
   TaskManager tm;
   std::vector<Task> tv;
+  TaskIdProducer id_prod;
   {
     std::string name;
     std::string date;
@@ -66,6 +67,7 @@ TEST(TestOrdering, Tests) {
     auto vb = tv.cbegin(), ve = tv.cend();
     for (; mb != me && vb != ve; ++vb, ++mb) {
       ASSERT_TRUE(TaskEquality(mb->second, *vb));
+      ASSERT_EQ(id_prod.GetNextId(), mb->first);
     }
   }
 }
@@ -90,15 +92,15 @@ TEST(TestExceptions, Tests) {
     }
   }
   for (int i = 0; i != 20; ++i) {
-    tm.Delete(i);
+    tm.Delete(TaskId::Create(i));
   }
   for (int i = 0; i != 20; ++i) {
     // NOLINTNEXTLINE
-    ASSERT_THROW(tm.Delete(i), std::runtime_error); 
+    ASSERT_THROW(tm.Delete(TaskId::Create(i)), std::runtime_error); 
     // NOLINTNEXTLINE
-    ASSERT_THROW(tm.Complete(i), std::runtime_error);
+    ASSERT_THROW(tm.Complete(TaskId::Create(i)), std::runtime_error);
     // NOLINTNEXTLINE
-    ASSERT_THROW(tm.Edit(i, Task::Create("", Task::Priority::kHigh, {})),
+    ASSERT_THROW(tm.Edit(TaskId::Create(i), Task::Create("", Task::Priority::kHigh, {})),
                  std::runtime_error);
   }
 }

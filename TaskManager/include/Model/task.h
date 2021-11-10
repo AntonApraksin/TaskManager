@@ -1,5 +1,5 @@
-#ifndef TASK_MANAGER_SRC_MODEL_TASK_H_
-#define TASK_MANAGER_SRC_MODEL_TASK_H_
+#ifndef TASK_MANAGER_INCLUDE_MODEL_TASK_H_
+#define TASK_MANAGER_INCLUDE_MODEL_TASK_H_
 #pragma once
 
 #include <ctime>
@@ -33,4 +33,4 @@ class Task {
   Date_t due_date_;
 };
 
-#endif  // TASK_MANAGER_SRC_MODEL_TASK_H_
+#endif  // TASK_MANAGER_INCLUDE_MODEL_TASK_H_

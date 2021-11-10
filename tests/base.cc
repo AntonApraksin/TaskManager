@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 
-#include "TaskManager.h"
+#include "Model/task_manager.h"
 
 bool TaskEquality(const Task& lhs, const Task& rhs) {
   return lhs.GetTitle() == rhs.GetTitle() &&
@@ -20,7 +20,7 @@ Task::Date_t parse_date(std::string date) {
 
 TEST(BasicCreationAndEdition, Tests) {
   TaskManager tm;
-  auto task = Task::Create("Test task #1", Task::Priority::HIGH,
+  auto task = Task::Create("Test task #1", Task::Priority::kHigh,
                            parse_date("08/11/2021"));
 
   tm.Add(task);
@@ -29,7 +29,7 @@ TEST(BasicCreationAndEdition, Tests) {
     ASSERT_TRUE(TaskEquality(task, i.second));
   }
 
-  auto edited_task = Task::Create("Edited test task #1", Task::Priority::MEDIUM,
+  auto edited_task = Task::Create("Edited test task #1", Task::Priority::kMedium,
                                   parse_date("09/12/2021"));
   tm.Edit(0, edited_task);
 
@@ -54,7 +54,7 @@ TEST(TestOrdering, Tests) {
       }
       ss << i + 1 << "/11/2021";
       date = ss.str();
-      Task task = Task::Create(name, Task::Priority::HIGH, parse_date(date));
+      Task task = Task::Create(name, Task::Priority::kHigh, parse_date(date));
       tm.Add(task);
       tv.push_back(task);
     }
@@ -85,7 +85,7 @@ TEST(TestExceptions, Tests) {
       }
       ss << i + 1 << "/11/2021";
       date = ss.str();
-      Task task = Task::Create(name, Task::Priority::HIGH, parse_date(date));
+      Task task = Task::Create(name, Task::Priority::kHigh, parse_date(date));
       tm.Add(task);
     }
   }
@@ -93,9 +93,12 @@ TEST(TestExceptions, Tests) {
     tm.Delete(i);
   }
   for (int i = 0; i != 20; ++i) {
-    ASSERT_THROW(tm.Delete(i), std::runtime_error);
+    // NOLINTNEXTLINE
+    ASSERT_THROW(tm.Delete(i), std::runtime_error); 
+    // NOLINTNEXTLINE
     ASSERT_THROW(tm.Complete(i), std::runtime_error);
-    ASSERT_THROW(tm.Edit(i, Task::Create("", Task::Priority::HIGH, {})),
+    // NOLINTNEXTLINE
+    ASSERT_THROW(tm.Edit(i, Task::Create("", Task::Priority::kHigh, {})),
                  std::runtime_error);
   }
 }

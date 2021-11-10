@@ -2,32 +2,29 @@
 #define TASK_MANAGER_INCLUDE_MODEL_ID_H_
 #pragma once
 
-class TaskId
-{
+class TaskId {
  public:
   int GetId() const;
 
   static TaskId Create(int id);
 
-private:
+ private:
   explicit TaskId(int id);
   const int id_;
 };
 
-bool operator< (const TaskId&, const TaskId&);
+bool operator<(const TaskId&, const TaskId&);
 
-bool operator== (const TaskId&, const TaskId&);
+bool operator==(const TaskId&, const TaskId&);
 
-class TaskIdProducer
-{
+class TaskIdProducer {
  public:
   TaskIdProducer();
 
   TaskId GetNextId();
 
  private:
-   int current_id_;
+  int current_id_;
 };
 
-
-#endif // TASK_MANAGER_INCLUDE_MODEL_ID_H_
+#endif  // TASK_MANAGER_INCLUDE_MODEL_ID_H_

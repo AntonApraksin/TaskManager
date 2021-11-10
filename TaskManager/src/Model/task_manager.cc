@@ -1,7 +1,7 @@
 #include "Model/task_manager.h"
 
 void TaskManager::Add(Task task) {
-    tasks_.insert({id_producer_.GetNextId(), std::move(task)});
+  tasks_.insert({id_producer_.GetNextId(), std::move(task)});
 }
 
 void TaskManager::Edit(TaskId id, Task task) {

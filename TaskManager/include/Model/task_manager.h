@@ -5,8 +5,8 @@
 #include <map>
 #include <stdexcept>
 
-#include "Model/task.h"
 #include "Model/id.h"
+#include "Model/task.h"
 
 class TaskManager {
  public:

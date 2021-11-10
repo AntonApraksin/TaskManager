@@ -29,8 +29,8 @@ TEST(BasicCreationAndEdition, Tests) {
     ASSERT_TRUE(TaskEquality(task, i.second));
   }
 
-  auto edited_task = Task::Create("Edited test task #1", Task::Priority::kMedium,
-                                  parse_date("09/12/2021"));
+  auto edited_task = Task::Create(
+      "Edited test task #1", Task::Priority::kMedium, parse_date("09/12/2021"));
   tm.Edit(TaskId::Create(0), edited_task);
 
   for (const auto& i : tm.Show()) {
@@ -96,11 +96,12 @@ TEST(TestExceptions, Tests) {
   }
   for (int i = 0; i != 20; ++i) {
     // NOLINTNEXTLINE
-    ASSERT_THROW(tm.Delete(TaskId::Create(i)), std::runtime_error); 
+    ASSERT_THROW(tm.Delete(TaskId::Create(i)), std::runtime_error);
     // NOLINTNEXTLINE
     ASSERT_THROW(tm.Complete(TaskId::Create(i)), std::runtime_error);
     // NOLINTNEXTLINE
-    ASSERT_THROW(tm.Edit(TaskId::Create(i), Task::Create("", Task::Priority::kHigh, {})),
-                 std::runtime_error);
+    ASSERT_THROW(
+        tm.Edit(TaskId::Create(i), Task::Create("", Task::Priority::kHigh, {})),
+        std::runtime_error);
   }
 }

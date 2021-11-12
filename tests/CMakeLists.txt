@@ -7,16 +7,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(
-  base_test
-  base.cc
-)
-
-target_link_libraries(
-  base_test
-  gtest_main
-  TaskManager
-)
-
 include(GoogleTest)
-gtest_discover_tests(base_test)
+
+add_subdirectory(TaskManager)

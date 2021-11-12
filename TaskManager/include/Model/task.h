@@ -16,6 +16,7 @@ class Task {
 
   using Date_t = std::chrono::time_point<std::chrono::system_clock>;
 
+ public:
   static Task Create(std::string title, Priority priority, Date_t due_date);
 
   std::string GetTitle() const;

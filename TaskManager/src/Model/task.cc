@@ -1,6 +1,9 @@
 #include "Model/task.h"
 
 Task Task::Create(std::string title, Priority priority, Date_t due_date) {
+  if (title.empty()) {
+    throw std::runtime_error{"Cannot create task with an empty title"};
+  }
   return {std::move(title), priority, std::move(due_date)};
 }
 

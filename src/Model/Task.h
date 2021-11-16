@@ -5,7 +5,7 @@
 #include <ctime>
 #include <string>
 
-class Task {
+class Task final {
  public:
   enum class Priority {
     kHigh,

@@ -1,6 +1,6 @@
-#include "Model/id.h"
-
 #include <gtest/gtest.h>
+
+#include "model/TaskIdProducer.h"
 
 bool operator!=(const TaskId& lhs, const TaskId& rhs) { return !(lhs == rhs); }
 
@@ -27,13 +27,11 @@ TEST_F(IdTest, TestUniqueness) {
   EXPECT_EQ(task_ids.size(), kElems);
 }
 
-TEST_F(IdTest, TestSequencing)
-{
+TEST_F(IdTest, TestSequencing) {
   constexpr int kElems = 32768;
   TaskIdProducer tp;
 
-  for(int id{0}; id != kElems; ++id)
-  {
+  for (int id{0}; id != kElems; ++id) {
     EXPECT_EQ(tp.GetNextId().GetId(), id);
   }
 }

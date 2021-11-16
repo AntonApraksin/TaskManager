@@ -17,5 +17,23 @@ add_link_options(-stdlib=libc++)
 
 enable_testing()
 
-add_subdirectory(TaskManager)
+set(TaskManager_SRCS
+  src/model/TaskId.cc
+  src/model/TaskIdProducer.cc
+  src/model/Task.cc
+  src/model/TaskManager.cc
+  src/model/TaskId.h
+  src/model/TaskIdProducer.h
+  src/model/Task.h
+  src/model/TaskManager.h
+)
+
+add_library(TaskManager
+  STATIC ${TaskManager_SRCS}
+)
+
+target_include_directories(TaskManager
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 add_subdirectory(tests)

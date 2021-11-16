@@ -1,16 +1,15 @@
-#include "Model/task_manager.h"
+#include "model/TaskManager.h"
 
 #include <gtest/gtest.h>
 
-Task::Date_t parse_date(std::string date) {
+inline Task::Date_t parse_date(std::string date) {
   tm timeinfo;
   std::string pattern{"%d/%m/%y"};
   strptime(date.c_str(), pattern.c_str(), &timeinfo);
   return std::chrono::system_clock::from_time_t(std::mktime(&timeinfo));
 }
 
-Task CreateSampleTask()
-{
+Task CreateSampleTask() {
   std::string task_title = "Test task title";
   Task::Date_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::Priority::kMedium;

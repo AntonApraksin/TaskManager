@@ -1,4 +1,5 @@
 Find_Package(GTest)
+
 IF (${GTEST_FOUND})
   MESSAGE(STATUS "GTest is found locally")
   set(TASK_MANAGER_LINK_GTEST 
@@ -18,5 +19,21 @@ ELSE (${GTEST_FOUND})
     gtest_main)
 ENDIF (${GTEST_FOUND})
 
+set(MODEL_TESTS
+  model/Task.cc
+  model/Id.cc
+  model/TaskManager.cc
+)
 
-add_subdirectory(TaskManager)
+add_executable(ModelTest
+  ${MODEL_TESTS}
+)
+
+target_link_libraries(
+  ModelTest
+  PRIVATE
+  ${TASK_MANAGER_LINK_GTEST}
+  TaskManager
+)
+
+gtest_discover_tests(ModelTest)

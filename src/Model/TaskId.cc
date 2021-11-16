@@ -1,4 +1,4 @@
-#include "Model/id.h"
+#include "model/TaskId.h"
 
 int TaskId::GetId() const { return id_; }
 
@@ -13,7 +13,3 @@ bool operator<(const TaskId& lhs, const TaskId& rhs) {
 bool operator==(const TaskId& lhs, const TaskId& rhs) {
   return lhs.GetId() == rhs.GetId();
 }
-
-TaskIdProducer::TaskIdProducer() : current_id_{0} {}
-
-TaskId TaskIdProducer::GetNextId() { return TaskId::Create(current_id_++); }

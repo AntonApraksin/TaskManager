@@ -5,10 +5,10 @@
 #include <map>
 #include <stdexcept>
 
-#include "Model/id.h"
-#include "Model/task.h"
+#include "model/Task.h"
+#include "model/TaskIdProducer.h"
 
-class TaskManager {
+class TaskManager final {
  public:
   TaskManager& Add(Task task);
   TaskManager& Edit(TaskId id, Task task);

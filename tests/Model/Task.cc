@@ -1,8 +1,8 @@
-#include "Model/task.h"
+#include "model/Task.h"
 
 #include <gtest/gtest.h>
 
-Task::Date_t parse_date(std::string date) {
+inline Task::Date_t parse_date(std::string date) {
   tm timeinfo;
   std::string pattern{"%d/%m/%y"};
   strptime(date.c_str(), pattern.c_str(), &timeinfo);

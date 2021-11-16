@@ -16,21 +16,21 @@ add_executable(
 target_link_libraries(
   task_test 
   PRIVATE
-  gtest_main
+  ${TASK_MANAGER_LINK_GTEST}
   TaskManager
 )
 
 target_link_libraries(
   id_test
   PRIVATE
-  gtest_main
+  ${TASK_MANAGER_LINK_GTEST}
   TaskManager
 )
 
 target_link_libraries(
   task_manager_test
   PRIVATE
-  gtest_main
+  ${TASK_MANAGER_LINK_GTEST}
   TaskManager
 )
 

@@ -2,8 +2,7 @@
 #define TASK_MANAGER_INCLUDE_MODEL_TASK_H_
 #pragma once
 
-#include <ctime>
-#include <string>
+#include "model/TaskDate.h"
 
 class Task final {
  public:
@@ -13,8 +12,6 @@ class Task final {
     kLow,
     kNone,
   };
-
-  using Date_t = std::chrono::time_point<std::chrono::system_clock>;
 
  public:
   static Task Create(std::string title, Priority priority, Date_t due_date);

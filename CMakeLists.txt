@@ -21,10 +21,12 @@ set(TaskManager_SRCS
   src/model/TaskId.cc
   src/model/TaskIdProducer.cc
   src/model/Task.cc
+  src/model/TaskDate.cc
   src/model/TaskManager.cc
   src/model/TaskId.h
   src/model/TaskIdProducer.h
   src/model/Task.h
+  src/model/TaskDate.h
   src/model/TaskManager.h
 )
 

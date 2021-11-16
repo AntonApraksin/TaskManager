@@ -11,7 +11,7 @@ std::string Task::GetTitle() const { return title_; }
 
 Task::Priority Task::GetPriority() const { return priority_; }
 
-Task::Date_t Task::GetDueDate() const { return due_date_; }
+Date_t Task::GetDueDate() const { return due_date_; }
 
 Task::Task(std::string title, Priority priority, Date_t due_date)
     : title_(std::move(title)),

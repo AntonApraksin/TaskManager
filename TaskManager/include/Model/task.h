@@ -19,10 +19,9 @@ class Task {
  public:
   static Task Create(std::string title, Priority priority, Date_t due_date);
 
+ public:
   std::string GetTitle() const;
-
   Priority GetPriority() const;
-
   Date_t GetDueDate() const;
 
  private:

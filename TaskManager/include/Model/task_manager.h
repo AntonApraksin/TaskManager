@@ -10,15 +10,13 @@
 
 class TaskManager {
  public:
-  void Add(Task task);
+  TaskManager& Add(Task task);
+  TaskManager& Edit(TaskId id, Task task);
+  TaskManager& Complete(TaskId id);
+  TaskManager& Delete(TaskId id);
 
-  void Edit(TaskId id, Task task);
-
-  void Complete(TaskId id);
-
-  void Delete(TaskId id);
-
-  const std::map<TaskId, Task>& Show();
+  const std::map<TaskId, Task>& Show() &;
+  std::map<TaskId, Task> Show() &&;
 
  private:
   std::map<TaskId, Task> tasks_;

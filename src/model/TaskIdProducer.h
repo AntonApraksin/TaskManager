@@ -1,5 +1,5 @@
-#ifndef TASK_MANAGER_INCLUDE_MODEL_TASK_ID_PRODUCER_H_
-#define TASK_MANAGER_INCLUDE_MODEL_TASK_ID_PRODUCER_H_
+#ifndef TASKMANAGER_SRC_MODEL_TASKIDPRODUCER_H_
+#define TASKMANAGER_SRC_MODEL_TASKIDPRODUCER_H_
 #pragma once
 
 #include "model/ITaskIdProducer.h"
@@ -15,4 +15,4 @@ class TaskIdProducer final : public ITaskIdProducer {
   int current_id_;
 };
 
-#endif  // TASK_MANAGER_INCLUDE_MODEL_TASK_ID_PRODUCER_H_
+#endif  // TASKMANAGER_SRC_MODEL_TASKIDPRODUCER_H_

@@ -1,5 +1,5 @@
-#ifndef TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_
-#define TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_
+#ifndef TASKMANAGER_SRC_MODEL_TASKMANAGER_H_
+#define TASKMANAGER_SRC_MODEL_TASKMANAGER_H_
 #pragma once
 
 #include <map>
@@ -26,4 +26,4 @@ class TaskManager final {
   std::unique_ptr<ITaskIdProducer> id_producer_;
 };
 
-#endif  // TASK_MANAGER_INCLUDE_MODEL_TASK_MANAGER_H_
+#endif  // TASKMANAGER_SRC_MODEL_TASKMANAGER_H_

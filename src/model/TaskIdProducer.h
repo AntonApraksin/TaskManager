@@ -2,14 +2,14 @@
 #define TASK_MANAGER_INCLUDE_MODEL_TASK_ID_PRODUCER_H_
 #pragma once
 
-#include "model/Task.h"
+#include "model/ITaskIdProducer.h"
 #include "model/TaskId.h"
 
-class TaskIdProducer final {
+class TaskIdProducer final : public ITaskIdProducer {
  public:
   TaskIdProducer();
 
-  TaskId GetNextId();
+  TaskId GetNextId() override;
 
  private:
   int current_id_;

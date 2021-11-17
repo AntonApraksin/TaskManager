@@ -15,10 +15,14 @@ bool operator==(const Task& lhs, const Task& rhs) {
          lhs.GetDueDate() == rhs.GetDueDate();
 }
 
+std::unique_ptr<ITaskIdProducer> get_default_task_id_producer() {
+  return std::make_unique<TaskIdProducer>();
+}
+
 class TaskManagerTest : public ::testing::Test {};
 
 TEST_F(TaskManagerTest, TaskAddedProperly) {
-  TaskManager tm{};
+  TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
   ASSERT_EQ(tm.Show().size(), 1);
@@ -26,7 +30,7 @@ TEST_F(TaskManagerTest, TaskAddedProperly) {
 }
 
 TEST_F(TaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
-  TaskManager tm{};
+  TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
   auto tmp_id = tm.Show().cbegin()->first;
@@ -36,7 +40,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
 }
 
 TEST_F(TaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
-  TaskManager tm{};
+  TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
   auto tmp_id = tm.Show().cbegin()->first;
@@ -46,7 +50,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
 }
 
 TEST_F(TaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
-  TaskManager tm{};
+  TaskManager tm{get_default_task_id_producer()};
   std::string task_title = "Test task title";
   Date_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::Priority::kMedium;
@@ -60,7 +64,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
 
 TEST_F(TaskManagerTest, ProperDeletion) {
   constexpr int kElems = 512;
-  TaskManager tm;
+  TaskManager tm{get_default_task_id_producer()};
 
   {
     std::stringstream ss;
@@ -82,7 +86,7 @@ TEST_F(TaskManagerTest, ProperDeletion) {
 
 TEST_F(TaskManagerTest, ProperEdition) {
   constexpr int kElems = 512;
-  TaskManager tm;
+  TaskManager tm{get_default_task_id_producer()};
   std::vector<Task> vec_tasks;
 
   {

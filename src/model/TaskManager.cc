@@ -1,8 +1,12 @@
 #include "model/TaskManager.h"
 
-TaskManager& TaskManager::Add(Task task) {
-  tasks_.insert({id_producer_.GetNextId(), std::move(task)});
-  return *this;
+TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer)
+    : id_producer_(std::move(id_producer)) {}
+
+TaskId TaskManager::Add(Task task) {
+  auto next_id = id_producer_->GetNextId();
+  tasks_.insert({next_id, std::move(task)});
+  return next_id;
 }
 
 TaskManager& TaskManager::Edit(TaskId id, Task task) {

@@ -18,10 +18,10 @@ TEST_F(IdTest, TwoDifferentIds) {
 TEST_F(IdTest, TestUniqueness) {
   constexpr int kElems = 32768;
   TaskIdProducer id_prod;
-  std::vector<TaskId> task_ids;
+  std::set<TaskId> task_ids;
 
   for (int i{0}; i != kElems; ++i) {
-    task_ids.push_back(id_prod.GetNextId());
+    task_ids.insert(id_prod.GetNextId());
   }
 
   EXPECT_EQ(task_ids.size(), kElems);

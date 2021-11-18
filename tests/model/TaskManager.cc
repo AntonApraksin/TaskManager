@@ -1,6 +1,23 @@
 #include "model/TaskManager.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+using ::testing::AtLeast;
+using ::testing::Return;
+
+class MockTaskIdProducer : public ITaskIdProducer {
+ public:
+  TaskId GetNextId() override { return TaskId::Create(current_++); }
+
+ private:
+  int current_ = 0;
+};
+
+class DummyTaskIdProducer : public MockTaskIdProducer {
+ public:
+  MOCK_METHOD(TaskId, GetNextId, (), (override));
+};
 
 Task CreateSampleTask() {
   std::string task_title = "Test task title";
@@ -16,13 +33,28 @@ bool operator==(const Task& lhs, const Task& rhs) {
 }
 
 std::unique_ptr<ITaskIdProducer> get_default_task_id_producer() {
-  return std::make_unique<TaskIdProducer>();
+  return std::make_unique<MockTaskIdProducer>();
 }
 
 class TaskManagerTest : public ::testing::Test {};
 
+TEST_F(TaskManagerTest, PlayAroundWithGMock) {
+  constexpr int kTimes = 512;
+  auto id_producer = new DummyTaskIdProducer;
+  EXPECT_CALL(*id_producer, GetNextId()).Times(AtLeast(kTimes));
+
+  // NOLINTNEXTLINE
+  ::testing::DefaultValue<TaskId>::Set(TaskId::Create(0));
+
+  TaskManager tm{std::unique_ptr<DummyTaskIdProducer>(id_producer)};
+  for (int i{0}; i != kTimes; ++i) {
+    tm.Add(CreateSampleTask());
+  }
+}
+
 TEST_F(TaskManagerTest, TaskAddedProperly) {
-  TaskManager tm{get_default_task_id_producer()};
+  auto id_producer = get_default_task_id_producer();
+  TaskManager tm{std::move(id_producer)};
   auto task = CreateSampleTask();
   tm.Add(task);
   ASSERT_EQ(tm.Show().size(), 1);

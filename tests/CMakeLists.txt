@@ -3,7 +3,7 @@ Find_Package(GTest)
 IF (${GTEST_FOUND})
   MESSAGE(STATUS "GTest is found locally")
   set(TASK_MANAGER_LINK_GTEST 
-    GTest::gtest GTest::gtest_main)
+    GTest::gtest GTest::gtest_main GTest::gmock)
 ELSE (${GTEST_FOUND})
   MESSAGE(STATUS "GTest is not found locally")
   include(FetchContent)

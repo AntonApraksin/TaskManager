@@ -18,16 +18,16 @@ add_link_options(-stdlib=libc++)
 enable_testing()
 
 set(TaskManager_SRCS
-  src/model/TaskId.cc
-  src/model/TaskIdProducer.cc
-  src/model/Task.cc
-  src/model/TaskDate.cc
-  src/model/TaskManager.cc
-  src/model/TaskId.h
-  src/model/TaskIdProducer.h
-  src/model/Task.h
-  src/model/TaskDate.h
-  src/model/TaskManager.h
+        src/model/id/TaskId.cc
+        src/model/id/TaskIdProducer.cc
+        src/model/task/Task.cc
+        src/model/task/TaskDate.cc
+        src/model/task_manager/TaskManager.cc
+        src/model/id/TaskId.h
+        src/model/id/TaskIdProducer.h
+        src/model/task/Task.h
+        src/model/task/TaskDate.h
+        src/model/task_manager/TaskManager.h
 )
 
 add_library(TaskManager

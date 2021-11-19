@@ -1,12 +1,12 @@
-#ifndef TASKMANAGER_SRC_MODEL_TASKMANAGER_H_
-#define TASKMANAGER_SRC_MODEL_TASKMANAGER_H_
+#ifndef TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_
+#define TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_
 #pragma once
 
 #include <map>
 #include <memory>
 
-#include "model/Task.h"
-#include "model/TaskIdProducer.h"
+#include "model/id/TaskIdProducer.h"
+#include "model/task/Task.h"
 
 class TaskManager final {
  public:
@@ -26,4 +26,4 @@ class TaskManager final {
   std::unique_ptr<ITaskIdProducer> id_producer_;
 };
 
-#endif  // TASKMANAGER_SRC_MODEL_TASKMANAGER_H_
+#endif  // TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_

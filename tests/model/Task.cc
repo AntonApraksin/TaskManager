@@ -1,4 +1,4 @@
-#include "model/Task.h"
+#include "model/task/Task.h"
 
 #include <gtest/gtest.h>
 

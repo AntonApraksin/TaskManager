@@ -1,4 +1,4 @@
-#include "model/TaskManager.h"
+#include "model/task_manager/TaskManager.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

@@ -1,5 +1,5 @@
-#ifndef TASKMANAGER_SRC_MODEL_TASKID_H_
-#define TASKMANAGER_SRC_MODEL_TASKID_H_
+#ifndef TASKMANAGER_SRC_MODEL_ID_TASKID_H_
+#define TASKMANAGER_SRC_MODEL_ID_TASKID_H_
 #pragma once
 
 class TaskId final {
@@ -17,4 +17,4 @@ bool operator<(const TaskId&, const TaskId&);
 
 bool operator==(const TaskId&, const TaskId&);
 
-#endif  // TASKMANAGER_SRC_MODEL_TASKID_H_
+#endif  // TASKMANAGER_SRC_MODEL_ID_TASKID_H_

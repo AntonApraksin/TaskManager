@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "model/TaskIdProducer.h"
+#include "model/id/TaskIdProducer.h"
 
 bool operator!=(const TaskId& lhs, const TaskId& rhs) { return !(lhs == rhs); }
 

@@ -36,9 +36,9 @@ std::unique_ptr<ITaskIdProducer> get_default_task_id_producer() {
   return std::make_unique<MockTaskIdProducer>();
 }
 
-class TaskManagerTest : public ::testing::Test {};
+class PlainTaskManagerTest : public ::testing::Test {};
 
-TEST_F(TaskManagerTest, PlayAroundWithGMock) {
+TEST_F(PlainTaskManagerTest, PlayAroundWithGMock) {
   constexpr int kTimes = 512;
   auto id_producer = new DummyTaskIdProducer;
   EXPECT_CALL(*id_producer, GetNextId()).Times(AtLeast(kTimes));
@@ -52,16 +52,16 @@ TEST_F(TaskManagerTest, PlayAroundWithGMock) {
   }
 }
 
-TEST_F(TaskManagerTest, TaskAddedProperly) {
+TEST_F(PlainTaskManagerTest, TaskAddedProperly) {
   auto id_producer = get_default_task_id_producer();
   TaskManager tm{std::move(id_producer)};
   auto task = CreateSampleTask();
   tm.Add(task);
   ASSERT_EQ(tm.Show().size(), 1);
-  EXPECT_EQ(task, tm.Show().cbegin()->second);
+  EXPECT_EQ(task, *tm.Show().cbegin()->second);
 }
 
-TEST_F(TaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
@@ -71,7 +71,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
   EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
 }
 
-TEST_F(TaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
@@ -81,7 +81,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
   EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
 }
 
-TEST_F(TaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   std::string task_title = "Test task title";
   Date_t task_due_date = parse_date("03/11/2020");
@@ -94,7 +94,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
   EXPECT_THROW(tm.Edit(tmp_id, task), std::runtime_error);
 }
 
-TEST_F(TaskManagerTest, ProperDeletion) {
+TEST_F(PlainTaskManagerTest, ProperDeletion) {
   constexpr int kElems = 512;
   TaskManager tm{get_default_task_id_producer()};
 
@@ -116,7 +116,7 @@ TEST_F(TaskManagerTest, ProperDeletion) {
   EXPECT_TRUE(tm.Show().empty());
 }
 
-TEST_F(TaskManagerTest, ProperEdition) {
+TEST_F(PlainTaskManagerTest, ProperEdition) {
   constexpr int kElems = 512;
   TaskManager tm{get_default_task_id_producer()};
   std::vector<Task> vec_tasks;
@@ -131,7 +131,7 @@ TEST_F(TaskManagerTest, ProperEdition) {
       tm.Add(task);
       auto res =
           std::find_if(tm.Show().cbegin(), tm.Show().cend(),
-                       [task](const auto& t) { return t.second == task; });
+                       [task](const auto& t) { return *t.second == task; });
       tm.Edit(res->first, new_task);
       vec_tasks.push_back(new_task);
     }
@@ -139,7 +139,7 @@ TEST_F(TaskManagerTest, ProperEdition) {
 
   for (const auto& i : vec_tasks) {
     auto iter = std::find_if(tm.Show().cbegin(), tm.Show().cend(),
-                             [i](const auto& t) { return t.second == i; });
+                             [i](const auto& t) { return *t.second == i; });
     tm.Delete(iter->first);
   }
 

@@ -10,7 +10,8 @@ TEST_F(TaskTest, FieldsAreConsistent) {
   Task::Priority task_priority = Task::Priority::kMedium;
   Task::State task_state = Task::State::kInProgress;
 
-  const auto task = *Task::Create(task_title, task_priority, task_due_date, task_state);
+  const auto task =
+      *Task::Create(task_title, task_priority, task_due_date, task_state);
 
   EXPECT_EQ(task_title, task.GetTitle());
   EXPECT_EQ(task_due_date, task.GetDueDate());

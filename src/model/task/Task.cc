@@ -1,7 +1,7 @@
 #include "Task.h"
 
-std::optional<Task> Task::Create(std::string title, Priority priority, Date_t due_date,
-                  State state) {
+std::optional<Task> Task::Create(std::string title, Priority priority,
+                                 Date_t due_date, State state) {
   if (title.empty()) {
     return std::nullopt;
   }

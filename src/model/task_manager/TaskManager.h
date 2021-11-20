@@ -7,6 +7,7 @@
 
 #include "model/id/TaskIdProducer.h"
 #include "model/task/Task.h"
+#include "model/task_wrapper/TaskStorage.h"
 
 class TaskManager final {
  public:
@@ -18,11 +19,10 @@ class TaskManager final {
   TaskManager& Complete(TaskId id);
   TaskManager& Delete(TaskId id);
 
-  const std::map<TaskId, Task>& Show() &;
-  std::map<TaskId, Task> Show() &&;
+  const TaskStorage::Storage& Show() const;
 
  private:
-  std::map<TaskId, Task> tasks_;
+  TaskStorage storage_;
   std::unique_ptr<ITaskIdProducer> id_producer_;
 };
 

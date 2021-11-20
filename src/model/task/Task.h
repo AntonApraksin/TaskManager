@@ -2,9 +2,9 @@
 #define TASKMANAGER_SRC_MODEL_TASK_TASK_H_
 #pragma once
 
-#include "TaskDate.h"
-
 #include <optional>
+
+#include "TaskDate.h"
 
 class Task final {
  public:
@@ -23,7 +23,7 @@ class Task final {
 
  public:
   static std::optional<Task> Create(std::string, Priority, Date_t,
-                     State = State::kUncompleted);
+                                    State = State::kUncompleted);
 
  public:
   std::string GetTitle() const;

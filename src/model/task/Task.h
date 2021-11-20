@@ -4,6 +4,8 @@
 
 #include "TaskDate.h"
 
+#include <optional>
+
 class Task final {
  public:
   enum class Priority {
@@ -13,21 +15,30 @@ class Task final {
     kNone,
   };
 
+  enum class State {
+    kUncompleted,
+    kInProgress,
+    kCompleted,
+  };
+
  public:
-  static Task Create(std::string title, Priority priority, Date_t due_date);
+  static std::optional<Task> Create(std::string, Priority, Date_t,
+                     State = State::kUncompleted);
 
  public:
   std::string GetTitle() const;
   Priority GetPriority() const;
   Date_t GetDueDate() const;
+  State GetState() const;
 
  private:
-  Task(std::string title, Priority priority, Date_t due_date);
+  Task(std::string, Priority, Date_t, State);
 
  private:
   std::string title_;
   Priority priority_;
   Date_t due_date_;
+  State state_;
 };
 
 #endif  // TASKMANAGER_SRC_MODEL_TASK_TASK_H_

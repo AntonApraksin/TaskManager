@@ -5,7 +5,6 @@
 #include "ITaskIdProducer.h"
 #include "TaskId.h"
 
-
 class TaskIdProducer final : public ITaskIdProducer {
  public:
   TaskIdProducer();

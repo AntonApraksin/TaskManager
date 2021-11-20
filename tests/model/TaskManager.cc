@@ -23,7 +23,7 @@ Task CreateSampleTask() {
   std::string task_title = "Test task title";
   Date_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::Priority::kMedium;
-  return Task::Create(task_title, task_priority, task_due_date);
+  return *Task::Create(task_title, task_priority, task_due_date);
 }
 
 bool operator==(const Task& lhs, const Task& rhs) {
@@ -86,7 +86,7 @@ TEST_F(TaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
   std::string task_title = "Test task title";
   Date_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::Priority::kMedium;
-  auto task = Task::Create(task_title, task_priority, task_due_date);
+  auto task = *Task::Create(task_title, task_priority, task_due_date);
   tm.Add(task);
   auto tmp_id = tm.Show().cbegin()->first;
   tm.Delete(tmp_id);
@@ -102,7 +102,7 @@ TEST_F(TaskManagerTest, ProperDeletion) {
     std::stringstream ss;
     for (int i = 0; i != kElems; ++i) {
       ss << "Test task #" << i;
-      Task task = Task::Create(ss.str(), Task::Priority::kHigh, {});
+      auto task = *Task::Create(ss.str(), Task::Priority::kHigh, {});
       tm.Add(task);
     }
   }
@@ -125,9 +125,9 @@ TEST_F(TaskManagerTest, ProperEdition) {
     std::stringstream ss;
     for (int i = 0; i != kElems;) {
       ss << "Test task #" << i++;
-      Task task = Task::Create(ss.str(), Task::Priority::kHigh, {});
+      auto task = *Task::Create(ss.str(), Task::Priority::kHigh, {});
       ss << "Test task #" << i++;
-      Task new_task = Task::Create(ss.str(), Task::Priority::kHigh, {});
+      auto new_task = *Task::Create(ss.str(), Task::Priority::kHigh, {});
       tm.Add(task);
       auto res =
           std::find_if(tm.Show().cbegin(), tm.Show().cend(),

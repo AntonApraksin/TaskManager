@@ -6,18 +6,11 @@
 #include "model/id/TaskId.h"
 #include "model/task_wrapper/TaskWrapper.h"
 
-class TaskStorage {
+class TaskStorage final {
  public:
   using Storage = std::map<TaskId, TaskWrapper>;
 
  public:
-  TaskStorage();
-  TaskStorage(const TaskStorage&) = delete;
-  TaskStorage(TaskStorage&&) = delete;
-
-  TaskStorage& operator=(const TaskStorage&) = delete;
-  TaskStorage& operator=(TaskStorage&&) = delete;
-
   void Add(TaskId task_id, Task task);
   void Add(TaskId parent, TaskId task_id, Task task);
   void Complete(TaskId task_id);
@@ -25,12 +18,13 @@ class TaskStorage {
   void Edit(TaskId task_id, Task task);
 
   const Storage& Show() const;
+  const TaskWrapper& Find(TaskId) const;
 
  private:
-  TaskWrapper* Find(TaskId task_id);
+  TaskWrapper* FindImpl(TaskId task_id);
+  const TaskWrapper* FindImpl(TaskId task_id) const;
 
  private:
-  size_t size_ = 0;
   Storage children_;
 };
 

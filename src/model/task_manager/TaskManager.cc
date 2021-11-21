@@ -24,7 +24,6 @@ TaskManager& TaskManager::Delete(TaskId id) {
   return *this;
 }
 
-const TaskStorage::Storage& TaskManager::Show() const
-{
+const TaskStorage::Storage& TaskManager::Show() const {
   return storage_.Show();
 }

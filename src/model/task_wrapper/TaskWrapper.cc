@@ -33,16 +33,36 @@ bool TaskWrapper::Delete(TaskId task_id) {
   return false;
 }
 
-TaskWrapper* TaskWrapper::Find(TaskId task_id) {
+TaskWrapper* TaskWrapper::FindImpl(TaskId task_id) {
   if (auto it = children_.find(task_id); it != children_.end()) {
     return &it->second;
   }
   for (auto& i : children_) {
-    if (auto it = i.second.Find(task_id); it != nullptr) {
+    if (auto it = i.second.FindImpl(task_id); it != nullptr) {
       return it;
     }
   }
   return nullptr;
+}
+
+const TaskWrapper* TaskWrapper::FindImpl(TaskId task_id) const {
+  if (auto it = children_.find(task_id); it != children_.end()) {
+    return &it->second;
+  }
+  for (auto& i : children_) {
+    if (auto it = i.second.FindImpl(task_id); it != nullptr) {
+      return it;
+    }
+  }
+  return nullptr;
+}
+
+const TaskWrapper& TaskWrapper::Find(TaskId task_id) const {
+  auto found = FindImpl(task_id);
+  if (found == nullptr) {
+    throw std::runtime_error("ID does not exist");
+  }
+  return *found;
 }
 
 const TaskWrapper::Storage& TaskWrapper::Show() const { return children_; }

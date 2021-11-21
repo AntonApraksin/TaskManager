@@ -107,13 +107,13 @@ TEST_F(PlainTaskManagerTest, ProperDeletion) {
     }
   }
   auto tasks_map = tm.Show();
-  EXPECT_EQ(tasks_map.size(), 512);
+  EXPECT_EQ(tasks_map.size(), kElems);
 
   for (const auto& i : tasks_map) {
     tm.Delete(i.first);
   }
 
-  EXPECT_TRUE(tm.Show().empty());
+  EXPECT_EQ(tm.Show().size(), 0);
 }
 
 TEST_F(PlainTaskManagerTest, ProperEdition) {

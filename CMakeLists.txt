@@ -30,11 +30,17 @@ set(TaskManager_SRCS
         src/model/task_manager/TaskManager.h
         src/model/task_wrapper/TaskWrapper.cc
         src/model/task_wrapper/TaskWrapper.h
-        src/model/task_wrapper/TaskStorage.inl src/model/task_wrapper/TaskStorage.h)
+        src/model/task_wrapper/TaskStorage.inl src/model/task_wrapper/TaskStorage.h
+        src/repl/state/IREPLState.h src/repl/state/MainREPLState.cc src/repl/state/MainREPLState.h src/repl/state/AddNewREPLState.cc src/repl/state/AddNewREPLState.h src/repl/context/Context.cc src/repl/context/Context.h src/repl/print/IPrinter.h src/repl/print/DefaultPrinter.cc src/repl/print/DefaultPrinter.h)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}
 )
+
+add_executable(main
+        src/main.cc)
+
+target_link_libraries(main TaskManager)
 
 target_include_directories(TaskManager
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src

@@ -3,8 +3,7 @@
 
 #include <string>
 
-class IPrinter
-{
+class IPrinter {
  public:
   virtual ~IPrinter() {}
 
@@ -20,4 +19,4 @@ class IPrinter
   std::string prompt_;
 };
 
-#endif //TASKMANAGER_SRC_REPL_PRINT_IPRINTER_H_
+#endif  // TASKMANAGER_SRC_REPL_PRINT_IPRINTER_H_

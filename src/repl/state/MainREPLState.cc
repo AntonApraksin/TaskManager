@@ -1,22 +1,13 @@
 #include "MainREPLState.h"
 
 #include "repl/context/Context.h"
-#include "repl/state/AddNewREPLState.h"
 
-#include <iostream>
+MainREPLState::MainREPLState(const std::shared_ptr<IPrinter> &printer,
+                             const std::shared_ptr<IValidator> &validator)
+    : printer_(printer), validator_(validator) {}
 
-IREPLState* MainREPLState::Execute(Context* ctx)
-{
-  auto printer = ctx->GetPrinter();
-  printer->ChangePrompt("");
-  auto action = printer->AskForAnAction();
-  if (action == "add")
-  {
-    return new AddNewREPLState;
-  }
-  if (action == "exit")
-  {
-    return nullptr;
-  }
-  std::terminate();
+std::shared_ptr<IREPLState> MainREPLState::Execute(Context &ctx) {
+  printer_->ChangePrompt("");
+  auto action = printer_->AskForAnAction();
+  return ctx.GetStateFactory().GetState(validator_->MatchState(action));
 }

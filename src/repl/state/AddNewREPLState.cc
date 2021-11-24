@@ -1,21 +1,22 @@
 #include "AddNewREPLState.h"
 
 #include "repl/context/Context.h"
-#include "repl/state/MainREPLState.h"
 
-IREPLState* AddNewREPLState::Execute(Context* ctx)
-{
-  auto printer = ctx->GetPrinter();
-  printer->ChangePrompt("add");
+AddNewREPLState::AddNewREPLState(const std::shared_ptr<IPrinter>& printer,
+                                 const std::shared_ptr<IValidator>& validator)
+    : printer_(printer), validator_(validator) {}
 
-  auto title = printer->AskForATitle();
+std::shared_ptr<IREPLState> AddNewREPLState::Execute(Context& ctx) {
+  printer_->ChangePrompt("add");
+
+  auto title = printer_->AskForATitle();
   // validate
-  auto date = printer->AskForADate();
+  auto date = printer_->AskForADate();
   // validate
-  auto priority = printer->AskForAPriority();
+  auto priority = printer_->AskForAPriority();
   // validate
-  auto confirm = printer->AskForAConfirmation();
+  auto confirm = printer_->AskForAConfirmation();
   // if confirm = y then else ...
 
-  return new MainREPLState;
+  return ctx.GetStateFactory().GetState(StateEnum::kMain);
 }

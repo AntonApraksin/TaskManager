@@ -31,7 +31,7 @@ set(TaskManager_SRCS
         src/model/task_wrapper/TaskWrapper.cc
         src/model/task_wrapper/TaskWrapper.h
         src/model/task_wrapper/TaskStorage.inl src/model/task_wrapper/TaskStorage.h
-        src/repl/state/IREPLState.h src/repl/state/MainREPLState.cc src/repl/state/MainREPLState.h src/repl/state/AddNewREPLState.cc src/repl/state/AddNewREPLState.h src/repl/context/Context.cc src/repl/context/Context.h src/repl/print/IPrinter.h src/repl/print/DefaultPrinter.cc src/repl/print/DefaultPrinter.h)
+        src/repl/state/IREPLState.h src/repl/state/MainREPLState.cc src/repl/state/MainREPLState.h src/repl/state/AddNewREPLState.cc src/repl/state/AddNewREPLState.h src/repl/context/Context.cc src/repl/context/Context.h src/repl/print/IPrinter.h src/repl/print/DefaultPrinter.cc src/repl/print/DefaultPrinter.h src/repl/state_factory/IStateFactory.h src/repl/print/IValidator.h src/repl/print/DefaultValidator.cc src/repl/print/DefaultValidator.h src/repl/state_factory/DefaultStateFactory.cc src/repl/state_factory/DefaultStateFactory.h src/repl/state/HelpREPLState.cc src/repl/state/HelpREPLState.h)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

@@ -18,4 +18,4 @@ class DefaultPrinter : public IPrinter {
   std::string PrintAndGet(std::string);
 };
 
-#endif //TASKMANAGER_SRC_REPL_PRINT_DEFAULTPRINTER_H_
+#endif  // TASKMANAGER_SRC_REPL_PRINT_DEFAULTPRINTER_H_

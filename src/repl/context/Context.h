@@ -9,14 +9,11 @@
 
 class Context {
  public:
-  Context(std::unique_ptr<IStateFactory> state_factory);
+  Context(const std::shared_ptr<IREPLState>& state);
 
   void Run();
 
-  IStateFactory& GetStateFactory();
-
  private:
-  std::unique_ptr<IStateFactory> state_factory_;
   std::shared_ptr<IREPLState> state_;
 };
 

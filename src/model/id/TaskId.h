@@ -10,7 +10,7 @@ class TaskId final {
 
  private:
   explicit TaskId(int id);
-  const int id_;
+  int id_;
 };
 
 bool operator<(const TaskId&, const TaskId&);

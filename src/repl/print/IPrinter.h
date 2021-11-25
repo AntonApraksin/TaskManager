@@ -12,7 +12,11 @@ class IPrinter {
   virtual std::string AskForAPriority() = 0;
   virtual std::string AskForAConfirmation() = 0;
   virtual std::string AskForAnAction() = 0;
+  virtual std::string AskForAnId() = 0;
+
   virtual void ShowHelp() = 0;
+  virtual void ReportUnknownCommand() = 0;
+
   virtual void ChangePrompt(std::string) = 0;
 
  protected:

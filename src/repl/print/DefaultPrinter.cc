@@ -14,7 +14,26 @@ std::string DefaultPrinter::AskForAConfirmation() { return PrintAndGet("Y/n"); }
 
 std::string DefaultPrinter::AskForAnAction() { return PrintAndGet(""); }
 
-void DefaultPrinter::ShowHelp() { std::cout << "This is very helpful help\n"; }
+std::string DefaultPrinter::AskForAnId() { return PrintAndGet("id"); }
+
+void DefaultPrinter::ShowHelp() {
+  std::cout << "Usage:\n"
+            << "  add\n"
+            << "    Add a new task.\n"
+            << "  edit id\n"
+            << "    Edit a task with given id.\n"
+            << "  delete id\n"
+            << "    Delete a task with the given id.\n"
+            << "  complete id\n"
+            << "    Complete a task with the given id.\n"
+            << "  show\n"
+            << "    Show all uncompleted tasks.\n";
+}
+
+void DefaultPrinter::ReportUnknownCommand() {
+  std::cout
+      << "Unknown command. Type 'help' to display all available commands.\n";
+}
 
 void DefaultPrinter::ChangePrompt(std::string prompt) {
   prompt_ = std::move(prompt);

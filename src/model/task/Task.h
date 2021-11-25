@@ -12,12 +12,10 @@ class Task final {
     kHigh,
     kMedium,
     kLow,
-    kNone,
   };
 
   enum class State {
     kUncompleted,
-    kInProgress,
     kCompleted,
   };
 

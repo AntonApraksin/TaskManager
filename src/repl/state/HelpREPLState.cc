@@ -1,11 +1,7 @@
-#include "HelpREPLState.h"
-
 #include "repl/context/Context.h"
+#include "repl/state/IREPLState.h"
 
-HelpREPLState::HelpREPLState(const std::shared_ptr<IPrinter> &printer)
-    : printer_(printer) {}
-
-std::shared_ptr<IREPLState> HelpREPLState::Execute(Context &ctx) {
+StateEnum HelpREPLState::Execute(const std::shared_ptr<Context>&) {
   printer_->ShowHelp();
-  return ctx.GetStateFactory().GetState(StateEnum::kMain);
+  return StateEnum::kMain;
 }

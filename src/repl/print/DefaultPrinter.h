@@ -10,8 +10,11 @@ class DefaultPrinter : public IPrinter {
   std::string AskForAPriority() override;
   std::string AskForAConfirmation() override;
   std::string AskForAnAction() override;
+  std::string AskForAnId() override;
 
+  void ReportUnknownCommand() override;
   void ShowHelp() override;
+
   void ChangePrompt(std::string) override;
 
  private:

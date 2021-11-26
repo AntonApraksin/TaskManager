@@ -1,7 +1,7 @@
 #include "repl/context/Context.h"
 #include "repl/state/IREPLState.h"
 
-StateEnum UnknownREPLState::Execute(const std::shared_ptr<Context>&) {
+std::shared_ptr<IREPLState> UnknownREPLState::Execute(Context &ctx) {
   printer_->ReportUnknownCommand();
-  return StateEnum::kMain;
+  return ctx.GetStateFactory().GetState(StateEnum::kMain);
 }

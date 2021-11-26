@@ -9,9 +9,7 @@ class StateMachine {
                const std::shared_ptr<Context>& context)
       : state_factory_(state_factory), context_(context) {}
 
-  void Run() {
-
-  }
+  void Run() {}
 
  private:
   std::shared_ptr<IStateFactory> state_factory_;

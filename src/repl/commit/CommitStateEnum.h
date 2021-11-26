@@ -1,0 +1,12 @@
+#ifndef TASKMANAGER_SRC_REPL_COMMIT_COMMITSTATEENUM_H_
+#define TASKMANAGER_SRC_REPL_COMMIT_COMMITSTATEENUM_H_
+
+enum class CommitStateEnum {
+  kAdd,
+  kDelete,
+  kComplete,
+  kEdit,
+  kNothing,
+};
+
+#endif  // TASKMANAGER_SRC_REPL_COMMIT_COMMITSTATEENUM_H_

@@ -1,13 +1,13 @@
-#include "repl/commit/ICommitState.h"
 #include "repl/context/Context.h"
 #include "repl/state/IREPLState.h"
 #include "repl/substate/IREPLSubState.h"
 
-std::shared_ptr<IREPLState> AddNewREPLState::Execute(Context& ctx) {
-  printer_->ChangePrompt("add");
-  auto sub_state = ctx.GetStateFactory().GetSubState(SubStateEnum::kReadTitle);
+std::shared_ptr<IREPLState> DeleteREPLState::Execute(Context &ctx) {
+  printer_->ChangePrompt("delete");
+
+  auto sub_state = ctx.GetStateFactory().GetSubState(SubStateEnum::kReadId);
   auto commit_state =
-      ctx.GetStateFactory().GetCommitState(CommitStateEnum::kAdd);
+      ctx.GetStateFactory().GetCommitState(CommitStateEnum::kDelete);
   ctx.SetSubState(sub_state);
   ctx.SetCommitState(commit_state);
   ctx.RunInteractor();

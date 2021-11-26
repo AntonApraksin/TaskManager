@@ -13,12 +13,19 @@ class DefaultPrinter : public IPrinter {
   std::string AskForAnId() override;
 
   void ReportUnknownCommand() override;
+  void ReportNotValidTitle() override;
+  void ReportNotValidDate() override;
+  void ReportNotValidPriority() override;
+  void ReportNotValidId() override;
+  void ReportNotValidConfirmation() override;
+
   void ShowHelp() override;
 
   void ChangePrompt(std::string) override;
 
  private:
   std::string PrintAndGet(std::string);
+  void Report(const std::string&);
 };
 
 #endif  // TASKMANAGER_SRC_REPL_PRINT_DEFAULTPRINTER_H_

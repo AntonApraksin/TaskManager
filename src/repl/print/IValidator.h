@@ -7,16 +7,7 @@
 #include "model/id/TaskId.h"
 #include "model/task/Task.h"
 #include "model/task/TaskDate.h"
-
-enum class StateEnum {
-  kMain,
-  kAdd,
-  kExit,
-  kHelp,
-
-  kUnknown,
-  kDefault,
-};
+#include "repl/state/StateEnum.h"
 
 enum class ConfirmationResult {
   kYes,

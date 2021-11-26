@@ -15,7 +15,13 @@ class IPrinter {
   virtual std::string AskForAnId() = 0;
 
   virtual void ShowHelp() = 0;
+
   virtual void ReportUnknownCommand() = 0;
+  virtual void ReportNotValidTitle() = 0;
+  virtual void ReportNotValidDate() = 0;
+  virtual void ReportNotValidPriority() = 0;
+  virtual void ReportNotValidId() = 0;
+  virtual void ReportNotValidConfirmation() = 0;
 
   virtual void ChangePrompt(std::string) = 0;
 

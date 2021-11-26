@@ -1,11 +1,12 @@
+#include "repl/context/Context.h"
 #include "repl/substate/IREPLSubState.h"
 
-std::shared_ptr<IREPLSubState> ReadPriorityREPLSubState::Execute(Context &) {
+std::shared_ptr<IREPLSubState> ReadPriorityREPLSubState::Execute(Context &ctx) {
   auto priority = validator_->ParseTaskPriority(printer_->AskForAPriority());
-  for(; !priority;)
-  {
+  for (; !priority;) {
+    printer_->ReportNotValidPriority();
     priority = validator_->ParseTaskPriority(printer_->AskForAPriority());
   }
-  // TODO: forward priority somewhere
-  return std::make_shared<ReadConfirmationREPLSubState>(printer_, validator_); // TODO: put in factory
+  ctx.GetTaskBuilder().SetPriority(*priority);
+  return ctx.GetStateFactory().GetSubState(SubStateEnum::kReadConfirmation);
 }

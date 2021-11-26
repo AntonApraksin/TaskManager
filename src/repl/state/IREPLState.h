@@ -10,7 +10,7 @@ class Context;
 
 class IREPLState {
  public:
-  virtual StateEnum Execute(const std::shared_ptr<Context>&) = 0;
+  virtual std::shared_ptr<IREPLState> Execute(Context&) = 0;
   virtual ~IREPLState() {}
 };
 
@@ -47,28 +47,49 @@ class AddNewREPLState : public IPrinterValidatorREPLState {
  public:
   using IPrinterValidatorREPLState::IPrinterValidatorREPLState;
 
-  StateEnum Execute(const std::shared_ptr<Context>&) override;
+  std::shared_ptr<IREPLState> Execute(Context&) override;
 };
 
 class HelpREPLState : public IPrinterREPLState {
  public:
   using IPrinterREPLState::IPrinterREPLState;
 
-  StateEnum Execute(const std::shared_ptr<Context>&) override;
+  std::shared_ptr<IREPLState> Execute(Context&) override;
 };
 
 class MainREPLState : public IPrinterValidatorREPLState {
  public:
   using IPrinterValidatorREPLState::IPrinterValidatorREPLState;
 
-  StateEnum Execute(const std::shared_ptr<Context>&) override;
+  std::shared_ptr<IREPLState> Execute(Context&) override;
 };
 
 class UnknownREPLState : public IPrinterREPLState {
  public:
   using IPrinterREPLState::IPrinterREPLState;
 
-  StateEnum Execute(const std::shared_ptr<Context>&) override;
+  std::shared_ptr<IREPLState> Execute(Context&) override;
+};
+
+class CompleteREPLState : public IPrinterValidatorREPLState {
+ public:
+  using IPrinterValidatorREPLState::IPrinterValidatorREPLState;
+
+  std::shared_ptr<IREPLState> Execute(Context&) override;
+};
+
+class DeleteREPLState : public IPrinterValidatorREPLState {
+ public:
+  using IPrinterValidatorREPLState::IPrinterValidatorREPLState;
+
+  std::shared_ptr<IREPLState> Execute(Context&) override;
+};
+
+class EditREPLState : public IPrinterValidatorREPLState {
+ public:
+  using IPrinterValidatorREPLState::IPrinterValidatorREPLState;
+
+  std::shared_ptr<IREPLState> Execute(Context&) override;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_IREPLSTATE_H_

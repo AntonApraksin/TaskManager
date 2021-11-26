@@ -13,14 +13,23 @@ void lower_string(std::string &str) {
 StateEnum DefaultValidator::MatchState(const std::string &str) {
   std::string input(str);
   lower_string(input);
-  if (input == "add") {
+  if (input == "a" || input == "add") {
     return StateEnum::kAdd;
   }
-  if (input == "exit") {
+  if (input == "ex" || input == "exit") {
     return StateEnum::kExit;
   }
-  if (input == "help") {
+  if (input == "h" || input == "help") {
     return StateEnum::kHelp;
+  }
+  if (input == "d" || input == "delete") {
+    return StateEnum::kDelete;
+  }
+  if (input == "c" || input == "complete") {
+    return StateEnum::kComplete;
+  }
+  if (input == "ed" || input == "edit") {
+    return StateEnum::kEdit;
   }
   return StateEnum::kUnknown;
 }
@@ -37,9 +46,15 @@ std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
 }
 
 std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
+  // TODO make if return nullopt. get_time is stupid
   std::tm tm = {};
-  std::stringstream ss(str);
-  ss >> std::get_time(&tm, "%H:%M %d/%m/%Y");
+  std::string pattern(
+      "%H:%M %d/%m/%Y");  // TODO: make single format across all program
+  std::istringstream ss(str);
+  ss >> std::get_time(&tm, pattern.c_str());
+  if (ss.fail()) {
+    return std::nullopt;
+  }
   auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
   return tp;
 }

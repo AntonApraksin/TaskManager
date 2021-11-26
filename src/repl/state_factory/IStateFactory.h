@@ -1,13 +1,13 @@
 #ifndef TASKMANAGER_SRC_REPL_STATE_FACTORY_ISTATEFACTORY_H_
 #define TASKMANAGER_SRC_REPL_STATE_FACTORY_ISTATEFACTORY_H_
 
-#include "repl/commit/CommitStateEnum.h"
-#include "repl/commit/ICommitState.h"
+#include "repl/substate/commit/CommitStateEnum.h"
+#include "repl/substate/commit/ICommitState.h"
 #include "repl/print/IValidator.h"
 #include "repl/state/IREPLState.h"
 #include "repl/state/StateEnum.h"
-#include "repl/substate/IREPLSubState.h"
-#include "repl/substate/SubStateEnum.h"
+#include "repl/substate/repl/IREPLSubState.h"
+#include "repl/substate/repl/SubStateEnum.h"
 
 class IStateFactory {
  public:

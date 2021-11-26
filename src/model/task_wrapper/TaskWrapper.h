@@ -5,36 +5,25 @@
 
 #include "model/id/TaskId.h"
 #include "model/task/Task.h"
+#include "model/task_wrapper/TaskStorage.h"
 
-class TaskWrapper final {
+class TaskWrapper : public _TaskStorageImpl<TaskWrapper> {
  public:
-  using Storage = std::map<TaskId, TaskWrapper>;
-
- public:
-  const Task& GetTask() const;
-  const Task& operator*() const;
-  const Storage& Show() const;
-
-  const TaskWrapper& Find(TaskId) const;
-
- private:
   TaskWrapper(Task task);
 
-  void Add(TaskId task_id, Task task);
+  const Task& GetTask() const;
+  const Task& operator*() const;
+
   void Complete();
-  bool Delete(TaskId task_id);
-
   void SetTask(Task task);
-
-  TaskWrapper* FindImpl(TaskId task_id);
-  const TaskWrapper* FindImpl(TaskId task_id) const;
 
  private:
   Task task_;
-  std::map<TaskId, TaskWrapper> children_;
 
  private:
-  friend class TaskStorage;
+  friend class _TaskStorageImpl<TaskWrapper>;
 };
+
+using TaskStorage = _TaskStorageImpl<TaskWrapper>;
 
 #endif  // TASKMANAGER_SRC_MODEL_TASK_WRAPPER_TASKWRAPPER_H_

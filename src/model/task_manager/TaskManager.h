@@ -7,7 +7,7 @@
 
 #include "model/id/TaskIdProducer.h"
 #include "model/task/Task.h"
-#include "model/task_wrapper/TaskStorage.h"
+#include "model/task_wrapper/TaskWrapper.h"
 
 class TaskManager final {
  public:
@@ -19,7 +19,7 @@ class TaskManager final {
   TaskManager& Complete(TaskId id);
   TaskManager& Delete(TaskId id);
 
-  const TaskStorage::Storage& Show() const;
+  const TaskStorage& Show() const;
 
  private:
   TaskStorage storage_;

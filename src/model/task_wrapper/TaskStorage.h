@@ -4,28 +4,32 @@
 #include <map>
 
 #include "model/id/TaskId.h"
-#include "model/task_wrapper/TaskWrapper.h"
+#include "model/task/Task.h"
 
-class TaskStorage final {
+template<typename T>
+class _TaskStorageImpl {
  public:
-  using Storage = std::map<TaskId, TaskWrapper>;
+  using Storage = std::map<TaskId, T>;
 
  public:
   void Add(TaskId task_id, Task task);
-  void Add(TaskId parent, TaskId task_id, Task task);
-  void Complete(TaskId task_id);
   void Delete(TaskId task_id);
-  void Edit(TaskId task_id, Task task);
 
-  const Storage& Show() const;
-  const TaskWrapper& Find(TaskId) const;
+  const Storage& ShowStorage() const;
+  const T& Find(TaskId) const;
+  T& Find(TaskId);
+
+  const _TaskStorageImpl& FindParentOf(TaskId) const;
+  _TaskStorageImpl& FindParentOf(TaskId);
 
  private:
-  TaskWrapper* FindImpl(TaskId task_id);
-  const TaskWrapper* FindImpl(TaskId task_id) const;
+  _TaskStorageImpl* FindParentOfImpl(TaskId task_id);
+  const _TaskStorageImpl* FindParentOfImpl(TaskId task_id) const;
 
- private:
+ protected:
   Storage children_;
 };
+
+#include "TaskStorage.inl"
 
 #endif  // TASKMANAGER_SRC_MODEL_TASK_WRAPPER_TASKSTORAGE_H_

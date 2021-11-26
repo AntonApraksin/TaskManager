@@ -10,20 +10,23 @@ TaskId TaskManager::Add(Task task) {
 }
 
 TaskManager& TaskManager::Edit(TaskId id, Task task) {
-  storage_.Edit(id, std::move(task));
+  auto& to_edit = storage_.Find(id);
+  to_edit.SetTask(task);
   return *this;
 }
 
 TaskManager& TaskManager::Complete(TaskId id) {
-  storage_.Complete(id);
+  auto& to_edit = storage_.Find(id);
+  to_edit.Complete();
   return *this;
 }
 
 TaskManager& TaskManager::Delete(TaskId id) {
-  storage_.Delete(id);
+  auto& parent_of = storage_.FindParentOf(id);
+  parent_of.Delete(id);
   return *this;
 }
 
-const TaskStorage::Storage& TaskManager::Show() const {
-  return storage_.Show();
+const TaskStorage& TaskManager::Show() const {
+  return storage_;
 }

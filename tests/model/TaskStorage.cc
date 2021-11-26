@@ -1,4 +1,4 @@
-#include "model/task_wrapper/TaskStorage.h"
+#include "model/task_wrapper/TaskWrapper.h"
 
 #include <gtest/gtest.h>
 
@@ -57,7 +57,8 @@ TEST_F(TaskStorageTest, SimpleNestedAdd) {
   auto nested_id = ip.GetNextId();
 
   ts.Add(id, task);
-  ts.Add(id, nested_id, nested_task);
+  auto& added_task = ts.Find(id);
+  added_task.Add(nested_id, nested_task);
   auto parent_task = *ts.Find(id);
   auto child_task = *ts.Find(id).Find(nested_id);
 
@@ -80,7 +81,8 @@ TEST_F(TaskStorageTest, DeepNestedAdd) {
   ts.Add(ids.front(), tasks.front());
 
   for (int i{0}, end{kElems - 1}; i != end; ++i) {
-    ts.Add(ids.at(i), ids.at(i + 1), tasks.at(i + 1));
+    auto& add_to = ts.Find(ids.at(i));
+    add_to.Add(ids.at(i + 1), tasks.at(i + 1));
   }
 
   for (int i{0}, end{kElems - 1}; i != end; ++i) {

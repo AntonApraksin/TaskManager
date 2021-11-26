@@ -57,15 +57,15 @@ TEST_F(PlainTaskManagerTest, TaskAddedProperly) {
   TaskManager tm{std::move(id_producer)};
   auto task = CreateSampleTask();
   tm.Add(task);
-  ASSERT_EQ(tm.Show().size(), 1);
-  EXPECT_EQ(task, *tm.Show().cbegin()->second);
+  ASSERT_EQ(tm.Show().ShowStorage().size(), 1);
+  EXPECT_EQ(task, *tm.Show().ShowStorage().cbegin()->second);
 }
 
 TEST_F(PlainTaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
-  auto tmp_id = tm.Show().cbegin()->first;
+  auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
   tm.Delete(tmp_id);
   // NOLINTNEXTLINE
   EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
@@ -75,7 +75,7 @@ TEST_F(PlainTaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   auto task = CreateSampleTask();
   tm.Add(task);
-  auto tmp_id = tm.Show().cbegin()->first;
+  auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
   tm.Delete(tmp_id);
   // NOLINTNEXTLINE
   EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
@@ -88,7 +88,7 @@ TEST_F(PlainTaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
   Task::Priority task_priority = Task::Priority::kMedium;
   auto task = *Task::Create(task_title, task_priority, task_due_date);
   tm.Add(task);
-  auto tmp_id = tm.Show().cbegin()->first;
+  auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
   tm.Delete(tmp_id);
   // NOLINTNEXTLINE
   EXPECT_THROW(tm.Edit(tmp_id, task), std::runtime_error);
@@ -106,14 +106,14 @@ TEST_F(PlainTaskManagerTest, ProperDeletion) {
       tm.Add(task);
     }
   }
-  auto tasks_map = tm.Show();
+  auto tasks_map = tm.Show().ShowStorage();
   EXPECT_EQ(tasks_map.size(), kElems);
 
   for (const auto& i : tasks_map) {
     tm.Delete(i.first);
   }
 
-  EXPECT_EQ(tm.Show().size(), 0);
+  EXPECT_EQ(tm.Show().ShowStorage().size(), 0);
 }
 
 TEST_F(PlainTaskManagerTest, ProperEdition) {
@@ -130,7 +130,7 @@ TEST_F(PlainTaskManagerTest, ProperEdition) {
       auto new_task = *Task::Create(ss.str(), Task::Priority::kHigh, {});
       tm.Add(task);
       auto res =
-          std::find_if(tm.Show().cbegin(), tm.Show().cend(),
+          std::find_if(tm.Show().ShowStorage().cbegin(), tm.Show().ShowStorage().cend(),
                        [task](const auto& t) { return *t.second == task; });
       tm.Edit(res->first, new_task);
       vec_tasks.push_back(new_task);
@@ -138,10 +138,10 @@ TEST_F(PlainTaskManagerTest, ProperEdition) {
   }
 
   for (const auto& i : vec_tasks) {
-    auto iter = std::find_if(tm.Show().cbegin(), tm.Show().cend(),
+    auto iter = std::find_if(tm.Show().ShowStorage().cbegin(), tm.Show().ShowStorage().cend(),
                              [i](const auto& t) { return *t.second == i; });
     tm.Delete(iter->first);
   }
 
-  EXPECT_TRUE(tm.Show().empty());
+  EXPECT_TRUE(tm.Show().ShowStorage().empty());
 }

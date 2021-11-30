@@ -14,6 +14,8 @@ class TaskWrapper : public _TaskStorageImpl<TaskWrapper> {
   const Task& GetTask() const;
   const Task& operator*() const;
 
+  const Task* operator->() const { return &task_; }
+
   void Complete();
   void SetTask(Task task);
 

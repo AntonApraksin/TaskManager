@@ -6,7 +6,7 @@
 #include "model/id/TaskId.h"
 #include "model/task/Task.h"
 
-template<typename T>
+template <typename T>
 class _TaskStorageImpl {
  public:
   using Storage = std::map<TaskId, T>;

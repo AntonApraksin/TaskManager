@@ -16,8 +16,8 @@ void _TaskStorageImpl<T>::Delete(TaskId task_id) {
 
 template<typename T>
 const T& _TaskStorageImpl<T>::Find(TaskId task_id) const {
-  _TaskStorageImpl<T>& parent = FindParentOf(task_id);
-  return parent.children_.find(task_id).second;
+  const _TaskStorageImpl<T>& parent = FindParentOf(task_id);
+  return parent.children_.find(task_id)->second;
 }
 
 template<typename T>
@@ -38,7 +38,7 @@ _TaskStorageImpl<T> &_TaskStorageImpl<T>::FindParentOf(TaskId task_id) {
 
 template<typename T>
 const _TaskStorageImpl<T> &_TaskStorageImpl<T>::FindParentOf(TaskId task_id) const{
-  _TaskStorageImpl* parent_of = FindParentOfImpl(task_id);
+  const _TaskStorageImpl* parent_of = FindParentOfImpl(task_id);
   if(parent_of == nullptr)
   {
     throw std::runtime_error("Given Id does not exist");

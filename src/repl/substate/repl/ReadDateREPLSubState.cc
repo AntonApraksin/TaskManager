@@ -1,7 +1,7 @@
 #include "IREPLSubState.h"
-#include "repl/substate/SubContext.h"
+#include "repl/substate/TaskContext.h"
 
-void ReadDateREPLSubState::Execute(SubContext &ctx) {
+void ReadDateREPLSubState::Execute(TaskContext &ctx) {
   auto date = validator_->ParseTaskDate(printer_->AskForADate());
   if (!date) {
     printer_->ReportNotValidDate();

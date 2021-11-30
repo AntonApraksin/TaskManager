@@ -7,7 +7,7 @@
   return name;
 
 DefaultStateFactory::DefaultStateFactory(
-    const std::shared_ptr<IPrinter>& printer,
+    const std::shared_ptr<IIOFacility>& printer,
     const std::shared_ptr<IValidator>& validator,
     const std::shared_ptr<TaskManager>& task_manager)
     : printer_(printer), validator_(validator), task_manager_(task_manager) {}
@@ -36,7 +36,7 @@ std::shared_ptr<IREPLState> DefaultStateFactory::GetState(StateEnum se) {
   }
 }
 
-std::shared_ptr<IREPLSubState> DefaultStateFactory::GetSubState(
+std::shared_ptr<IREPLSubState> DefaultStateFactory::GetREPLState(
     SubStateEnum sse) {
   switch (sse) {
     case SubStateEnum::kReadTitle:

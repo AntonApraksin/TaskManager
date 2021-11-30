@@ -1,6 +1,6 @@
 #include "ICommitState.h"
-#include "repl/substate/SubContext.h"
+#include "repl/substate/TaskContext.h"
 
-void NothingCommitState::Execute(SubContext &ctx) {
+void NothingCommitState::Execute(TaskContext &ctx) {
   ctx.PopState();
 }

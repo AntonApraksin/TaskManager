@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "repl/print/IPrinter.h"
-#include "repl/print/IValidator.h"
+#include "repl/io_facility/IIOFacility.h"
+#include "repl/io_facility/IValidator.h"
 
 class Context;
 
@@ -16,11 +16,11 @@ class IREPLState {
 
 class IPrinterREPLState : public IREPLState {
  public:
-  IPrinterREPLState(const std::shared_ptr<IPrinter>& printer)
+  IPrinterREPLState(const std::shared_ptr<IIOFacility>& printer)
       : printer_(printer) {}
 
  protected:
-  std::shared_ptr<IPrinter> printer_;
+  std::shared_ptr<IIOFacility> printer_;
 };
 
 class IValidatorREPLState : public IREPLState {
@@ -34,12 +34,12 @@ class IValidatorREPLState : public IREPLState {
 
 class IPrinterValidatorREPLState : public IREPLState {
  public:
-  IPrinterValidatorREPLState(const std::shared_ptr<IPrinter>& printer,
+  IPrinterValidatorREPLState(const std::shared_ptr<IIOFacility>& printer,
                              const std::shared_ptr<IValidator>& validator)
       : printer_(printer), validator_(validator) {}
 
  protected:
-  std::shared_ptr<IPrinter> printer_;
+  std::shared_ptr<IIOFacility> printer_;
   std::shared_ptr<IValidator> validator_;
 };
 

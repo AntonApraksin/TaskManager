@@ -19,35 +19,35 @@ class AddCommitState : public ICommitState {
  public:
   using ICommitState::ICommitState;
 
-  void Execute(SubContext& ctx) override;
+  void Execute(TaskContext& ctx) override;
 };
 
 class EditCommitState : public ICommitState {
  public:
   using ICommitState::ICommitState;
 
-  void Execute(SubContext& ctx) override;
+  void Execute(TaskContext& ctx) override;
 };
 
 class CompleteCommitState : public ICommitState {
  public:
   using ICommitState::ICommitState;
 
-  void Execute(SubContext& ctx) override;
+  void Execute(TaskContext& ctx) override;
 };
 
 class DeleteCommitState : public ICommitState {
  public:
   using ICommitState::ICommitState;
 
-  void Execute(SubContext& ctx) override;
+  void Execute(TaskContext& ctx) override;
 };
 
 class NothingCommitState : public ICommitState {
  public:
   using ICommitState::ICommitState;
 
-  void Execute(SubContext& ctx) override;
+  void Execute(TaskContext& ctx) override;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_COMMIT_ICOMMITSTATE_H_

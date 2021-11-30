@@ -3,9 +3,9 @@
 
 #include <string>
 
-class IPrinter {
+class IIOFacility {
  public:
-  virtual ~IPrinter() {}
+  virtual ~IIOFacility() {}
 
   virtual std::string AskForATitle() = 0;
   virtual std::string AskForADate() = 0;

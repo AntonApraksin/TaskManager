@@ -1,9 +1,9 @@
 #ifndef TASKMANAGER_SRC_REPL_PRINT_DEFAULTPRINTER_H_
 #define TASKMANAGER_SRC_REPL_PRINT_DEFAULTPRINTER_H_
 
-#include "repl/print/IPrinter.h"
+#include "repl/io_facility/IIOFacility.h"
 
-class DefaultPrinter : public IPrinter {
+class DefaultIOFacility : public IIOFacility {
  public:
   std::string AskForATitle() override;
   std::string AskForADate() override;

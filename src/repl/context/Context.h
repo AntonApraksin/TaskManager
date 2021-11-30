@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "repl/TaskBuilder.h"
-#include "repl/print/IPrinter.h"
+#include "repl/io_facility/IIOFacility.h"
 #include "repl/state/IREPLState.h"
 #include "repl/state_factory/IStateFactory.h"
 #include "repl/substate/repl/IREPLSubState.h"

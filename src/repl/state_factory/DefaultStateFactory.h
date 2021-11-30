@@ -5,12 +5,12 @@
 
 class DefaultStateFactory : public IStateFactory {
  public:
-  DefaultStateFactory(const std::shared_ptr<IPrinter>& printer,
+  DefaultStateFactory(const std::shared_ptr<IIOFacility>& printer,
                       const std::shared_ptr<IValidator>& validator,
                       const std::shared_ptr<TaskManager>& task_manager);
 
   std::shared_ptr<IREPLState> GetState(StateEnum se) override;
-  std::shared_ptr<IREPLSubState> GetSubState(SubStateEnum sse) override;
+  std::shared_ptr<IREPLSubState> GetREPLState(SubStateEnum sse) override;
   std::shared_ptr<ICommitState> GetCommitState(CommitStateEnum cse) override;
 
  private:
@@ -57,7 +57,7 @@ class DefaultStateFactory : public IStateFactory {
   std::shared_ptr<EditCommitState> edit_commit_state_;
   std::shared_ptr<NothingCommitState> nothing_commit_state_;
 
-  std::shared_ptr<IPrinter> printer_;
+  std::shared_ptr<IIOFacility> printer_;
   std::shared_ptr<IValidator> validator_;
   std::shared_ptr<TaskManager> task_manager_;
 };

@@ -1,22 +1,22 @@
-#include "DefaultPrinter.h"
+#include "DefaultIOFacility.h"
 
 #include <iostream>
 
-std::string DefaultPrinter::AskForATitle() { return PrintAndGet("title"); }
+std::string DefaultIOFacility::AskForATitle() { return PrintAndGet("title"); }
 
-std::string DefaultPrinter::AskForADate() { return PrintAndGet("date"); }
+std::string DefaultIOFacility::AskForADate() { return PrintAndGet("date"); }
 
-std::string DefaultPrinter::AskForAPriority() {
+std::string DefaultIOFacility::AskForAPriority() {
   return PrintAndGet("priority");
 }
 
-std::string DefaultPrinter::AskForAConfirmation() { return PrintAndGet("Y/n"); }
+std::string DefaultIOFacility::AskForAConfirmation() { return PrintAndGet("Y/n"); }
 
-std::string DefaultPrinter::AskForAnAction() { return PrintAndGet(""); }
+std::string DefaultIOFacility::AskForAnAction() { return PrintAndGet(""); }
 
-std::string DefaultPrinter::AskForAnId() { return PrintAndGet("id"); }
+std::string DefaultIOFacility::AskForAnId() { return PrintAndGet("id"); }
 
-void DefaultPrinter::ShowHelp() {
+void DefaultIOFacility::ShowHelp() {
   std::cout << "Usage:\n"
             << "  add(a)\n"
             << "    Add a new task.\n"
@@ -32,39 +32,39 @@ void DefaultPrinter::ShowHelp() {
             << "    Exit.\n";
 }
 
-void DefaultPrinter::Report(const std::string& str) {
+void DefaultIOFacility::Report(const std::string& str) {
   std::cout << str << '\n';
 }
 
-void DefaultPrinter::ReportUnknownCommand() {
+void DefaultIOFacility::ReportUnknownCommand() {
   Report("Unknown command. Type 'help' to display all available commands.");
 }
 
-void DefaultPrinter::ReportNotValidConfirmation() {
+void DefaultIOFacility::ReportNotValidConfirmation() {
   Report("Please, enter yes(y) or no(n).");
 }
 
-void DefaultPrinter::ReportNotValidDate() {
+void DefaultIOFacility::ReportNotValidDate() {
   Report("Date should be in format.");  // TODO
 }
 
-void DefaultPrinter::ReportNotValidPriority() {
+void DefaultIOFacility::ReportNotValidPriority() {
   Report("Priority should be: low, medium, high.");
 }
 
-void DefaultPrinter::ReportNotValidId() {
+void DefaultIOFacility::ReportNotValidId() {
   Report("Id should be numeric value.");
 }
 
-void DefaultPrinter::ReportNotValidTitle() {
+void DefaultIOFacility::ReportNotValidTitle() {
   Report("Title must not be empty.");
 }
 
-void DefaultPrinter::ChangePrompt(std::string prompt) {
+void DefaultIOFacility::ChangePrompt(std::string prompt) {
   prompt_ = std::move(prompt);
 }
 
-std::string DefaultPrinter::PrintAndGet(std::string str) {
+std::string DefaultIOFacility::PrintAndGet(std::string str) {
   std::cout << prompt_ << '[' << str << ']' << ": ";
   std::string result;
   std::getline(std::cin, result);

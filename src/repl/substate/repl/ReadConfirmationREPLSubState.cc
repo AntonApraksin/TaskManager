@@ -1,8 +1,8 @@
 #include "IREPLSubState.h"
-#include "repl/substate/SubContext.h"
+#include "repl/substate/TaskContext.h"
 
 void ReadConfirmationREPLSubState::Execute(
-    SubContext &ctx) {
+    TaskContext &ctx) {
   auto confirm = validator_->ParseConfirmation(printer_->AskForAConfirmation());
   if(!confirm) {
     printer_->ReportNotValidConfirmation();

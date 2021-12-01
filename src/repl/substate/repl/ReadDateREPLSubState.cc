@@ -3,9 +3,9 @@
 
 void ReadDateREPLSubState::Execute(TaskContext &ctx) {
   auto date = validator_->ParseTaskDate(printer_->AskForADate());
-  if (!date) {
+  for (; !date;) {
     printer_->ReportNotValidDate();
-    return;
+    date = validator_->ParseTaskDate(printer_->AskForADate());
   }
   ctx.GetTaskBuilder().SetDate(*date);
   ctx.PopState();

@@ -14,7 +14,6 @@ class TaskContext {
   void ClearStates();
 
   TaskBuilder& GetTaskBuilder();
-  TaskId& GetTaskId();
 
   void Run();
 
@@ -22,7 +21,6 @@ class TaskContext {
   std::deque<std::shared_ptr<ISubState>> states_;
 
   TaskBuilder task_builder_;
-  TaskId task_id_ = TaskId::Create(0);
 };
 
 #endif  // TASKMANAGER_SRC_REPL_SUBSTATE_TASKCONTEXT_H_

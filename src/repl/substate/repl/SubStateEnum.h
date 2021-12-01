@@ -4,7 +4,6 @@
 enum class SubStateEnum {
   kReadConfirmation,
   kReadDate,
-  kReadId,
   kReadPriority,
   kReadTitle,
 };

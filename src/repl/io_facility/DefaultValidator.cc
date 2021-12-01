@@ -4,6 +4,7 @@
 #include <cctype>
 #include <iomanip>
 #include <sstream>
+#include <vector>
 
 void lower_string(std::string &str) {
   std::transform(str.cbegin(), str.cend(), str.begin(),
@@ -11,27 +12,42 @@ void lower_string(std::string &str) {
 }
 
 StateEnum DefaultValidator::MatchState(const std::string &str) {
-  std::string input(str);
-  lower_string(input);
-  if (input == "a" || input == "add") {
+  if (str == "a" || str == "add") {
     return StateEnum::kAdd;
   }
-  if (input == "ex" || input == "exit") {
+  if (str == "ex" || str == "exit") {
     return StateEnum::kExit;
   }
-  if (input == "h" || input == "help") {
+  if (str == "h" || str == "help") {
     return StateEnum::kHelp;
   }
-  if (input == "d" || input == "delete") {
+  if (str == "d" || str == "delete") {
     return StateEnum::kDelete;
   }
-  if (input == "c" || input == "complete") {
+  if (str == "c" || str == "complete") {
     return StateEnum::kComplete;
   }
-  if (input == "ed" || input == "edit") {
+  if (str == "ed" || str == "edit") {
     return StateEnum::kEdit;
   }
+  if (str == "s" || str == "show") {
+    return StateEnum::kShow;
+  }
   return StateEnum::kUnknown;
+}
+std::pair<StateEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
+    const std::string &str) {
+  std::string input(str);
+  lower_string(input);
+  std::stringstream ss{input};
+  std::string token;
+  std::getline(ss, token, ' ');
+  auto state = MatchState(token);
+  std::vector<TaskId> ids;
+  for (; std::getline(ss, token, ' ');) {
+    ids.push_back(TaskId::Create(std::stoi(token)));
+  }
+  return {state, ids};
 }
 
 std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(

@@ -4,14 +4,16 @@
 enum class StateEnum {
   kMain,
   kAdd,
-  kExit,
-  kHelp,
+  kEdit,
   kComplete,
   kDelete,
-  kEdit,
+
+  kHelp,
+  kShow,
+
+  kExit,
 
   kUnknown,
-  kDefault,
 };
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_STATEENUM_H_

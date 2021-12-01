@@ -5,7 +5,7 @@ void ReadPriorityREPLSubState::Execute(TaskContext &ctx) {
   auto priority = validator_->ParseTaskPriority(printer_->AskForAPriority());
   for (; !priority;) {
     printer_->ReportNotValidPriority();
-    return;
+    priority = validator_->ParseTaskPriority(printer_->AskForAPriority());
   }
   ctx.GetTaskBuilder().SetPriority(*priority);
   ctx.PopState();

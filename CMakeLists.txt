@@ -30,9 +30,33 @@ set(TaskManager_SRCS
         src/model/task_manager/TaskManager.h
         src/model/task_wrapper/TaskWrapper.cc
         src/model/task_wrapper/TaskWrapper.h
-        src/model/task_wrapper/TaskStorage.inl src/model/task_wrapper/TaskStorage.h
-
-        src/repl/state/IREPLState.h src/repl/state/MainREPLState.cc src/repl/state/AddNewREPLState.cc src/repl/context/Context.cc src/repl/context/Context.h src/repl/io_facility/IIOFacility.h src/repl/io_facility/DefaultIOFacility.cc src/repl/io_facility/DefaultIOFacility.h src/repl/state_factory/IStateFactory.h src/repl/io_facility/IValidator.h src/repl/io_facility/DefaultValidator.cc src/repl/io_facility/DefaultValidator.h src/repl/state_factory/DefaultStateFactory.cc src/repl/state_factory/DefaultStateFactory.h src/repl/state/HelpREPLState.cc src/repl/state/UnknownREPLState.cc src/repl/substate/repl/IREPLSubState.h src/repl/substate/repl/ReadTitleREPLSubState.cc src/repl/substate/repl/ReadDateREPLSubState.cc src/repl/substate/repl/ReadPriorityREPLSubState.cc src/repl/substate/repl/ReadConfirmationREPLSubState.cc src/repl/state_machine/StateMachine.cc src/repl/state_machine/StateMachine.h src/repl/substate/repl/ReadIdREPLSubState.cc src/repl/TaskBuilder.cc src/repl/TaskBuilder.h src/repl/state/CompleteREPLState.cc src/repl/state/DeleteREPLState.cc src/repl/state/EditREPLState.cc src/repl/substate/commit/ICommitState.h src/repl/substate/commit/NothingCommitState.cc src/repl/substate/commit/DeleteCommitState.cc src/repl/substate/commit/AddCommitState.cc src/repl/substate/commit/EditCommitState.cc src/repl/substate/commit/CompleteCommitState.cc src/repl/state/StateEnum.h src/repl/substate/commit/CommitStateEnum.h src/repl/substate/repl/SubStateEnum.h src/repl/substate/ISubState.h src/repl/substate/TaskContext.cc src/repl/substate/TaskContext.h)
+        src/model/task_wrapper/TaskStorage.inl
+        src/model/task_wrapper/TaskStorage.h
+        src/repl/io_facility/IIOFacility.h
+        src/repl/io_facility/DefaultIOFacility.cc
+        src/repl/io_facility/DefaultIOFacility.h
+        src/repl/state_factory/IStateFactory.h
+        src/repl/io_facility/IValidator.h
+        src/repl/io_facility/DefaultValidator.cc
+        src/repl/io_facility/DefaultValidator.h
+        src/repl/state_factory/DefaultStateFactory.cc
+        src/repl/state_factory/DefaultStateFactory.h
+        src/repl/substate/repl/IREPLSubState.h
+        src/repl/substate/repl/ReadTitleREPLSubState.cc
+        src/repl/substate/repl/ReadDateREPLSubState.cc
+        src/repl/substate/repl/ReadPriorityREPLSubState.cc
+        src/repl/substate/repl/ReadConfirmationREPLSubState.cc
+        src/repl/TaskBuilder.cc
+        src/repl/TaskBuilder.h
+        src/repl/view/StateEnum.h
+        src/repl/substate/repl/SubStateEnum.h
+        src/repl/substate/ISubState.h
+        src/repl/substate/TaskContext.cc
+        src/repl/substate/TaskContext.h
+        src/repl/view/View.cc
+        src/repl/view/View.h
+        src/repl/Controller.cc
+        src/repl/Controller.h)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

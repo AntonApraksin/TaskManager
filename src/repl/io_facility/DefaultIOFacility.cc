@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-const char* to_string(Task::Priority priority) {
+inline const char* to_string(Task::Priority priority) {
   switch (priority) {
     case Task::Priority::kLow:
       return "low";
@@ -13,7 +13,7 @@ const char* to_string(Task::Priority priority) {
   }
 }
 
-const char* to_string(Task::State state) {
+inline const char* to_string(Task::State state) {
   switch (state) {
     case Task::State::kCompleted:
       return "+";

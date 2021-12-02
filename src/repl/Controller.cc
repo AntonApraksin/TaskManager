@@ -87,11 +87,8 @@ void Controller::HandleAdd() {
 
 void Controller::HandleEdit(TaskId task_id) {
   view_->SetState(StateEnum::kEdit);
-  auto to_edit = task_manager_->Show().find(task_id);
-  if (to_edit == task_manager_->Show().end()) {
-    // TODO: Report failure
-  }
-  view_->ShowTask(*to_edit->second);
+  auto& to_edit = task_manager_->Show().Find(task_id); // TODO: handle exception
+  view_->ShowTask(*to_edit);
   auto confirmation = view_->GetConfirmation();
   if (confirmation == ConfirmationResult::kNo) {
     return;
@@ -125,6 +122,8 @@ void Controller::ShowByMap(const std::map<TaskId, TaskWrapper>& map) {
   }
 }
 
-void Controller::HandleShow() { ShowByMap(task_manager_->Show()); }
+void Controller::HandleShow() {
+  ShowByMap(task_manager_->Show().ShowStorage());
+}
 
 void Controller::HandleHelp() { view_->ShowHelp(); }

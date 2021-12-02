@@ -56,7 +56,7 @@ set(TaskManager_SRCS
         src/repl/view/View.cc
         src/repl/view/View.h
         src/repl/Controller.cc
-        src/repl/Controller.h)
+        src/repl/Controller.h src/repl/view/step/IStep.h src/repl/view/step/StepResult.h src/repl/view/step/iostream_step/IostreamStep.h src/repl/view/step/iostream_step/IostreamAddTaskREPLState.cc src/repl/view/step/iostream_step/IostreamEditTaskREPLState.cc src/repl/view/step/iostream_step/IostreamDeleteTaskREPLState.cc src/repl/view/step/iostream_step/IostreamCompleteTaskREPLState.cc src/repl/view/step/iostream_step/IostreamShowAllTasksREPLState.cc src/repl/view/step/iostream_step/IostreamShowNTasksREPLState.cc src/repl/view/step/iostream_step/IostreamShowSortedTasksREPLState.cc src/repl/view/step/iostream_step/IostreamUnknownCommandsREPLState.cc src/repl/view/step/iostream_step/IostreamShowHelpREPLState.cc)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

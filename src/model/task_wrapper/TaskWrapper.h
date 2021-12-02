@@ -21,9 +21,6 @@ class TaskWrapper : public _TaskStorageImpl<TaskWrapper> {
 
  private:
   Task task_;
-
- private:
-  friend class _TaskStorageImpl<TaskWrapper>;
 };
 
 using TaskStorage = _TaskStorageImpl<TaskWrapper>;

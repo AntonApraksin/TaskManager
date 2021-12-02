@@ -3,6 +3,7 @@
 #include "repl/io_facility/DefaultIOFacility.h"
 #include "repl/io_facility/DefaultValidator.h"
 #include "repl/state_factory/DefaultStateFactory.h"
+#include "repl/view/step/iostream_step/IostreamStepFactory.h"
 
 int main() {
   auto printer = std::make_shared<DefaultIOFacility>();
@@ -11,7 +12,8 @@ int main() {
   auto task_manager = std::make_shared<TaskManager>(std::move(id_producer));
   auto state_factory =
       std::make_shared<DefaultStateFactory>(printer, validator);
-  Controller ctrl{printer, validator, state_factory, task_manager};
+  auto step_factory = std::make_unique<IostreamStepFactory>(state_factory, validator);
+  Controller ctrl{printer, validator, task_manager, std::move(step_factory)};
   ctrl.Run();
 
   return 0;

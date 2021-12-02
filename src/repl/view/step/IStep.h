@@ -24,7 +24,7 @@ class IAddTaskREPLState : public IStep {
 
 class IEditTaskREPLState : public IStep {
  public:
-  using TaskWrapperRef = std::reference_wrapper<TaskWrapper>;
+  using TaskWrapperRef = std::reference_wrapper<const TaskWrapper>;
 
   IEditTaskREPLState(TaskWrapperRef task_wrapper)
       : task_wrapper_(task_wrapper) {}
@@ -39,7 +39,7 @@ class IEditTaskREPLState : public IStep {
 
 class IDeleteTaskREPLState : public IStep {
  public:
-  using TaskWrappers = std::vector<std::reference_wrapper<TaskWrapper>>;
+  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
   IDeleteTaskREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
@@ -54,7 +54,7 @@ class IDeleteTaskREPLState : public IStep {
 
 class ICompleteTaskREPLState : public IStep {
  public:
-  using TaskWrappers = std::vector<std::reference_wrapper<TaskWrapper>>;
+  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
   ICompleteTaskREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
@@ -69,7 +69,7 @@ class ICompleteTaskREPLState : public IStep {
 
 class IShowAllTasksREPLState : public IStep {
  public:
-  using TaskStorageRef = std::reference_wrapper<TaskStorage>;
+  using TaskStorageRef = std::reference_wrapper<const TaskStorage>;
 
   IShowAllTasksREPLState(TaskStorageRef task_storage)
       : task_storage_(task_storage) {}
@@ -84,7 +84,7 @@ class IShowAllTasksREPLState : public IStep {
 
 class IShowNTasksREPLState : public IStep {
  public:
-  using TaskWrappers = std::vector<std::reference_wrapper<TaskWrapper>>;
+  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
   IShowNTasksREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(task_wrappers) {}
@@ -108,9 +108,4 @@ class IShowSortedTasksREPLState : public IStep {
  protected:
   Tasks tasks_;
 };
-
-class IUnknownCommandsREPLState : public IStep {};
-
-class IShowHelpREPLState : public IStep {};
-
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

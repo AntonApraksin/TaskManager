@@ -2,14 +2,15 @@
 #define TASKMANAGER_SRC_REPL_CONTROLLER_H_
 
 #include "model/task_manager/TaskManager.h"
+#include "repl/view/step/IStepFactory.h"
 #include "repl/view/View.h"
 
 class Controller {
  public:
   Controller(const std::shared_ptr<IIOFacility>&,
              const std::shared_ptr<IValidator>&,
-             const std::shared_ptr<IStateFactory>&,
-             const std::shared_ptr<TaskManager>&);
+             const std::shared_ptr<TaskManager>&,
+             std::unique_ptr<IStepFactory>);
 
   void Run();
 
@@ -27,6 +28,8 @@ class Controller {
  private:
   std::shared_ptr<TaskManager> task_manager_;
   std::unique_ptr<View> view_;
+
+  std::unique_ptr<IStepFactory> step_factory_;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_CONTROLLER_H_

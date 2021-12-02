@@ -15,7 +15,7 @@ IostreamEditTaskREPLState::IostreamEditTaskREPLState(
 StepResult IostreamEditTaskREPLState::Run() {
   std::cout << "You are going to edit:\n"
       << "  [" << to_string(task_wrapper_.get()->GetState()) << "] "
-      << "(" << to_string(task_wrapper_.get()->GetState()) << ") "
+      << "(" << to_string(task_wrapper_.get()->GetPriority()) << ") "
       << task_wrapper_.get()->GetTitle() << "\n";  // TODO: Display date
       // TODO: inform about children
   TaskContext sub_context;

@@ -2,16 +2,16 @@
 
 Controller::Controller(const std::shared_ptr<IIOFacility>& io_facility,
                        const std::shared_ptr<IValidator>& validator,
-                       const std::shared_ptr<IStateFactory>& state_factory,
-                       const std::shared_ptr<TaskManager>& task_manager)
+                       const std::shared_ptr<TaskManager>& task_manager,
+                       std::unique_ptr<IStepFactory> step_factory)
     : task_manager_(task_manager),
-      view_(std::make_unique<View>(io_facility, validator, state_factory)) {}
+      view_(std::make_unique<View>(io_facility, validator)),
+      step_factory_(std::move(step_factory)){}
 
 void Controller::Run() {
   auto command = view_->GetNextCommand();
   for (; command.first != StateEnum::kExit;) {
     PerformAction(command.first, command.second);
-    view_->SetState(StateEnum::kMain);
     command = view_->GetNextCommand();
   }
 }
@@ -75,55 +75,48 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
 }
 
 void Controller::HandleAdd() {
-  view_->SetState(StateEnum::kAdd);
-  auto task = view_->GetTask();
-  auto confirmation = view_->GetConfirmation();
-  if (confirmation == ConfirmationResult::kYes) {
-    auto given_id = task_manager_->Add(task);
-    view_->ShowId(given_id);
+  view_->SetState(step_factory_->GetAddTaskREPLState());
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes)
+  {
+    task_manager_->Add(*task);
+    // view_.ShowId(given_id); // TODO: Implement
   }
-  return;
 }
 
 void Controller::HandleEdit(TaskId task_id) {
-  view_->SetState(StateEnum::kEdit);
-  auto& to_edit = task_manager_->Show().Find(task_id); // TODO: handle exception
-  view_->ShowTask(*to_edit);
-  auto confirmation = view_->GetConfirmation();
-  if (confirmation == ConfirmationResult::kNo) {
-    return;
-  }
-  auto task = view_->GetTask();
-  confirmation = view_->GetConfirmation();
-  if (confirmation == ConfirmationResult::kYes) {
-    task_manager_->Edit(task_id, task);
+  auto to_edit = task_manager_->Show().Find(task_id);
+  view_->SetState(step_factory_->GetEditTaskREPLState(to_edit));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes)
+  {
+    task_manager_->Edit(task_id, *task);
   }
 }
 
-void Controller::HandleComplete(TaskId task_id) {
-  view_->SetState(StateEnum::kComplete);
-  auto confirmation = view_->GetConfirmation();
-  if (confirmation == ConfirmationResult::kYes) {
+void Controller::HandleComplete(TaskId task_id) { // TODO: Make vector
+  auto to_complete = task_manager_->Show().Find(task_id);
+  view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes)
+  {
     task_manager_->Complete(task_id);
   }
 }
 
-void Controller::HandleDelete(TaskId task_id) {
-  view_->SetState(StateEnum::kDelete);
-  auto confirmation = view_->GetConfirmation();
-  if (confirmation == ConfirmationResult::kYes) {
+void Controller::HandleDelete(TaskId task_id) { // TODO: Make it vector
+  auto to_delete = task_manager_->Show().Find(task_id);
+  view_->SetState(step_factory_->GetDeleteTaskREPLState({to_delete}));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes)
+  {
     task_manager_->Delete(task_id);
   }
 }
 
-void Controller::ShowByMap(const std::map<TaskId, TaskWrapper>& map) {
-  for (auto i : map) {
-    view_->ShowTaskWithId(i.first, *i.second);
-  }
-}
-
 void Controller::HandleShow() {
-  ShowByMap(task_manager_->Show().ShowStorage());
+  view_->SetState(step_factory_->GetShowAllTasksREPLState(task_manager_->Show()));
+  view_->Run();
 }
 
 void Controller::HandleHelp() { view_->ShowHelp(); }

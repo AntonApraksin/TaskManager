@@ -101,23 +101,14 @@ class IostreamShowAllTasksREPLState final : public IShowAllTasksREPLState {
 
 class IostreamShowNTasksREPLState final : public IShowNTasksREPLState {
  public:
+  using IShowNTasksREPLState::IShowNTasksREPLState;
   StepResult Run() override;
 };
 
 class IostreamShowSortedTasksREPLState final
     : public IShowSortedTasksREPLState {
  public:
-  StepResult Run() override;
-};
-
-class IostreamUnknownCommandsREPLState final
-    : public IUnknownCommandsREPLState {
- public:
-  StepResult Run() override;
-};
-
-class IostreamShowHelpREPLState final : public IShowHelpREPLState {
- public:
+  using IShowSortedTasksREPLState::IShowSortedTasksREPLState;
   StepResult Run() override;
 };
 

@@ -10,7 +10,7 @@ StepResult IostreamDeleteTaskREPLState::Run() {
   for (const auto i: task_wrappers_)
   {
     std::cout << "  [" << to_string(i.get()->GetState()) << "] "
-             << "(" << to_string(i.get()->GetState()) << ") "
+             << "(" << to_string(i.get()->GetPriority()) << ") "
              << i.get()->GetTitle() << "\n";  // TODO: Display date, add children
   }
 

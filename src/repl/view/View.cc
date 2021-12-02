@@ -2,55 +2,19 @@
 
 #include "repl/substate/TaskContext.h"
 
+#include <iostream>
+
 View::View(const std::shared_ptr<IIOFacility> &io_facility,
-           const std::shared_ptr<IValidator> &validator,
-           const std::shared_ptr<IStateFactory> &state_factory)
+           const std::shared_ptr<IValidator> &validator)
     : io_facility_(io_facility),
-      validator_(validator),
-      state_factory_(state_factory) {}
+      validator_(validator){}
 
-void View::SetState(StateEnum se) {
-  switch (se) {
-    case StateEnum::kMain:
-      io_facility_->ChangePrompt("");
-      break;
-    case StateEnum::kAdd:
-      io_facility_->ChangePrompt("add");
-      break;
-    case StateEnum::kEdit:
-      io_facility_->ChangePrompt("edit");
-      break;
-    case StateEnum::kHelp:
-      break;
-    case StateEnum::kComplete:
-      break;
-    case StateEnum::kDelete:
-      break;
-    case StateEnum::kExit:
-      break;
-    case StateEnum::kUnknown:
-      break;
-    case StateEnum::kShow:
-      break;
-  }
+void View::SetState(const std::shared_ptr<IStep>& step) {
+  current_step_ = step;
 }
 
-Task View::GetTask() {
-  TaskContext sub_context;
-  sub_context.PushState(state_factory_->GetREPLState(SubStateEnum::kReadTitle));
-  sub_context.PushState(state_factory_->GetREPLState(SubStateEnum::kReadDate));
-  sub_context.PushState(
-      state_factory_->GetREPLState(SubStateEnum::kReadPriority));
-  sub_context.Run();
-  return sub_context.GetTaskBuilder().GetTask();
-}
-
-void View::ShowTask(Task task) { io_facility_->ShowTask(task); }
-
-void View::ShowId(TaskId task_id) { io_facility_->ShowId(task_id); }
-
-void View::ShowTaskWithId(TaskId task_id, Task task) {
-  io_facility_->ShowTaskAndId(task_id, task);
+StepResult View::Run() {
+  return current_step_->Run();
 }
 
 void View::ReportInvalidId() { io_facility_->ReportNotValidId(); }
@@ -63,19 +27,27 @@ void View::ReportMultipleId() { io_facility_->ReportMultipleId(); }
 
 void View::ReportRequiredId() { io_facility_->ReportRequiredId(); }
 
-ConfirmationResult View::GetConfirmation() {
-  auto confirm =
-      validator_->ParseConfirmation(io_facility_->AskForAConfirmation());
-  for (; !confirm;) {
-    io_facility_->ReportNotValidConfirmation();
-  }
-  return *confirm;
-}
-
 std::pair<StateEnum, std::vector<TaskId>> View::GetNextCommand() {
   return validator_->MakeRequest(io_facility_->AskForAnAction());
 }
 
-void View::ShowHelp() { io_facility_->ShowHelp(); }
+void View::ShowHelp() {
+  std::cout << "Usage:\n"
+            << "  add(a)\n"
+            << "    Add a new task.\n"
+            << "  edit(ed) id\n"
+            << "    Edit a task with given id.\n"
+            << "  delete(d) id\n"
+            << "    Delete a task with the given id.\n"
+            << "  complete(c) id\n"
+            << "    Complete a task with the given id.\n"
+            << "  show(s)\n"
+            << "    Show all uncompleted tasks.\n"
+            << "  exit(ex)\n"
+            << "    Exit.\n";
+}
 
-void View::ReportUnknownCommand() { io_facility_->ReportUnknownCommand(); }
+void View::ReportUnknownCommand() {
+  std::cout <<
+            "Unknown command. Type 'help' to display all available commands.";
+}

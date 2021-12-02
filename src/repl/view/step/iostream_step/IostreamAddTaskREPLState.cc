@@ -14,7 +14,7 @@ StepResult IostreamAddTaskREPLState::Run() {
   if (task_) {
     std::cout << "Add subtask to:\n"
               << "  [" << to_string(task_->GetState()) << "] "
-              << "(" << to_string(task_->GetState()) << ") "
+              << "(" << to_string(task_->GetPriority()) << ") "
               << task_->GetTitle() << "\n";  // TODO: Display date
   }
   TaskContext sub_context;

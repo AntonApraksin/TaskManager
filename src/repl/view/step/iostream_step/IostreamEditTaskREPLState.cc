@@ -2,6 +2,7 @@
 
 #include "repl/view/small_step/ISmallStepFactory.h"
 #include "repl/view/small_step/TaskContext.h"
+#include "repl/view/step/iostream_step/IostreamGeneralFunctional.h"
 #include "repl/view/step/iostream_step/IostreamStep.h"
 
 IostreamEditTaskREPLState::IostreamEditTaskREPLState(
@@ -13,19 +14,20 @@ IostreamEditTaskREPLState::IostreamEditTaskREPLState(
       IostreamWithValidatorREPLState(validator) {}
 
 StepResult IostreamEditTaskREPLState::Run() {
-  std::cout << "You are going to edit:\n"
-            << "  [" << to_string(task_wrapper_.get()->GetState()) << "] "
-            << "(" << to_string(task_wrapper_.get()->GetPriority()) << ") "
-            << task_wrapper_.get()->GetTitle() << "\n";  // TODO: Display date
-  // TODO: inform about children
+  std::cout << "You are going to edit:\n";
+  ShowTask(*(task_wrapper_.get()));
+  std::cout << "  and its " << task_wrapper_.get().ShowStorage().size()
+            << " children.\n";
   TaskContext sub_context;
-  sub_context.PushState(state_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
-  sub_context.PushState(state_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
+  sub_context.PushState(
+      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
+  sub_context.PushState(
+      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
   sub_context.PushState(
       state_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
   sub_context.Run();
 
-  std::cout << "Proceed to edit [Y/n]? ";
+  std::cout << "Proceed to edit? [Y/n]: ";
 
   std::string input;
   std::getline(std::cin, input);

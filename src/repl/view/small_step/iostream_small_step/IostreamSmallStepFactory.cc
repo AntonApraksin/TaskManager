@@ -25,13 +25,15 @@ std::shared_ptr<IostreamSmallStep> IostreamSmallStepFactory::GetREPLState(
 
 std::shared_ptr<IostreamReadTitleSmallStep>
 IostreamSmallStepFactory::GetIostreamReadTitleSmallStep() {
-  GENERATE_GETTER_FOR_POINTER(IostreamReadTitleSmallStep, read_title_repl_sub_state_,
+  GENERATE_GETTER_FOR_POINTER(IostreamReadTitleSmallStep,
+                              read_title_repl_sub_state_,
                               (printer_, validator_));
 }
 
 std::shared_ptr<IostreamReadDateSmallStep>
 IostreamSmallStepFactory::GetIostreamReadDateSmallStep() {
-  GENERATE_GETTER_FOR_POINTER(IostreamReadDateSmallStep, read_date_repl_sub_state_,
+  GENERATE_GETTER_FOR_POINTER(IostreamReadDateSmallStep,
+                              read_date_repl_sub_state_,
                               (printer_, validator_));
 }
 

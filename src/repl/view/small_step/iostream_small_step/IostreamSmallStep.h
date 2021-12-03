@@ -10,7 +10,7 @@ class Context;
 class IostreamSmallStep : public ISmallStep {
  public:
   IostreamSmallStep(const std::shared_ptr<IIOFacility>& printer,
-                const std::shared_ptr<IValidator>& validator)
+                    const std::shared_ptr<IValidator>& validator)
       : printer_(printer), validator_(validator) {}
 
  protected:

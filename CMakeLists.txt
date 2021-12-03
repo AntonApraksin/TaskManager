@@ -69,7 +69,7 @@ set(TaskManager_SRCS
     src/repl/view/step/IStepFactory.h
     src/repl/view/step/iostream_step/IostreamStepFactory.h
     src/repl/view/step/iostream_step/IostreamStepFactory.cc
-)
+    src/repl/view/step/iostream_step/IostreamGeneralFunctional.cc src/repl/view/step/iostream_step/IostreamGeneralFunctional.h)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

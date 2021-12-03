@@ -6,8 +6,8 @@
 #include "model/task/Task.h"
 #include "repl/io_facility/IIOFacility.h"
 #include "repl/io_facility/IValidator.h"
-#include "repl/view/small_step/ISmallStepFactory.h"
 #include "repl/view/StateEnum.h"
+#include "repl/view/small_step/ISmallStepFactory.h"
 #include "repl/view/step/IStep.h"
 
 class View {

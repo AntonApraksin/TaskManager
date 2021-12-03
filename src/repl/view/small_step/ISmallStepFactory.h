@@ -7,7 +7,8 @@
 
 class ISmallStepFactory {
  public:
-  virtual std::shared_ptr<IostreamSmallStep> GetREPLState(IostreamSmallStepEnum se) = 0;
+  virtual std::shared_ptr<IostreamSmallStep> GetREPLState(
+      IostreamSmallStepEnum se) = 0;
 
   virtual ~ISmallStepFactory() {}
 };

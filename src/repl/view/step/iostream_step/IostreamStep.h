@@ -7,28 +7,6 @@
 
 class ISmallStepFactory;
 
-inline const char* to_string(
-    Task::Priority priority) {  // TODO: find it a better place
-  switch (priority) {
-    case Task::Priority::kLow:
-      return "low";
-    case Task::Priority::kMedium:
-      return "medium";
-    case Task::Priority::kHigh:
-      return "high";
-  }
-}
-
-inline const char* to_string(
-    Task::State state) {  // TODO: find it a better place
-  switch (state) {
-    case Task::State::kCompleted:
-      return "+";
-    case Task::State::kUncompleted:
-      return "-";
-  }
-}
-
 class IostreamREPLState {
  protected:
   IostreamREPLState(const std::shared_ptr<ISmallStepFactory>& state_factory)

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "repl/view/step/iostream_step/IostreamGeneralFunctional.h"
 #include "repl/view/step/iostream_step/IostreamStep.h"
 
 IostreamCompleteTaskREPLState::IostreamCompleteTaskREPLState(
@@ -10,12 +11,11 @@ IostreamCompleteTaskREPLState::IostreamCompleteTaskREPLState(
 StepResult IostreamCompleteTaskREPLState::Run() {
   std::cout << "You are going to complete such tasks:\n";
   for (const auto i : task_wrappers_) {
-    std::cout << "  [" << to_string(i.get()->GetState()) << "] "
-              << "(" << to_string(i.get()->GetPriority()) << ") "
-              << i.get()->GetTitle()
-              << "\n";  // TODO: Display date, add children
+    ShowTask(*(i.get()));
+    std::cout << "  and its " << i.get().ShowStorage().size() << " children.\n";
   }
 
+  std::cout << "Proceed to complete? [Y/n]: ";
   std::string input;
   std::getline(std::cin, input);
   auto confirm = validator_->ParseConfirmation(input);

@@ -3,9 +3,9 @@
 
 #include <deque>
 
+#include "ISmallStep.h"
 #include "model/id/TaskId.h"
 #include "repl/TaskBuilder.h"
-#include "ISmallStep.h"
 
 class TaskContext {
  public:

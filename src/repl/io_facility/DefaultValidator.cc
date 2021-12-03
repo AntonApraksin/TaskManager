@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
+#include <regex>  // TODO: Avoid regex
 #include <sstream>
 #include <vector>
+
+#include "repl/io_facility/DateFormat.h"
 
 void lower_string(std::string &str) {
   std::transform(str.cbegin(), str.cend(), str.begin(),
@@ -68,12 +71,13 @@ std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
 }
 
 std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
-  // TODO make if return nullopt. get_time is stupid
-  std::tm tm = {};
-  std::string pattern(
-      "%H:%M %d/%m/%Y");  // TODO: make single format across all program
+  std::tm tm{};
+  std::regex pattern_regex(kDateRegex);
+  if (!std::regex_match(str, pattern_regex)) {
+    return std::nullopt;
+  }
   std::istringstream ss(str);
-  ss >> std::get_time(&tm, pattern.c_str());
+  ss >> std::get_time(&tm, kDatePattern);
   if (ss.fail()) {
     return std::nullopt;
   }

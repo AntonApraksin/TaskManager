@@ -2,29 +2,16 @@
 
 #include <iostream>
 
-inline const char* to_string(Task::Priority priority) {
-  switch (priority) {
-    case Task::Priority::kLow:
-      return "low";
-    case Task::Priority::kMedium:
-      return "medium";
-    case Task::Priority::kHigh:
-      return "high";
-  }
-}
-
-inline const char* to_string(Task::State state) {
-  switch (state) {
-    case Task::State::kCompleted:
-      return "+";
-    case Task::State::kUncompleted:
-      return "-";
-  }
-}
+#include "repl/io_facility/DateFormat.h"
 
 std::string DefaultIOFacility::AskForATitle() { return PrintAndGet("title"); }
 
-std::string DefaultIOFacility::AskForADate() { return PrintAndGet("date"); }
+std::string DefaultIOFacility::AskForADate() {
+  std::cout << prompt_ << "[date(" << kDatePattern << ")]: ";
+  std::string result;
+  std::getline(std::cin, result);
+  return result;
+}
 
 std::string DefaultIOFacility::AskForAPriority() {
   return PrintAndGet("priority");

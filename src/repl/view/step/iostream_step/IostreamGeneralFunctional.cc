@@ -1,6 +1,9 @@
 #include "IostreamGeneralFunctional.h"
 
+#include <iomanip>
 #include <iostream>
+
+#include "repl/io_facility/DateFormat.h"
 
 const char* to_string(Task::Priority priority) {
   switch (priority) {
@@ -23,27 +26,28 @@ const char* to_string(Task::State state) {
 }
 
 void ShowTask(const Task& task) {
-  std::cout << ' ' << " [" << to_string(task.GetState()) << "] "
-            << "(" << to_string(task.GetPriority()) << ") " << task.GetTitle()
-            << "\n";  // TODO: Display date
+  auto time = std::chrono::system_clock::to_time_t(task.GetDueDate());
+  std::cout << " [" << to_string(task.GetState()) << "] "
+            << "(" << to_string(task.GetPriority()) << ") "
+            << "{" << std::put_time(std::localtime(&time), kDatePattern) << "} "
+            << "'" << task.GetTitle() << "'\n";
 }
 
 void ShowTask(const Task& task, int nest) {
   std::string indent(nest, ' ');
-  std::cout << indent << "[" << to_string(task.GetState()) << "] "
-            << "(" << to_string(task.GetPriority()) << ") " << task.GetTitle()
-            << "\n";  // TODO: Display date
+  std::cout << indent;
+  ShowTask(task);
 }
 
 void ShowTaskWithId(const Task& task, TaskId task_id) {
   std::cout << "└─ " << task_id.GetId() << ' ';
-  ShowTask(task, 0);
+  ShowTask(task);
 }
 
 void ShowTaskWithId(const Task& task, TaskId task_id, int nest) {
   std::string indent(nest, ' ');
   std::cout << indent << "└─ " << task_id.GetId() << ' ';
-  ShowTask(task, 0);
+  ShowTask(task);
 }
 
 void ShowNestedMap(const TaskWrapper& task_wrapper, int nest) {

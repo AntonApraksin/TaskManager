@@ -9,12 +9,12 @@
 
 class TaskWrapper : public _TaskStorageImpl<TaskWrapper> {
  public:
-  TaskWrapper(Task task);
+  explicit TaskWrapper(Task task);
 
   const Task& GetTask() const;
   const Task& operator*() const;
 
-  const Task* operator->() const { return &task_; }
+  const Task* operator->() const;
 
   void Complete();
   void SetTask(Task task);

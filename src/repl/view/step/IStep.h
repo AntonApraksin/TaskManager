@@ -26,7 +26,7 @@ class IEditTaskREPLState : public IStep {
  public:
   using TaskWrapperRef = std::reference_wrapper<const TaskWrapper>;
 
-  IEditTaskREPLState(TaskWrapperRef task_wrapper)
+  explicit IEditTaskREPLState(TaskWrapperRef task_wrapper)
       : task_wrapper_(task_wrapper) {}
 
   void SetTaskWrapper(TaskWrapperRef task_wrapper) {
@@ -41,7 +41,7 @@ class IDeleteTaskREPLState : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  IDeleteTaskREPLState(TaskWrappers task_wrappers)
+  explicit IDeleteTaskREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -56,7 +56,7 @@ class ICompleteTaskREPLState : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  ICompleteTaskREPLState(TaskWrappers task_wrappers)
+  explicit ICompleteTaskREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -71,7 +71,7 @@ class IShowAllTasksREPLState : public IStep {
  public:
   using TaskStorageRef = std::reference_wrapper<const TaskStorage>;
 
-  IShowAllTasksREPLState(TaskStorageRef task_storage)
+  explicit IShowAllTasksREPLState(TaskStorageRef task_storage)
       : task_storage_(task_storage) {}
 
   void SetTaskStorage(TaskStorageRef task_storage) {
@@ -86,7 +86,7 @@ class IShowNTasksREPLState : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  IShowNTasksREPLState(TaskWrappers task_wrappers)
+  explicit IShowNTasksREPLState(TaskWrappers task_wrappers)
       : task_wrappers_(task_wrappers) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -101,7 +101,7 @@ class IShowSortedTasksREPLState : public IStep {
  public:
   using Tasks = std::vector<std::pair<TaskId, Task>>;
 
-  IShowSortedTasksREPLState(Tasks tasks) : tasks_(tasks) {}
+  explicit IShowSortedTasksREPLState(Tasks tasks) : tasks_(tasks) {}
 
   void SetTasks(Tasks tasks) { tasks_ = tasks; }
 

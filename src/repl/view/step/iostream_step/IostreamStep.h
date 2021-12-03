@@ -9,7 +9,8 @@ class ISmallStepFactory;
 
 class IostreamREPLState {
  protected:
-  IostreamREPLState(const std::shared_ptr<ISmallStepFactory>& state_factory)
+  explicit IostreamREPLState(
+      const std::shared_ptr<ISmallStepFactory>& state_factory)
       : state_factory_(state_factory) {}
   ~IostreamREPLState() {}
 
@@ -18,7 +19,8 @@ class IostreamREPLState {
 
 class IostreamWithValidatorREPLState {
  protected:
-  IostreamWithValidatorREPLState(const std::shared_ptr<IValidator>& validator)
+  explicit IostreamWithValidatorREPLState(
+      const std::shared_ptr<IValidator>& validator)
       : validator_(validator) {}
   ~IostreamWithValidatorREPLState() {}
 

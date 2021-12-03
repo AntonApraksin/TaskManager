@@ -30,7 +30,6 @@ set(TaskManager_SRCS
     src/model/task_manager/TaskManager.h
     src/model/task_wrapper/TaskWrapper.cc
     src/model/task_wrapper/TaskWrapper.h
-    src/model/task_wrapper/TaskStorage.inl
     src/model/task_wrapper/TaskStorage.h
     src/repl/io_facility/IIOFacility.h
     src/repl/io_facility/DefaultIOFacility.cc

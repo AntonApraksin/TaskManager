@@ -12,7 +12,7 @@
 
 class View {
  public:
-  View(const std::shared_ptr<IValidator>& validator);
+  explicit View(const std::shared_ptr<IValidator>& validator);
 
   void SetState(const std::shared_ptr<IStep>&);
   StepResult Run();

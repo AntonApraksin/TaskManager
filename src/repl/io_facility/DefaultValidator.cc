@@ -55,9 +55,15 @@ std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
   std::string input(str);
   lower_string(input);
 
-  if (input == "high") return Task::Priority::kHigh;
-  if (input == "medium") return Task::Priority::kMedium;
-  if (input == "low") return Task::Priority::kLow;
+  if (input == "high") {
+    return Task::Priority::kHigh;
+  }
+  if (input == "medium") {
+    return Task::Priority::kMedium;
+  }
+  if (input == "low") {
+    return Task::Priority::kLow;
+  }
   return std::nullopt;
 }
 

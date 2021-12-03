@@ -15,6 +15,10 @@ StepResult View::Run() { return current_step_->Run(); }
 
 void View::ReportInvalidId() { std::cout << "Id should be numeric value.\n"; }
 
+void View::ShowId(TaskId task_id) {
+  std::cout << "Id: " << task_id.GetId() << '\n';
+}
+
 void View::ReportNotPresentId(TaskId task_id) {
   std::cout << task_id.GetId() << " not present in store.\n";
 }

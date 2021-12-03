@@ -16,6 +16,7 @@ class Controller {
  private:
   void PerformAction(StateEnum, const std::vector<TaskId>& ids);
   void HandleAdd();
+  void HandleAdd(TaskId);
   void HandleEdit(TaskId);
   void HandleComplete(TaskId);
   void HandleDelete(TaskId);

@@ -14,6 +14,7 @@ class TaskManager final {
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
   TaskId Add(Task task);
+  TaskId Add(TaskId task_id, Task task);
 
   TaskManager& Edit(TaskId id, Task task);
   TaskManager& Complete(TaskId id);

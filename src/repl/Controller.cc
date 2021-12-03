@@ -22,8 +22,9 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
         HandleAdd();
       } else if (ids.size() > 1) {
         view_->ReportMultipleId();
+      } else {
+        HandleAdd(ids.at(0));
       }
-      // HandleAdd(ids.at(0)); // TODO
       break;
 
     case StateEnum::kEdit:
@@ -73,12 +74,22 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
   }
 }
 
+void Controller::HandleAdd(TaskId task_id) {
+  auto add_to = *task_manager_->Show().Find(task_id);
+  view_->SetState(step_factory_->GetAddTaskREPLState(add_to));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes) {
+    auto given_id = task_manager_->Add(task_id, *task);
+    view_->ShowId(given_id);
+  }
+}
+
 void Controller::HandleAdd() {
   view_->SetState(step_factory_->GetAddTaskREPLState());
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    task_manager_->Add(*task);
-    // view_.ShowId(given_id); // TODO: Implement
+    auto given_id = task_manager_->Add(*task);
+    view_->ShowId(given_id);  // TODO: Implement
   }
 }
 

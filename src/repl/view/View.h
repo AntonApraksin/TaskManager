@@ -24,6 +24,8 @@ class View {
   void ReportMultipleId();
   void ReportRequiredId();
 
+  void ShowId(TaskId);
+
   std::pair<StateEnum, std::vector<TaskId>> GetNextCommand();
 
  private:

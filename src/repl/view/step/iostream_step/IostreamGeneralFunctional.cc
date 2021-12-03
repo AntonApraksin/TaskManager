@@ -22,6 +22,12 @@ const char* to_string(Task::State state) {
   }
 }
 
+void ShowTask(const Task& task) {
+  std::cout << ' ' << " [" << to_string(task.GetState()) << "] "
+            << "(" << to_string(task.GetPriority()) << ") " << task.GetTitle()
+            << "\n";  // TODO: Display date
+}
+
 void ShowTask(const Task& task, int nest) {
   std::string indent(nest, ' ');
   std::cout << indent << "[" << to_string(task.GetState()) << "] "
@@ -29,9 +35,14 @@ void ShowTask(const Task& task, int nest) {
             << "\n";  // TODO: Display date
 }
 
+void ShowTaskWithId(const Task& task, TaskId task_id) {
+  std::cout << "└─ " << task_id.GetId() << ' ';
+  ShowTask(task, 0);
+}
+
 void ShowTaskWithId(const Task& task, TaskId task_id, int nest) {
   std::string indent(nest, ' ');
-  std::cout << indent << task_id.GetId() << ' ';
+  std::cout << indent << "└─ " << task_id.GetId() << ' ';
   ShowTask(task, 0);
 }
 

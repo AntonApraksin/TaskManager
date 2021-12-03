@@ -15,6 +15,7 @@ StepResult IostreamAddTaskREPLState::Run() {
   if (task_) {
     std::cout << "Add subtask to:\n";
     ShowTask(*task_);
+    task_.reset();
   }
 
   TaskContext sub_context;

@@ -16,8 +16,6 @@ std::shared_ptr<IREPLSubState> DefaultStateFactory::GetREPLState(
   switch (sse) {
     case SubStateEnum::kReadTitle:
       return GetReadTitleREPLSubState();
-    case SubStateEnum::kReadConfirmation:
-      return GetReadConfirmationREPLSubState();
     case SubStateEnum::kReadDate:
       return GetReadDateREPLSubState();
     case SubStateEnum::kReadPriority:
@@ -37,12 +35,6 @@ DefaultStateFactory::GetReadDateREPLSubState() {
                               (printer_, validator_));
 }
 
-std::shared_ptr<ReadConfirmationREPLSubState>
-DefaultStateFactory::GetReadConfirmationREPLSubState() {
-  GENERATE_GETTER_FOR_POINTER(ReadConfirmationREPLSubState,
-                              read_confirmation_repl_sub_state_,
-                              (printer_, validator_));
-}
 std::shared_ptr<ReadPriorityREPLSubState>
 DefaultStateFactory::GetReadPriorityREPLSubState() {
   GENERATE_GETTER_FOR_POINTER(ReadPriorityREPLSubState,

@@ -13,15 +13,11 @@ class DefaultStateFactory : public IStateFactory {
  private:
   std::shared_ptr<ReadTitleREPLSubState> GetReadTitleREPLSubState();
   std::shared_ptr<ReadDateREPLSubState> GetReadDateREPLSubState();
-  std::shared_ptr<ReadConfirmationREPLSubState>
-  GetReadConfirmationREPLSubState();
   std::shared_ptr<ReadPriorityREPLSubState> GetReadPriorityREPLSubState();
 
  private:
   std::shared_ptr<ReadTitleREPLSubState> read_title_repl_sub_state_;
   std::shared_ptr<ReadDateREPLSubState> read_date_repl_sub_state_;
-  std::shared_ptr<ReadConfirmationREPLSubState>
-      read_confirmation_repl_sub_state_;
   std::shared_ptr<ReadPriorityREPLSubState> read_priority_repl_sub_state_;
 
   std::shared_ptr<IIOFacility> printer_;

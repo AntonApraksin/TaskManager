@@ -1,12 +1,11 @@
 #include "Controller.h"
 
-Controller::Controller(const std::shared_ptr<IIOFacility>& io_facility,
-                       const std::shared_ptr<IValidator>& validator,
+Controller::Controller(const std::shared_ptr<IValidator>& validator,
                        const std::shared_ptr<TaskManager>& task_manager,
                        std::unique_ptr<IStepFactory> step_factory)
     : task_manager_(task_manager),
-      view_(std::make_unique<View>(io_facility, validator)),
-      step_factory_(std::move(step_factory)){}
+      view_(std::make_unique<View>(validator)),
+      step_factory_(std::move(step_factory)) {}
 
 void Controller::Run() {
   auto command = view_->GetNextCommand();
@@ -77,8 +76,7 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
 void Controller::HandleAdd() {
   view_->SetState(step_factory_->GetAddTaskREPLState());
   auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes)
-  {
+  if (*status == ConfirmationResult::kYes) {
     task_manager_->Add(*task);
     // view_.ShowId(given_id); // TODO: Implement
   }
@@ -88,34 +86,32 @@ void Controller::HandleEdit(TaskId task_id) {
   auto to_edit = task_manager_->Show().Find(task_id);
   view_->SetState(step_factory_->GetEditTaskREPLState(to_edit));
   auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes)
-  {
+  if (*status == ConfirmationResult::kYes) {
     task_manager_->Edit(task_id, *task);
   }
 }
 
-void Controller::HandleComplete(TaskId task_id) { // TODO: Make vector
+void Controller::HandleComplete(TaskId task_id) {  // TODO: Make vector
   auto to_complete = task_manager_->Show().Find(task_id);
   view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
   auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes)
-  {
+  if (*status == ConfirmationResult::kYes) {
     task_manager_->Complete(task_id);
   }
 }
 
-void Controller::HandleDelete(TaskId task_id) { // TODO: Make it vector
+void Controller::HandleDelete(TaskId task_id) {  // TODO: Make it vector
   auto to_delete = task_manager_->Show().Find(task_id);
   view_->SetState(step_factory_->GetDeleteTaskREPLState({to_delete}));
   auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes)
-  {
+  if (*status == ConfirmationResult::kYes) {
     task_manager_->Delete(task_id);
   }
 }
 
 void Controller::HandleShow() {
-  view_->SetState(step_factory_->GetShowAllTasksREPLState(task_manager_->Show()));
+  view_->SetState(
+      step_factory_->GetShowAllTasksREPLState(task_manager_->Show()));
   view_->Run();
 }
 

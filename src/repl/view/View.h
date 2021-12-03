@@ -12,8 +12,7 @@
 
 class View {
  public:
-  View(const std::shared_ptr<IIOFacility>& io_facility,
-       const std::shared_ptr<IValidator>& validator);
+  View(const std::shared_ptr<IValidator>& validator);
 
   void SetState(const std::shared_ptr<IStep>&);
   StepResult Run();
@@ -28,7 +27,6 @@ class View {
   std::pair<StateEnum, std::vector<TaskId>> GetNextCommand();
 
  private:
-  std::shared_ptr<IIOFacility> io_facility_;
   std::shared_ptr<IValidator> validator_;
 
   std::shared_ptr<IStep> current_step_;

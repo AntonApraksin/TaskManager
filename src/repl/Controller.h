@@ -2,13 +2,12 @@
 #define TASKMANAGER_SRC_REPL_CONTROLLER_H_
 
 #include "model/task_manager/TaskManager.h"
-#include "repl/view/step/IStepFactory.h"
 #include "repl/view/View.h"
+#include "repl/view/step/IStepFactory.h"
 
 class Controller {
  public:
-  Controller(const std::shared_ptr<IIOFacility>&,
-             const std::shared_ptr<IValidator>&,
+  Controller(const std::shared_ptr<IValidator>&,
              const std::shared_ptr<TaskManager>&,
              std::unique_ptr<IStepFactory>);
 

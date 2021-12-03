@@ -45,7 +45,6 @@ set(TaskManager_SRCS
         src/repl/substate/repl/ReadTitleREPLSubState.cc
         src/repl/substate/repl/ReadDateREPLSubState.cc
         src/repl/substate/repl/ReadPriorityREPLSubState.cc
-        src/repl/substate/repl/ReadConfirmationREPLSubState.cc
         src/repl/TaskBuilder.cc
         src/repl/TaskBuilder.h
         src/repl/view/StateEnum.h

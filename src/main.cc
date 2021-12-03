@@ -12,8 +12,9 @@ int main() {
   auto task_manager = std::make_shared<TaskManager>(std::move(id_producer));
   auto state_factory =
       std::make_shared<DefaultStateFactory>(printer, validator);
-  auto step_factory = std::make_unique<IostreamStepFactory>(state_factory, validator);
-  Controller ctrl{printer, validator, task_manager, std::move(step_factory)};
+  auto step_factory =
+      std::make_unique<IostreamStepFactory>(state_factory, validator);
+  Controller ctrl{validator, task_manager, std::move(step_factory)};
   ctrl.Run();
 
   return 0;

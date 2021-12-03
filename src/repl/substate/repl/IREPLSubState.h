@@ -36,10 +36,4 @@ class ReadPriorityREPLSubState : public IREPLSubState {
   void Execute(TaskContext&) override;
 };
 
-class ReadConfirmationREPLSubState : public IREPLSubState {
- public:
-  using IREPLSubState::IREPLSubState;
-  void Execute(TaskContext&) override;
-};
-
 #endif  // TASKMANAGER_SRC_REPL_STATE_IREPLSUBSTATE_H_

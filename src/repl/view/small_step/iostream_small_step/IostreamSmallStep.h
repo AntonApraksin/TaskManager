@@ -3,13 +3,13 @@
 
 #include "repl/io_facility/IIOFacility.h"
 #include "repl/io_facility/IValidator.h"
-#include "repl/substate/ISubState.h"
+#include "repl/view/small_step/ISmallStep.h"
 
 class Context;
 
-class IREPLSubState : public ISubState {
+class IostreamSmallStep : public ISmallStep {
  public:
-  IREPLSubState(const std::shared_ptr<IIOFacility>& printer,
+  IostreamSmallStep(const std::shared_ptr<IIOFacility>& printer,
                 const std::shared_ptr<IValidator>& validator)
       : printer_(printer), validator_(validator) {}
 
@@ -18,21 +18,21 @@ class IREPLSubState : public ISubState {
   std::shared_ptr<IValidator> validator_;
 };
 
-class ReadTitleREPLSubState : public IREPLSubState {
+class IostreamReadTitleSmallStep : public IostreamSmallStep {
  public:
-  using IREPLSubState::IREPLSubState;
+  using IostreamSmallStep::IostreamSmallStep;
   void Execute(TaskContext&) override;
 };
 
-class ReadDateREPLSubState : public IREPLSubState {
+class IostreamReadDateSmallStep : public IostreamSmallStep {
  public:
-  using IREPLSubState::IREPLSubState;
+  using IostreamSmallStep::IostreamSmallStep;
   void Execute(TaskContext&) override;
 };
 
-class ReadPriorityREPLSubState : public IREPLSubState {
+class IostreamReadPrioritySmallStep : public IostreamSmallStep {
  public:
-  using IREPLSubState::IREPLSubState;
+  using IostreamSmallStep::IostreamSmallStep;
   void Execute(TaskContext&) override;
 };
 

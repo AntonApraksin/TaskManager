@@ -1,6 +1,6 @@
 #include "TaskContext.h"
 
-void TaskContext::PushState(const std::shared_ptr<ISubState>& state) {
+void TaskContext::PushState(const std::shared_ptr<ISmallStep>& state) {
   states_.push_back(state);
 }
 

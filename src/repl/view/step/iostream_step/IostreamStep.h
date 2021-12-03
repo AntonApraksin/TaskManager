@@ -5,7 +5,7 @@
 
 // TODO: Give better names
 
-class IStateFactory;
+class ISmallStepFactory;
 
 inline const char* to_string(
     Task::Priority priority) {  // TODO: find it a better place
@@ -31,11 +31,11 @@ inline const char* to_string(
 
 class IostreamREPLState {
  protected:
-  IostreamREPLState(const std::shared_ptr<IStateFactory>& state_factory)
+  IostreamREPLState(const std::shared_ptr<ISmallStepFactory>& state_factory)
       : state_factory_(state_factory) {}
   ~IostreamREPLState() {}
 
-  std::shared_ptr<IStateFactory> state_factory_;
+  std::shared_ptr<ISmallStepFactory> state_factory_;
 };
 
 class IostreamWithValidatorREPLState {
@@ -51,7 +51,7 @@ class IostreamAddTaskREPLState final : public IAddTaskREPLState,
                                        public IostreamREPLState,
                                        public IostreamWithValidatorREPLState {
  public:
-  IostreamAddTaskREPLState(const std::shared_ptr<IStateFactory>&,
+  IostreamAddTaskREPLState(const std::shared_ptr<ISmallStepFactory>&,
                            const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
@@ -64,7 +64,7 @@ class IostreamEditTaskREPLState final : public IEditTaskREPLState,
   using IEditTaskREPLState::TaskWrapperRef;
 
   IostreamEditTaskREPLState(TaskWrapperRef,
-                            const std::shared_ptr<IStateFactory>&,
+                            const std::shared_ptr<ISmallStepFactory>&,
                             const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;

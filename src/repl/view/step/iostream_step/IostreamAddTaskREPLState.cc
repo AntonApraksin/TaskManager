@@ -1,11 +1,11 @@
 #include <iostream>
 
-#include "repl/state_factory/IStateFactory.h"
-#include "repl/substate/TaskContext.h"
+#include "repl/view/small_step/ISmallStepFactory.h"
+#include "repl/view/small_step/TaskContext.h"
 #include "repl/view/step/iostream_step/IostreamStep.h"
 
 IostreamAddTaskREPLState::IostreamAddTaskREPLState(
-    const std::shared_ptr<IStateFactory>& state_factory,
+    const std::shared_ptr<ISmallStepFactory>& state_factory,
     const std::shared_ptr<IValidator>& validator)
     : IostreamREPLState(state_factory),
       IostreamWithValidatorREPLState(validator) {}
@@ -18,10 +18,10 @@ StepResult IostreamAddTaskREPLState::Run() {
               << task_->GetTitle() << "\n";  // TODO: Display date
   }
   TaskContext sub_context;
-  sub_context.PushState(state_factory_->GetREPLState(SubStateEnum::kReadTitle));
-  sub_context.PushState(state_factory_->GetREPLState(SubStateEnum::kReadDate));
+  sub_context.PushState(state_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
+  sub_context.PushState(state_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
   sub_context.PushState(
-      state_factory_->GetREPLState(SubStateEnum::kReadPriority));
+      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
   sub_context.Run();
 
   std::cout << "Proceed to add [Y/n]? ";

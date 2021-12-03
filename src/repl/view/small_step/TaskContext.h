@@ -5,11 +5,11 @@
 
 #include "model/id/TaskId.h"
 #include "repl/TaskBuilder.h"
-#include "repl/substate/ISubState.h"
+#include "ISmallStep.h"
 
 class TaskContext {
  public:
-  void PushState(const std::shared_ptr<ISubState>&);
+  void PushState(const std::shared_ptr<ISmallStep>&);
   void PopState();
   void ClearStates();
 
@@ -18,7 +18,7 @@ class TaskContext {
   void Run();
 
  private:
-  std::deque<std::shared_ptr<ISubState>> states_;
+  std::deque<std::shared_ptr<ISmallStep>> states_;
 
   TaskBuilder task_builder_;
 };

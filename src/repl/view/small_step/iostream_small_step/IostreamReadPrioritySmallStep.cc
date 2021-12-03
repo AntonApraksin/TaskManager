@@ -1,7 +1,7 @@
-#include "IREPLSubState.h"
-#include "repl/substate/TaskContext.h"
+#include "IostreamSmallStep.h"
+#include "repl/view/small_step/TaskContext.h"
 
-void ReadPriorityREPLSubState::Execute(TaskContext &ctx) {
+void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
   auto priority = validator_->ParseTaskPriority(printer_->AskForAPriority());
   for (; !priority;) {
     printer_->ReportNotValidPriority();

@@ -67,6 +67,6 @@ std::shared_ptr<IStep> IostreamStepFactory::GetShowSortedTasksREPLState(
   return iostream_show_sorted_tasks_repl_state_;
 }
 IostreamStepFactory::IostreamStepFactory(
-    const std::shared_ptr<IStateFactory> &state_factory,
+    const std::shared_ptr<ISmallStepFactory> &state_factory,
     const std::shared_ptr<IValidator> &validator)
     : state_factory_(state_factory), validator_(validator) {}

@@ -1,7 +1,7 @@
-#include "IREPLSubState.h"
-#include "repl/substate/TaskContext.h"
+#include "IostreamSmallStep.h"
+#include "repl/view/small_step/TaskContext.h"
 
-void ReadTitleREPLSubState::Execute(TaskContext &ctx) {
+void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
   auto title = validator_->ValidateTitle(printer_->AskForATitle());
   for (; !title;) {
     printer_->ReportNotValidTitle();

@@ -3,9 +3,9 @@
 
 class TaskContext;
 
-class ISubState {
+class ISmallStep {
  public:
-  virtual ~ISubState() {}
+  virtual ~ISmallStep() {}
   virtual void Execute(TaskContext& ctx) = 0;
 };
 

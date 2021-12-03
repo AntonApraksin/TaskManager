@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "repl/substate/TaskContext.h"
+#include "repl/view/small_step/TaskContext.h"
 
 View::View(const std::shared_ptr<IValidator>& validator)
     : validator_(validator) {}

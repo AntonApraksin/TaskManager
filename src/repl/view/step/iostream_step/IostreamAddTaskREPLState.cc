@@ -2,6 +2,7 @@
 
 #include "repl/view/small_step/ISmallStepFactory.h"
 #include "repl/view/small_step/TaskContext.h"
+#include "repl/view/small_step/task_initializer_small_step/TaskInitializerSmallStep.h"
 #include "repl/view/step/iostream_step/IostreamGeneralFunctional.h"
 #include "repl/view/step/iostream_step/IostreamStep.h"
 
@@ -12,13 +13,26 @@ IostreamAddTaskREPLState::IostreamAddTaskREPLState(
       IostreamWithValidatorREPLState(validator) {}
 
 StepResult IostreamAddTaskREPLState::Run() {
+  TaskContext sub_context;
   if (task_) {
     std::cout << "Add subtask to:\n";
     ShowTask(*task_);
+    sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
+        TaskBuilder{/*.title = */ std::nullopt,
+                    /*.date_ =*/task_->GetDueDate(),
+                    /*.priority =*/task_->GetPriority(),
+                    /*.state =*/task_->GetState()}));
     task_.reset();
+  } else {
+    sub_context.PushState(
+        std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
+            /*.title =*/std::nullopt,
+            /*.date_ =*/std::chrono::system_clock::now(),  // TODO: other
+                                                           // default value
+            /*.priority =*/Task::Priority::kLow,
+            /*.state =*/Task::State::kUncompleted}));
   }
 
-  TaskContext sub_context;
   sub_context.PushState(
       state_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
   sub_context.PushState(

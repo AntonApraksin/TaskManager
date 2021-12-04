@@ -1,12 +1,29 @@
+#include <iostream>
+
 #include "IostreamSmallStep.h"
 #include "repl/view/small_step/TaskContext.h"
+#include "repl/view/small_step/iostream_small_step/IostreamSmallStepGeneralFunctional.h"
+
+// TODO: Prettify implementation
 
 void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
-  auto title = validator_->ValidateTitle(printer_->AskForATitle());
-  for (; !title;) {
-    printer_->ReportNotValidTitle();
-    title = validator_->ValidateTitle(printer_->AskForATitle());
+  if (ctx.GetTaskBuilder().title_) {
+    std::cout << "Leave empty for '" << *ctx.GetTaskBuilder().title_ << "'\n";
+    auto title = validator_->ValidateTitle(PrintAndGet("title"));
+    if (title) {
+      ctx.GetTaskBuilder().title_ = std::move(title);
+      ctx.PopState();
+      return;
+    } else {
+      ctx.PopState();
+      return;
+    }
   }
-  ctx.GetTaskBuilder().SetTitle(*title);
+  auto title = validator_->ValidateTitle(PrintAndGet("title"));
+  for (; !title;) {
+    std::cout << "Title must not be empty.\n";
+    title = validator_->ValidateTitle(PrintAndGet("title"));
+  }
+  ctx.GetTaskBuilder().title_ = std::move(title);
   ctx.PopState();
 }

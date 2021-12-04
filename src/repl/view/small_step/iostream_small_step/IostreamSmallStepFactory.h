@@ -5,8 +5,8 @@
 
 class IostreamSmallStepFactory : public ISmallStepFactory {
  public:
-  IostreamSmallStepFactory(const std::shared_ptr<IIOFacility>& printer,
-                           const std::shared_ptr<IValidator>& validator);
+  explicit IostreamSmallStepFactory(
+      const std::shared_ptr<IValidator>& validator);
 
   std::shared_ptr<IostreamSmallStep> GetREPLState(
       IostreamSmallStepEnum sse) override;
@@ -22,7 +22,6 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
   std::shared_ptr<IostreamReadDateSmallStep> read_date_repl_sub_state_;
   std::shared_ptr<IostreamReadPrioritySmallStep> read_priority_repl_sub_state_;
 
-  std::shared_ptr<IIOFacility> printer_;
   std::shared_ptr<IValidator> validator_;
 };
 

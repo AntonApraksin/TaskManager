@@ -10,8 +10,8 @@ void ShowTask(const Task&, int);
 void ShowTaskWithId(const Task&, TaskId);
 void ShowTaskWithId(const Task&, TaskId, int);
 
-inline const char* to_string(Task::Priority priority);
-inline const char* to_string(Task::State state);
+const char* to_string(Task::Priority priority);
+const char* to_string(Task::State state);
 
 void ShowNestedMap(const TaskWrapper& task_wrapper, int nest);
 

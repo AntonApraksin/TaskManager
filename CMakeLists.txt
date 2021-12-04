@@ -31,9 +31,6 @@ set(TaskManager_SRCS
     src/model/task_wrapper/TaskWrapper.cc
     src/model/task_wrapper/TaskWrapper.h
     src/model/task_wrapper/TaskStorage.h
-    src/repl/io_facility/IIOFacility.h
-    src/repl/io_facility/DefaultIOFacility.cc
-    src/repl/io_facility/DefaultIOFacility.h
     src/repl/view/small_step/ISmallStepFactory.h
     src/repl/io_facility/IValidator.h
     src/repl/io_facility/DefaultValidator.cc
@@ -68,7 +65,7 @@ set(TaskManager_SRCS
     src/repl/view/step/IStepFactory.h
     src/repl/view/step/iostream_step/IostreamStepFactory.h
     src/repl/view/step/iostream_step/IostreamStepFactory.cc
-    src/repl/view/step/iostream_step/IostreamGeneralFunctional.cc src/repl/view/step/iostream_step/IostreamGeneralFunctional.h src/repl/io_facility/DateFormat.h)
+    src/repl/view/step/iostream_step/IostreamGeneralFunctional.cc src/repl/view/step/iostream_step/IostreamGeneralFunctional.h src/repl/io_facility/DateFormat.h src/repl/view/small_step/task_initializer_small_step/DefaultTaskInitializerSmallStep.cc src/repl/view/small_step/task_initializer_small_step/TaskInitializerSmallStep.h src/repl/view/small_step/iostream_small_step/IostreamSmallStepGeneralFunctional.cc src/repl/view/small_step/iostream_small_step/IostreamSmallStepGeneralFunctional.h)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

@@ -3,20 +3,13 @@
 
 #include "model/task/Task.h"
 
-class TaskBuilder {
- public:
-  void SetTitle(const std::string& title);
-  void SetPriority(Task::Priority priority);
-  void SetDate(Date_t date);
-  void SetState(Task::State state);
-
+struct TaskBuilder {
   Task GetTask();
 
- private:
-  std::string title_;
-  Task::Priority priority_;
-  Date_t date_;
-  Task::State state_ = Task::State::kUncompleted;
+  std::optional<std::string> title_;
+  std::optional<Date_t> date_;
+  std::optional<Task::Priority> priority_;
+  std::optional<Task::State> state_;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_TASKBUILDER_H_

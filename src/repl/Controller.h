@@ -3,7 +3,7 @@
 
 #include "model/task_manager/TaskManager.h"
 #include "repl/view/View.h"
-#include "repl/view/step/IStepFactory.h"
+#include "repl/view/steps/IStepFactory.h"
 
 class Controller {
  public:

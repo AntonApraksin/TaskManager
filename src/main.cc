@@ -1,8 +1,8 @@
 #include "model/task_manager/TaskManager.h"
 #include "repl/Controller.h"
-#include "repl/io_facility/DefaultValidator.h"
-#include "repl/view/small_step/iostream_small_step/IostreamSmallStepFactory.h"
-#include "repl/view/step/iostream_step/IostreamStepFactory.h"
+#include "repl/validator/DefaultValidator.h"
+#include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
+#include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 
 int main() {
   auto validator = std::make_shared<DefaultValidator>();

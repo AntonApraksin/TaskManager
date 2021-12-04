@@ -4,10 +4,10 @@
 #include <vector>
 
 #include "model/task/Task.h"
-#include "repl/io_facility/IValidator.h"
+#include "repl/validator/IValidator.h"
 #include "repl/view/StateEnum.h"
-#include "repl/view/small_step/ISmallStepFactory.h"
-#include "repl/view/step/IStep.h"
+#include "repl/view/steps/ISmallStepFactory.h"
+#include "repl/view/steps/IStep.h"
 
 class View {
  public:

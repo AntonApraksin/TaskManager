@@ -21,7 +21,6 @@ set(TaskManager_SRCS
     src/model/id/TaskId.cc
     src/model/id/TaskIdProducer.cc
     src/model/task/Task.cc
-    src/model/task/TaskDate.cc
     src/model/task_manager/TaskManager.cc
     src/model/id/TaskId.h
     src/model/id/TaskIdProducer.h
@@ -31,41 +30,47 @@ set(TaskManager_SRCS
     src/model/task_wrapper/TaskWrapper.cc
     src/model/task_wrapper/TaskWrapper.h
     src/model/task_wrapper/TaskStorage.h
-    src/repl/view/small_step/ISmallStepFactory.h
-    src/repl/io_facility/IValidator.h
-    src/repl/io_facility/DefaultValidator.cc
-    src/repl/io_facility/DefaultValidator.h
-    src/repl/view/small_step/iostream_small_step/IostreamSmallStepFactory.cc
-    src/repl/view/small_step/iostream_small_step/IostreamSmallStepFactory.h
-    src/repl/view/small_step/iostream_small_step/IostreamSmallStep.h
-    src/repl/view/small_step/iostream_small_step/IostreamReadTitleSmallStep.cc
-    src/repl/view/small_step/iostream_small_step/IostreamReadDateSmallStep.cc
-    src/repl/view/small_step/iostream_small_step/IostreamReadPrioritySmallStep.cc
+    src/repl/view/steps/ISmallStepFactory.h
+    src/repl/validator/IValidator.h
+    src/repl/validator/DefaultValidator.cc
+    src/repl/validator/DefaultValidator.h
+    src/repl/view/steps/iostream/small_step/IostreamSmallStepFactory.cc
+    src/repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h
+    src/repl/view/steps/iostream/small_step/IostreamSmallStep.h
+    src/repl/view/steps/iostream/small_step/IostreamReadTitleSmallStep.cc
+    src/repl/view/steps/iostream/small_step/IostreamReadDateSmallStep.cc
+    src/repl/view/steps/iostream/small_step/IostreamReadPrioritySmallStep.cc
     src/repl/TaskBuilder.cc
     src/repl/TaskBuilder.h
     src/repl/view/StateEnum.h
-    src/repl/view/small_step/iostream_small_step/IostreamSmallStepEnum.h
-    src/repl/view/small_step/ISmallStep.h
-    src/repl/view/small_step/TaskContext.cc
-    src/repl/view/small_step/TaskContext.h
+    src/repl/view/steps/iostream/small_step/IostreamSmallStepEnum.h
+    src/repl/view/steps/ISmallStep.h
+    src/repl/view/steps/TaskContext.cc
+    src/repl/view/steps/TaskContext.h
     src/repl/view/View.cc
     src/repl/view/View.h
     src/repl/Controller.cc
     src/repl/Controller.h
-    src/repl/view/step/IStep.h
-    src/repl/view/step/StepResult.h
-    src/repl/view/step/iostream_step/IostreamStep.h
-    src/repl/view/step/iostream_step/IostreamAddTaskREPLState.cc
-    src/repl/view/step/iostream_step/IostreamEditTaskREPLState.cc
-    src/repl/view/step/iostream_step/IostreamDeleteTaskREPLState.cc
-    src/repl/view/step/iostream_step/IostreamCompleteTaskREPLState.cc
-    src/repl/view/step/iostream_step/IostreamShowAllTasksREPLState.cc
-    src/repl/view/step/iostream_step/IostreamShowNTasksREPLState.cc
-    src/repl/view/step/iostream_step/IostreamShowSortedTasksREPLState.cc
-    src/repl/view/step/IStepFactory.h
-    src/repl/view/step/iostream_step/IostreamStepFactory.h
-    src/repl/view/step/iostream_step/IostreamStepFactory.cc
-    src/repl/view/step/iostream_step/IostreamGeneralFunctional.cc src/repl/view/step/iostream_step/IostreamGeneralFunctional.h src/repl/io_facility/DateFormat.h src/repl/view/small_step/task_initializer_small_step/DefaultTaskInitializerSmallStep.cc src/repl/view/small_step/task_initializer_small_step/TaskInitializerSmallStep.h src/repl/view/small_step/iostream_small_step/IostreamSmallStepGeneralFunctional.cc src/repl/view/small_step/iostream_small_step/IostreamSmallStepGeneralFunctional.h src/repl/view/small_step/iostream_small_step/IostreamReadStateSmallStep.cc)
+    src/repl/view/steps/IStep.h
+    src/repl/view/steps/StepResult.h
+    src/repl/view/steps/iostream/step/IostreamStep.h
+    src/repl/view/steps/iostream/step/IostreamAddTaskREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamEditTaskREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamDeleteTaskREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamCompleteTaskREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamShowAllTasksREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamShowNTasksREPLState.cc
+    src/repl/view/steps/iostream/step/IostreamShowSortedTasksREPLState.cc
+    src/repl/view/steps/IStepFactory.h
+    src/repl/view/steps/iostream/step/IostreamStepFactory.h
+    src/repl/view/steps/iostream/step/IostreamStepFactory.cc
+    src/repl/view/steps/iostream/IostreamGeneralFunctional.cc
+    src/repl/view/steps/iostream/IostreamGeneralFunctional.h
+    src/repl/validator/DateFormat.h
+    src/repl/view/steps/DefaultTaskInitializerSmallStep.cc
+    src/repl/view/steps/TaskInitializerSmallStep.h
+    src/repl/view/steps/iostream/small_step/IostreamReadStateSmallStep.cc
+)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}

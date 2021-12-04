@@ -9,8 +9,9 @@ class DefaultValidator : public IValidator {
       const std::string &str) override;
   std::optional<Task::Priority> ParseTaskPriority(
       const std::string &str) override;
+
+  std::optional<Task::State> ParseTaskState(const std::string &str) override;
   std::optional<Date_t> ParseTaskDate(const std::string &str) override;
-  std::optional<TaskId> ParseTaskId(const std::string &str) override;
   std::optional<ConfirmationResult> ParseConfirmation(
       const std::string &str) override;
 

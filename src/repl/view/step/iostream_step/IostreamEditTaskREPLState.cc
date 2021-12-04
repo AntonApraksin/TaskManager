@@ -32,6 +32,8 @@ StepResult IostreamEditTaskREPLState::Run() {
       state_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
   sub_context.PushState(
       state_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
+  sub_context.PushState(
+      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
   sub_context.Run();
 
   std::cout << "Proceed to edit? [Y/n]: ";

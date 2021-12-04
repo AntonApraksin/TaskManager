@@ -17,10 +17,13 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
   std::shared_ptr<IostreamReadPrioritySmallStep>
   GetIostreamReadPrioritySmallStep();
 
+  std::shared_ptr<IostreamReadStateSmallStep> GetIostreamReadStateSmallStep();
+
  private:
   std::shared_ptr<IostreamReadTitleSmallStep> read_title_repl_sub_state_;
   std::shared_ptr<IostreamReadDateSmallStep> read_date_repl_sub_state_;
   std::shared_ptr<IostreamReadPrioritySmallStep> read_priority_repl_sub_state_;
+  std::shared_ptr<IostreamReadStateSmallStep> iostream_read_state_small_step_;
 
   std::shared_ptr<IValidator> validator_;
 };

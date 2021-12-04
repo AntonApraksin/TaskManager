@@ -33,4 +33,10 @@ class IostreamReadPrioritySmallStep : public IostreamSmallStep {
   void Execute(TaskContext&) override;
 };
 
+class IostreamReadStateSmallStep : public IostreamSmallStep {
+ public:
+  using IostreamSmallStep::IostreamSmallStep;
+  void Execute(TaskContext&) override;
+};
+
 #endif  // TASKMANAGER_SRC_REPL_STATE_IREPLSUBSTATE_H_

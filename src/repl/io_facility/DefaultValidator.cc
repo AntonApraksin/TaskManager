@@ -70,6 +70,19 @@ std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
   return std::nullopt;
 }
 
+std::optional<Task::State> DefaultValidator::ParseTaskState(
+    const std::string &str) {
+  std::string input(str);
+  lower_string(input);
+  if (str == "completed") {
+    return Task::State::kCompleted;
+  }
+  if (str == "uncompleted") {
+    return Task::State::kUncompleted;
+  }
+  return std::nullopt;
+}
+
 std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
   std::tm tm{};
   std::regex pattern_regex(kDateRegex);
@@ -83,13 +96,6 @@ std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
   }
   auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
   return tp;
-}
-std::optional<TaskId> DefaultValidator::ParseTaskId(const std::string &str) {
-  try {
-    return TaskId::Create(std::stoi(str));
-  } catch (const std::invalid_argument &) {
-    return std::nullopt;
-  }
 }
 
 std::optional<ConfirmationResult> DefaultValidator::ParseConfirmation(

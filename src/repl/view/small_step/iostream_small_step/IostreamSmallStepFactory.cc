@@ -19,6 +19,8 @@ std::shared_ptr<IostreamSmallStep> IostreamSmallStepFactory::GetREPLState(
       return GetIostreamReadDateSmallStep();
     case IostreamSmallStepEnum::kReadPriority:
       return GetIostreamReadPrioritySmallStep();
+    case IostreamSmallStepEnum::kReadState:
+      return GetIostreamReadStateSmallStep();
   }
 }
 
@@ -26,6 +28,12 @@ std::shared_ptr<IostreamReadTitleSmallStep>
 IostreamSmallStepFactory::GetIostreamReadTitleSmallStep() {
   GENERATE_GETTER_FOR_POINTER(IostreamReadTitleSmallStep,
                               read_title_repl_sub_state_, (validator_));
+}
+
+std::shared_ptr<IostreamReadStateSmallStep>
+IostreamSmallStepFactory::GetIostreamReadStateSmallStep() {
+  GENERATE_GETTER_FOR_POINTER(IostreamReadStateSmallStep,
+                              iostream_read_state_small_step_, (validator_));
 }
 
 std::shared_ptr<IostreamReadDateSmallStep>

@@ -18,8 +18,8 @@ class Controller {
   void HandleAdd();
   void HandleAdd(TaskId);
   void HandleEdit(TaskId);
-  void HandleComplete(TaskId);
-  void HandleDelete(TaskId);
+  void HandleComplete(const std::vector<TaskId>&);
+  void HandleDelete(const std::vector<TaskId>&);
   void HandleShow();
   void HandleHelp();
 

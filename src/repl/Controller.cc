@@ -43,18 +43,14 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
       if (ids.empty()) {
         view_->ReportRequiredId();
       }
-      for (auto i : ids) {
-        HandleComplete(i);
-      }
+      HandleComplete(ids);
       break;
 
     case StateEnum::kDelete:
       if (ids.empty()) {
         view_->ReportRequiredId();
       }
-      for (auto i : ids) {
-        HandleDelete(i);
-      }
+      HandleDelete(ids);
       break;
 
     case StateEnum::kHelp:
@@ -112,29 +108,65 @@ void Controller::HandleEdit(TaskId task_id) {
   }
 }
 
-void Controller::HandleComplete(TaskId task_id) {  // TODO: Make it vector
+// TODO: Prettify implementation
+void Controller::HandleComplete(
+    const std::vector<TaskId>& ids) {
+  ICompleteTaskStep::TaskWrappers tasks;
+
+  TaskId current_id = ids.at(0);
+  std::vector<TaskId> seen;
+  auto storage = task_manager_->Show();
   try {
-    auto to_complete = task_manager_->Show().Find(task_id);
-    view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
-    auto [status, task] = view_->Run();
-    if (*status == ConfirmationResult::kYes) {
-      task_manager_->Complete(task_id);
-    }
+    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
+      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
+        seen.push_back(id);
+        current_id = id;
+        tasks.push_back(storage.Find(id));
+      }
+    });
   } catch (const std::runtime_error&) {
-    view_->ReportNotPresentId(task_id);
+    view_->ReportNotPresentId(current_id);
+  }
+
+  view_->SetState(step_factory_->GetCompleteTaskREPLState(std::move(tasks)));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes) {
+    std::for_each(seen.cbegin(), seen.cend(), [this](auto id) {
+      try {
+        task_manager_->Complete(id);
+      } catch (const std::runtime_error&) {
+      }
+    });
   }
 }
 
-void Controller::HandleDelete(TaskId task_id) {  // TODO: Make it vector
+// TODO: Prettify implementation
+void Controller::HandleDelete(
+    const std::vector<TaskId>& ids) {
+  ICompleteTaskStep::TaskWrappers tasks;
+  std::vector<TaskId> seen;
+  TaskId current_id = ids.at(0);
+  auto storage = task_manager_->Show();
   try {
-    auto to_delete = task_manager_->Show().Find(task_id);
-    view_->SetState(step_factory_->GetDeleteTaskREPLState({to_delete}));
-    auto [status, task] = view_->Run();
-    if (*status == ConfirmationResult::kYes) {
-      task_manager_->Delete(task_id);
-    }
+    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
+      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
+        seen.push_back(id);
+        current_id = id;
+        tasks.push_back(storage.Find(id));
+      }
+    });
   } catch (const std::runtime_error&) {
-    view_->ReportNotPresentId(task_id);
+    view_->ReportNotPresentId(current_id);
+  }
+  view_->SetState(step_factory_->GetDeleteTaskREPLState(tasks));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes) {
+    std::for_each(seen.cbegin(), seen.cend(), [this](auto id) {
+      try {
+        task_manager_->Delete(id);
+      } catch (const std::runtime_error&) {
+      }
+    });
   }
 }
 

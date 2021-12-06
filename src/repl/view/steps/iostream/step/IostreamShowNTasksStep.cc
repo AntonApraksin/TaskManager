@@ -3,9 +3,9 @@
 #include "IostreamStep.h"
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
 
-StepResult IostreamShowSortedTasksREPLState::Run() {
-  for (const auto &i : tasks_) {
-    ShowTaskWithId(i.second, i.first);
+StepResult IostreamShowNTasksStep::Run() {
+  for (const auto &i : task_wrappers_) {
+    ShowNestedMap(i, 2);
   }
   return {{}, {}};
 }

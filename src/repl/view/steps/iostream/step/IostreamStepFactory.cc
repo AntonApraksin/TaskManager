@@ -6,21 +6,21 @@
   }
 
 std::shared_ptr<IStep> IostreamStepFactory::GetAddTaskREPLState() {
-  GENERATE_GETTER_FOR_POINTER(IostreamAddTaskREPLState,
+  GENERATE_GETTER_FOR_POINTER(IostreamAddTaskStep,
                               iostream_add_task_repl_state_,
                               (state_factory_, validator_))
   return iostream_add_task_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetAddTaskREPLState(Task task) {
-  GENERATE_GETTER_FOR_POINTER(IostreamAddTaskREPLState,
+  GENERATE_GETTER_FOR_POINTER(IostreamAddTaskStep,
                               iostream_add_task_repl_state_,
                               (state_factory_, validator_))
   iostream_add_task_repl_state_->SetTask(task);
   return iostream_add_task_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetEditTaskREPLState(
-    IEditTaskREPLState::TaskWrapperRef task_wrapper) {
-  GENERATE_GETTER_FOR_POINTER(IostreamEditTaskREPLState,
+    IEditTaskStep::TaskWrapperRef task_wrapper) {
+  GENERATE_GETTER_FOR_POINTER(IostreamEditTaskStep,
                               iostream_edit_task_repl_state_,
                               (task_wrapper, state_factory_, validator_));
   iostream_edit_task_repl_state_->SetTaskWrapper(
@@ -28,40 +28,40 @@ std::shared_ptr<IStep> IostreamStepFactory::GetEditTaskREPLState(
   return iostream_edit_task_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetCompleteTaskREPLState(
-    ICompleteTaskREPLState::TaskWrappers task_wrappers) {
-  GENERATE_GETTER_FOR_POINTER(IostreamCompleteTaskREPLState,
+    ICompleteTaskStep::TaskWrappers task_wrappers) {
+  GENERATE_GETTER_FOR_POINTER(IostreamCompleteTaskStep,
                               iostream_complete_task_repl_state_,
                               (task_wrappers, validator_));
   iostream_complete_task_repl_state_->SetTaskWrappers(std::move(task_wrappers));
   return iostream_complete_task_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetDeleteTaskREPLState(
-    IDeleteTaskREPLState::TaskWrappers task_wrappers) {
-  GENERATE_GETTER_FOR_POINTER(IostreamDeleteTaskREPLState,
+    IDeleteTaskStep::TaskWrappers task_wrappers) {
+  GENERATE_GETTER_FOR_POINTER(IostreamDeleteTaskStep,
                               iostream_delete_task_repl_state_,
                               (task_wrappers, validator_));
   iostream_delete_task_repl_state_->SetTaskWrappers(std::move(task_wrappers));
   return iostream_delete_task_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetShowAllTasksREPLState(
-    IShowAllTasksREPLState::TaskStorageRef task_storage) {
-  GENERATE_GETTER_FOR_POINTER(IostreamShowAllTasksREPLState,
+    IShowAllTasksStep::TaskStorageRef task_storage) {
+  GENERATE_GETTER_FOR_POINTER(IostreamShowAllTasksStep,
                               iostream_show_all_tasks_repl_state_,
                               (task_storage));
   iostream_show_all_tasks_repl_state_->SetTaskStorage(task_storage);
   return iostream_show_all_tasks_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetShowNTasksREPLState(
-    IShowNTasksREPLState::TaskWrappers task_wrappers) {
-  GENERATE_GETTER_FOR_POINTER(IostreamShowNTasksREPLState,
+    IShowNTasksStep::TaskWrappers task_wrappers) {
+  GENERATE_GETTER_FOR_POINTER(IostreamShowNTasksStep,
                               iostream_show_n_tasks_repl_state_,
                               (task_wrappers))
   iostream_show_n_tasks_repl_state_->SetTaskWrappers(std::move(task_wrappers));
   return iostream_show_n_tasks_repl_state_;
 }
 std::shared_ptr<IStep> IostreamStepFactory::GetShowSortedTasksREPLState(
-    IShowSortedTasksREPLState::Tasks tasks) {
-  GENERATE_GETTER_FOR_POINTER(IostreamShowSortedTasksREPLState,
+    IShowSortedTasksStep::Tasks tasks) {
+  GENERATE_GETTER_FOR_POINTER(IostreamShowSortedTasksStep,
                               iostream_show_sorted_tasks_repl_state_, (tasks));
   iostream_show_sorted_tasks_repl_state_->SetTasks(std::move(tasks));
   return iostream_show_sorted_tasks_repl_state_;

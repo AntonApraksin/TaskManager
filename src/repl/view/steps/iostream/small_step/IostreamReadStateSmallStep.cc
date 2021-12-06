@@ -18,8 +18,8 @@ void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   }
   auto validated_state = validator_->ParseTaskState(state_string);
   for (; !validated_state;) {
-    std::cout << "Priority should be: low, medium, high.\n";
-    state_string = PrintAndGet("priority");
+    std::cout << "State should be '+' for completed or '-' for uncompleted\n";
+    state_string = PrintAndGet("state");
     if (state_string.empty()) {
       ctx.PopState();
       return;

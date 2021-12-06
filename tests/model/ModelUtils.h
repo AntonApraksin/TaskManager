@@ -17,6 +17,13 @@ inline bool operator==(const Task& lhs, const Task& rhs) {
          lhs.GetDueDate() == rhs.GetDueDate();
 }
 
+inline Date_t parse_date(std::string date) {
+  tm timeinfo;
+  std::string pattern{"%d/%m/%y"};
+  strptime(date.c_str(), pattern.c_str(), &timeinfo);
+  return std::chrono::system_clock::from_time_t(std::mktime(&timeinfo));
+}
+
 class MockTaskIdProducer : public ITaskIdProducer {
  public:
   TaskId GetNextId() override { return TaskId::Create(current_++); }

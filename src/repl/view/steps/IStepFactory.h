@@ -9,18 +9,18 @@ class IStepFactory {
   virtual std::shared_ptr<IStep> GetAddTaskREPLState(Task) = 0;
 
   virtual std::shared_ptr<IStep> GetEditTaskREPLState(
-      IEditTaskREPLState::TaskWrapperRef) = 0;
+      IEditTaskStep::TaskWrapperRef) = 0;
   virtual std::shared_ptr<IStep> GetCompleteTaskREPLState(
-      ICompleteTaskREPLState::TaskWrappers) = 0;
+      ICompleteTaskStep::TaskWrappers) = 0;
   virtual std::shared_ptr<IStep> GetDeleteTaskREPLState(
-      IDeleteTaskREPLState::TaskWrappers) = 0;
+      IDeleteTaskStep::TaskWrappers) = 0;
 
   virtual std::shared_ptr<IStep> GetShowAllTasksREPLState(
-      IShowAllTasksREPLState::TaskStorageRef) = 0;
+      IShowAllTasksStep::TaskStorageRef) = 0;
   virtual std::shared_ptr<IStep> GetShowNTasksREPLState(
-      IShowNTasksREPLState::TaskWrappers) = 0;
+      IShowNTasksStep::TaskWrappers) = 0;
   virtual std::shared_ptr<IStep> GetShowSortedTasksREPLState(
-      IShowSortedTasksREPLState::Tasks) = 0;
+      IShowSortedTasksStep::Tasks) = 0;
 
   virtual ~IStepFactory() {}
 };

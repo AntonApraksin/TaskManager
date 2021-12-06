@@ -1,5 +1,7 @@
 #include "Controller.h"
 
+// TODO: handle errors with id that is not present
+
 Controller::Controller(const std::shared_ptr<IValidator>& validator,
                        const std::shared_ptr<TaskManager>& task_manager,
                        std::unique_ptr<IStepFactory> step_factory)
@@ -89,7 +91,7 @@ void Controller::HandleAdd() {
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
     auto given_id = task_manager_->Add(*task);
-    view_->ShowId(given_id);  // TODO: Implement
+    view_->ShowId(given_id);
   }
 }
 
@@ -102,7 +104,7 @@ void Controller::HandleEdit(TaskId task_id) {
   }
 }
 
-void Controller::HandleComplete(TaskId task_id) {  // TODO: Make vector
+void Controller::HandleComplete(TaskId task_id) {  // TODO: Make it vector
   auto to_complete = task_manager_->Show().Find(task_id);
   view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
   auto [status, task] = view_->Run();

@@ -2,8 +2,8 @@
 #define TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMSTEPFACTORY_H_
 
 #include "IostreamStep.h"
-#include "repl/validator/IValidator.h"  // TODO: move IValidator to a better place
-#include "repl/view/steps/ISmallStepFactory.h"  // TODO: move StateFactory to a better place
+#include "repl/validator/IValidator.h"
+#include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/IStepFactory.h"
 
 class IostreamStepFactory final : public IStepFactory {
@@ -15,30 +15,30 @@ class IostreamStepFactory final : public IStepFactory {
   std::shared_ptr<IStep> GetAddTaskREPLState(Task) override;
 
   std::shared_ptr<IStep> GetEditTaskREPLState(
-      IEditTaskREPLState::TaskWrapperRef) override;
+      IEditTaskStep::TaskWrapperRef) override;
   std::shared_ptr<IStep> GetCompleteTaskREPLState(
-      ICompleteTaskREPLState::TaskWrappers) override;
+      ICompleteTaskStep::TaskWrappers) override;
   std::shared_ptr<IStep> GetDeleteTaskREPLState(
-      IDeleteTaskREPLState::TaskWrappers) override;
+      IDeleteTaskStep::TaskWrappers) override;
 
   std::shared_ptr<IStep> GetShowAllTasksREPLState(
-      IShowAllTasksREPLState::TaskStorageRef) override;
+      IShowAllTasksStep::TaskStorageRef) override;
   std::shared_ptr<IStep> GetShowNTasksREPLState(
-      IShowNTasksREPLState::TaskWrappers) override;
+      IShowNTasksStep::TaskWrappers) override;
   std::shared_ptr<IStep> GetShowSortedTasksREPLState(
-      IShowSortedTasksREPLState::Tasks) override;
+      IShowSortedTasksStep::Tasks) override;
 
  private:
-  std::shared_ptr<IostreamAddTaskREPLState> iostream_add_task_repl_state_;
-  std::shared_ptr<IostreamEditTaskREPLState> iostream_edit_task_repl_state_;
-  std::shared_ptr<IostreamCompleteTaskREPLState>
+  std::shared_ptr<IostreamAddTaskStep> iostream_add_task_repl_state_;
+  std::shared_ptr<IostreamEditTaskStep> iostream_edit_task_repl_state_;
+  std::shared_ptr<IostreamCompleteTaskStep>
       iostream_complete_task_repl_state_;
-  std::shared_ptr<IostreamDeleteTaskREPLState> iostream_delete_task_repl_state_;
-  std::shared_ptr<IostreamShowAllTasksREPLState>
+  std::shared_ptr<IostreamDeleteTaskStep> iostream_delete_task_repl_state_;
+  std::shared_ptr<IostreamShowAllTasksStep>
       iostream_show_all_tasks_repl_state_;
-  std::shared_ptr<IostreamShowNTasksREPLState>
+  std::shared_ptr<IostreamShowNTasksStep>
       iostream_show_n_tasks_repl_state_;
-  std::shared_ptr<IostreamShowSortedTasksREPLState>
+  std::shared_ptr<IostreamShowSortedTasksStep>
       iostream_show_sorted_tasks_repl_state_;
 
   std::shared_ptr<ISmallStepFactory> state_factory_;

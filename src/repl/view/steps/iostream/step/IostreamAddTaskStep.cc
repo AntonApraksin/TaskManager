@@ -6,13 +6,13 @@
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
 
-IostreamAddTaskREPLState::IostreamAddTaskREPLState(
+IostreamAddTaskStep::IostreamAddTaskStep(
     const std::shared_ptr<ISmallStepFactory>& state_factory,
     const std::shared_ptr<IValidator>& validator)
-    : IostreamREPLState(state_factory),
-      IostreamWithValidatorREPLState(validator) {}
+    : IostreamStep(state_factory),
+      IostreamWithValidatorStep(validator) {}
 
-StepResult IostreamAddTaskREPLState::Run() {
+StepResult IostreamAddTaskStep::Run() {
   TaskContext sub_context;
   if (task_) {
     std::cout << "Add subtask to:\n";
@@ -27,7 +27,7 @@ StepResult IostreamAddTaskREPLState::Run() {
     sub_context.PushState(
         std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
             /*.title =*/std::nullopt,
-            /*.date_ =*/std::chrono::system_clock::now(),  // TODO: other
+            /*.date_ =*/std::chrono::system_clock::now(),  // TODO: give other
                                                            // default value
             /*.priority =*/Task::Priority::kLow,
             /*.state =*/Task::State::kUncompleted}));

@@ -6,15 +6,15 @@
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
 
-IostreamEditTaskREPLState::IostreamEditTaskREPLState(
+IostreamEditTaskStep::IostreamEditTaskStep(
     TaskWrapperRef task_wrapper,
     const std::shared_ptr<ISmallStepFactory> &state_factory,
     const std::shared_ptr<IValidator> &validator)
-    : IEditTaskREPLState(task_wrapper),
-      IostreamREPLState(state_factory),
-      IostreamWithValidatorREPLState(validator) {}
+    : IEditTaskStep(task_wrapper),
+      IostreamStep(state_factory),
+      IostreamWithValidatorStep(validator) {}
 
-StepResult IostreamEditTaskREPLState::Run() {
+StepResult IostreamEditTaskStep::Run() {
   std::cout << "You are going to edit:\n";
   const auto &to_edit = *(task_wrapper_.get());
   ShowTask(to_edit);

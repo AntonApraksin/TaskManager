@@ -12,7 +12,7 @@ class IStep {
   virtual ~IStep() {}
 };
 
-class IAddTaskREPLState : public IStep {
+class IAddTaskStep : public IStep {
  public:
   void SetTask(Task task) { task_ = task; }
 
@@ -22,11 +22,11 @@ class IAddTaskREPLState : public IStep {
   std::optional<Task> task_;
 };
 
-class IEditTaskREPLState : public IStep {
+class IEditTaskStep : public IStep {
  public:
   using TaskWrapperRef = std::reference_wrapper<const TaskWrapper>;
 
-  explicit IEditTaskREPLState(TaskWrapperRef task_wrapper)
+  explicit IEditTaskStep(TaskWrapperRef task_wrapper)
       : task_wrapper_(task_wrapper) {}
 
   void SetTaskWrapper(TaskWrapperRef task_wrapper) {
@@ -37,11 +37,11 @@ class IEditTaskREPLState : public IStep {
   TaskWrapperRef task_wrapper_;
 };
 
-class IDeleteTaskREPLState : public IStep {
+class IDeleteTaskStep : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  explicit IDeleteTaskREPLState(TaskWrappers task_wrappers)
+  explicit IDeleteTaskStep(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -52,11 +52,11 @@ class IDeleteTaskREPLState : public IStep {
   TaskWrappers task_wrappers_;
 };
 
-class ICompleteTaskREPLState : public IStep {
+class ICompleteTaskStep : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  explicit ICompleteTaskREPLState(TaskWrappers task_wrappers)
+  explicit ICompleteTaskStep(TaskWrappers task_wrappers)
       : task_wrappers_(std::move(task_wrappers)) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -67,11 +67,11 @@ class ICompleteTaskREPLState : public IStep {
   TaskWrappers task_wrappers_;
 };
 
-class IShowAllTasksREPLState : public IStep {
+class IShowAllTasksStep : public IStep {
  public:
   using TaskStorageRef = std::reference_wrapper<const TaskStorage>;
 
-  explicit IShowAllTasksREPLState(TaskStorageRef task_storage)
+  explicit IShowAllTasksStep(TaskStorageRef task_storage)
       : task_storage_(task_storage) {}
 
   void SetTaskStorage(TaskStorageRef task_storage) {
@@ -82,11 +82,11 @@ class IShowAllTasksREPLState : public IStep {
   TaskStorageRef task_storage_;
 };
 
-class IShowNTasksREPLState : public IStep {
+class IShowNTasksStep : public IStep {
  public:
   using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
 
-  explicit IShowNTasksREPLState(TaskWrappers task_wrappers)
+  explicit IShowNTasksStep(TaskWrappers task_wrappers)
       : task_wrappers_(task_wrappers) {}
 
   void SetTaskWrappers(TaskWrappers task_wrappers) {
@@ -97,11 +97,11 @@ class IShowNTasksREPLState : public IStep {
   TaskWrappers task_wrappers_;
 };
 
-class IShowSortedTasksREPLState : public IStep {
+class IShowSortedTasksStep : public IStep {
  public:
   using Tasks = std::vector<std::pair<TaskId, Task>>;
 
-  explicit IShowSortedTasksREPLState(Tasks tasks) : tasks_(tasks) {}
+  explicit IShowSortedTasksStep(Tasks tasks) : tasks_(tasks) {}
 
   void SetTasks(Tasks tasks) { tasks_ = tasks; }
 

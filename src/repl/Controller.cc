@@ -123,8 +123,9 @@ void Controller::HandleDelete(TaskId task_id) {  // TODO: Make it vector
 }
 
 void Controller::HandleShow() {
+  auto to_show = task_manager_->Show();
   view_->SetState(
-      step_factory_->GetShowAllTasksREPLState(task_manager_->Show()));
+      step_factory_->GetShowAllTasksREPLState(to_show));
   view_->Run();
 }
 

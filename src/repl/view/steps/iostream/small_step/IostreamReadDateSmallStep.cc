@@ -24,6 +24,7 @@ void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
   auto validated_date = validator_->ParseTaskDate(date_string);
   for (; !validated_date;) {
     std::cout << "Wrong date format.\n";
+    std::cout << "[due date(" << kDatePattern << ")]: ";
     std::getline(std::cin, date_string);
     if (date_string.empty()) {
       ctx.PopState();

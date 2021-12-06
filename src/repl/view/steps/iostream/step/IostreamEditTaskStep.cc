@@ -18,7 +18,7 @@ StepResult IostreamEditTaskStep::Run() {
   std::cout << "You are going to edit:\n";
   const auto &to_edit = *(task_wrapper_.get());
   ShowTask(to_edit);
-  std::cout << "  and its " << task_wrapper_.get().ShowStorage().size()
+  std::cout << "  it has " << task_wrapper_.get().ShowStorage().size()
             << " children.\n";
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(

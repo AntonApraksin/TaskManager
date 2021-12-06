@@ -74,10 +74,10 @@ std::optional<Task::State> DefaultValidator::ParseTaskState(
     const std::string &str) {
   std::string input(str);
   lower_string(input);
-  if (str == "completed") {
+  if (str == "+") {
     return Task::State::kCompleted;
   }
-  if (str == "uncompleted") {
+  if (str == "-") {
     return Task::State::kUncompleted;
   }
   return std::nullopt;

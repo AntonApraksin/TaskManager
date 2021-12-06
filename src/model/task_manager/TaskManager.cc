@@ -34,4 +34,4 @@ TaskManager& TaskManager::Delete(TaskId id) {
   return *this;
 }
 
-const TaskStorage& TaskManager::Show() const { return storage_; }
+TaskStorage TaskManager::Show() const { return storage_; }

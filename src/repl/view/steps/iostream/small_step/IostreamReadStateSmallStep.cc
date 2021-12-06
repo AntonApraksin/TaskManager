@@ -9,7 +9,7 @@
 void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().state_) {
     std::cout << "Leave empty for '" << to_string(*ctx.GetTaskBuilder().state_)
-              << "'\n";
+              << "'. '-' - uncompleted, '+' - completed\n";
   }
   auto state_string = PrintAndGet("state");
   if (state_string.empty()) {

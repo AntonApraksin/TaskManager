@@ -57,5 +57,5 @@ void View::ShowHelp() {
 
 void View::ReportUnknownCommand() {
   std::cout
-      << "Unknown command. Type 'help' to display all available commands.";
+      << "Unknown command. Type 'help' to display all available commands.\n";
 }

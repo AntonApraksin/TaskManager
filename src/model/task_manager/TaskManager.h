@@ -20,7 +20,7 @@ class TaskManager final {
   TaskManager& Complete(TaskId id);
   TaskManager& Delete(TaskId id);
 
-  const TaskStorage& Show() const;
+  TaskStorage Show() const;
 
  private:
   TaskStorage storage_;

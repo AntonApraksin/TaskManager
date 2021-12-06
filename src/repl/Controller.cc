@@ -77,12 +77,16 @@ void Controller::PerformAction(StateEnum se, const std::vector<TaskId>& ids) {
 }
 
 void Controller::HandleAdd(TaskId task_id) {
-  auto add_to = *task_manager_->Show().Find(task_id);
-  view_->SetState(step_factory_->GetAddTaskREPLState(add_to));
-  auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes) {
-    auto given_id = task_manager_->Add(task_id, *task);
-    view_->ShowId(given_id);
+  try {
+    auto add_to = *task_manager_->Show().Find(task_id);
+    view_->SetState(step_factory_->GetAddTaskREPLState(add_to));
+    auto [status, task] = view_->Run();
+    if (*status == ConfirmationResult::kYes) {
+      auto given_id = task_manager_->Add(task_id, *task);
+      view_->ShowId(given_id);
+    }
+  } catch (const std::runtime_error&) {
+    view_->ReportNotPresentId(task_id);
   }
 }
 
@@ -96,36 +100,47 @@ void Controller::HandleAdd() {
 }
 
 void Controller::HandleEdit(TaskId task_id) {
-  auto to_edit = task_manager_->Show().Find(task_id);
-  view_->SetState(step_factory_->GetEditTaskREPLState(to_edit));
-  auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes) {
-    task_manager_->Edit(task_id, *task);
+  try {
+    auto to_edit = task_manager_->Show().Find(task_id);
+    view_->SetState(step_factory_->GetEditTaskREPLState(to_edit));
+    auto [status, task] = view_->Run();
+    if (*status == ConfirmationResult::kYes) {
+      task_manager_->Edit(task_id, *task);
+    }
+  } catch (const std::runtime_error&) {
+    view_->ReportNotPresentId(task_id);
   }
 }
 
 void Controller::HandleComplete(TaskId task_id) {  // TODO: Make it vector
-  auto to_complete = task_manager_->Show().Find(task_id);
-  view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
-  auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes) {
-    task_manager_->Complete(task_id);
+  try {
+    auto to_complete = task_manager_->Show().Find(task_id);
+    view_->SetState(step_factory_->GetCompleteTaskREPLState({to_complete}));
+    auto [status, task] = view_->Run();
+    if (*status == ConfirmationResult::kYes) {
+      task_manager_->Complete(task_id);
+    }
+  } catch (const std::runtime_error&) {
+    view_->ReportNotPresentId(task_id);
   }
 }
 
 void Controller::HandleDelete(TaskId task_id) {  // TODO: Make it vector
-  auto to_delete = task_manager_->Show().Find(task_id);
-  view_->SetState(step_factory_->GetDeleteTaskREPLState({to_delete}));
-  auto [status, task] = view_->Run();
-  if (*status == ConfirmationResult::kYes) {
-    task_manager_->Delete(task_id);
+  try {
+    auto to_delete = task_manager_->Show().Find(task_id);
+    view_->SetState(step_factory_->GetDeleteTaskREPLState({to_delete}));
+    auto [status, task] = view_->Run();
+    if (*status == ConfirmationResult::kYes) {
+      task_manager_->Delete(task_id);
+    }
+  } catch (const std::runtime_error&) {
+    view_->ReportNotPresentId(task_id);
   }
 }
 
 void Controller::HandleShow() {
   auto to_show = task_manager_->Show();
-  view_->SetState(
-      step_factory_->GetShowAllTasksREPLState(to_show));
+  view_->SetState(step_factory_->GetShowAllTasksREPLState(to_show));
   view_->Run();
 }
 

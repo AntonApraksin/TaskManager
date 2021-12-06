@@ -31,13 +31,10 @@ class IostreamStepFactory final : public IStepFactory {
  private:
   std::shared_ptr<IostreamAddTaskStep> iostream_add_task_repl_state_;
   std::shared_ptr<IostreamEditTaskStep> iostream_edit_task_repl_state_;
-  std::shared_ptr<IostreamCompleteTaskStep>
-      iostream_complete_task_repl_state_;
+  std::shared_ptr<IostreamCompleteTaskStep> iostream_complete_task_repl_state_;
   std::shared_ptr<IostreamDeleteTaskStep> iostream_delete_task_repl_state_;
-  std::shared_ptr<IostreamShowAllTasksStep>
-      iostream_show_all_tasks_repl_state_;
-  std::shared_ptr<IostreamShowNTasksStep>
-      iostream_show_n_tasks_repl_state_;
+  std::shared_ptr<IostreamShowAllTasksStep> iostream_show_all_tasks_repl_state_;
+  std::shared_ptr<IostreamShowNTasksStep> iostream_show_n_tasks_repl_state_;
   std::shared_ptr<IostreamShowSortedTasksStep>
       iostream_show_sorted_tasks_repl_state_;
 

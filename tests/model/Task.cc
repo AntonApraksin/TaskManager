@@ -1,8 +1,8 @@
 #include "model/task/Task.h"
 
-#include "ModelUtils.h"
-
 #include <gtest/gtest.h>
+
+#include "ModelUtils.h"
 
 class TaskTest : public ::testing::Test {};
 

@@ -9,8 +9,7 @@
 IostreamAddTaskStep::IostreamAddTaskStep(
     const std::shared_ptr<ISmallStepFactory>& state_factory,
     const std::shared_ptr<IValidator>& validator)
-    : IostreamStep(state_factory),
-      IostreamWithValidatorStep(validator) {}
+    : IostreamStep(state_factory), IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamAddTaskStep::Run() {
   TaskContext sub_context;

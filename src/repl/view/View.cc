@@ -20,7 +20,7 @@ void View::ShowId(TaskId task_id) {
 }
 
 void View::ReportNotPresentId(TaskId task_id) {
-  std::cout << task_id.GetId() << " not present in store.\n";
+  std::cout << "Id " << task_id.GetId() << " not present in store.\n";
 }
 
 void View::ReportMultipleId() {
@@ -32,8 +32,7 @@ void View::ReportRequiredId() {
 }
 
 std::pair<StateEnum, std::vector<TaskId>> View::GetNextCommand() {
-  std::cout << "[]"
-            << ": ";
+  std::cout << "[]: ";
   std::string result;
   std::getline(std::cin, result);
   return validator_->MakeRequest(result);
@@ -41,7 +40,7 @@ std::pair<StateEnum, std::vector<TaskId>> View::GetNextCommand() {
 
 void View::ShowHelp() {
   std::cout << "Usage:\n"
-            << "  add(a)\n"
+            << "  add(a) [id]\n"
             << "    Add a new task.\n"
             << "  edit(ed) id\n"
             << "    Edit a task with given id.\n"
@@ -50,7 +49,7 @@ void View::ShowHelp() {
             << "  complete(c) id\n"
             << "    Complete a task with the given id.\n"
             << "  show(s)\n"
-            << "    Show all uncompleted tasks.\n"
+            << "    Show all tasks.\n"
             << "  exit(ex)\n"
             << "    Exit.\n";
 }

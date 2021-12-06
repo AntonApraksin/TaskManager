@@ -9,8 +9,7 @@ class ISmallStepFactory;
 
 class IostreamStep {
  protected:
-  explicit IostreamStep(
-      const std::shared_ptr<ISmallStepFactory>& state_factory)
+  explicit IostreamStep(const std::shared_ptr<ISmallStepFactory>& state_factory)
       : state_factory_(state_factory) {}
   ~IostreamStep() {}
 
@@ -50,9 +49,8 @@ class IostreamEditTaskStep final : public IEditTaskStep,
   StepResult Run() override;
 };
 
-class IostreamDeleteTaskStep final
-    : public IDeleteTaskStep,
-      public IostreamWithValidatorStep {
+class IostreamDeleteTaskStep final : public IDeleteTaskStep,
+                                     public IostreamWithValidatorStep {
  public:
   using IDeleteTaskStep::TaskWrappers;
 
@@ -61,14 +59,12 @@ class IostreamDeleteTaskStep final
   StepResult Run() override;
 };
 
-class IostreamCompleteTaskStep final
-    : public ICompleteTaskStep,
-      public IostreamWithValidatorStep {
+class IostreamCompleteTaskStep final : public ICompleteTaskStep,
+                                       public IostreamWithValidatorStep {
  public:
   using ICompleteTaskStep::TaskWrappers;
 
-  IostreamCompleteTaskStep(TaskWrappers,
-                           const std::shared_ptr<IValidator>&);
+  IostreamCompleteTaskStep(TaskWrappers, const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
@@ -85,8 +81,7 @@ class IostreamShowNTasksStep final : public IShowNTasksStep {
   StepResult Run() override;
 };
 
-class IostreamShowSortedTasksStep final
-    : public IShowSortedTasksStep {
+class IostreamShowSortedTasksStep final : public IShowSortedTasksStep {
  public:
   using IShowSortedTasksStep::IShowSortedTasksStep;
   StepResult Run() override;

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <sstream>
 
 #include "IostreamStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
@@ -15,10 +15,13 @@ IostreamAddTaskStep::IostreamAddTaskStep(
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamAddTaskStep::Run() {
+  std::stringstream ss;
   TaskContext sub_context;
   if (task_) {
-    std::cout << "Add subtask to:\n";
-    ShowTask(*task_);
+    ss << "Add subtask to:\n";
+    io_facility_->Print(ss.str());
+    ss.str("");
+    ShowTask(*io_facility_, *task_);
     sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
         TaskBuilder{/*.title = */ std::nullopt,
                     /*.date_ =*/task_->GetDueDate(),
@@ -45,12 +48,15 @@ StepResult IostreamAddTaskStep::Run() {
       small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
   sub_context.Run();
 
-  std::cout << "Proceed to add? [Y/n]: ";
-  std::string input;
-  std::getline(std::cin, input);
+  ss << "Proceed to add? [Y/n]: ";
+  io_facility_->Print(ss.str());
+  ss.str("");
+  std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
-    std::cout << "Okay, i treat it as no\n";
+    ss << "Okay, i treat it as no\n";
+    io_facility_->Print(ss.str());
+    ss.str("");
     return StepResult{ConfirmationResult::kNo,
                       sub_context.GetTaskBuilder().GetTask()};
   }

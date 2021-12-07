@@ -1,7 +1,7 @@
 #include "IostreamGeneralFunctional.h"
 
 #include <iomanip>
-#include <iostream>
+#include <sstream>
 
 #include "repl/validator/DateFormat.h"
 
@@ -25,41 +25,48 @@ const char* to_string(Task::State state) {
   }
 }
 
-void ShowTask(const Task& task) {
+void ShowTask(IIoFacility& io, const Task& task) {
+  std::stringstream ss;
   auto time = std::chrono::system_clock::to_time_t(task.GetDueDate());
-  std::cout << " [" << to_string(task.GetState()) << "] "
+  ss << " [" << to_string(task.GetState()) << "] "
             << "(" << to_string(task.GetPriority()) << ") "
             << "{" << std::put_time(std::localtime(&time), kDatePattern) << "} "
             << "'" << task.GetTitle() << "'\n";
+  io.Print(ss.str());
 }
 
-void ShowTask(const Task& task, int nest) {
+void ShowTask(IIoFacility& io, const Task& task, int nest) {
   std::string indent(nest, ' ');
-  std::cout << indent;
-  ShowTask(task);
+  io.Print(indent);
+  ShowTask(io, task);
 }
 
-void ShowTaskWithId(const Task& task, TaskId task_id) {
-  std::cout << "└─ " << task_id.GetId() << ' ';
-  ShowTask(task);
+void ShowTaskWithId(IIoFacility& io,const Task& task, TaskId task_id) {
+  std::stringstream ss;
+  ss << "└─ " << task_id.GetId() << ' ';
+  io.Print(ss.str());
+  ShowTask(io, task);
 }
 
-void ShowTaskWithId(const Task& task, TaskId task_id, int nest) {
+void ShowTaskWithId(IIoFacility& io, const Task& task, TaskId task_id, int nest) {
+  std::stringstream ss;
   std::string indent(nest, ' ');
-  std::cout << indent << "└─ " << task_id.GetId() << ' ';
-  ShowTask(task);
+  ss << indent << "└─ " << task_id.GetId() << ' ';
+  io.Print(ss.str());
+  ShowTask(io, task);
 }
 
-void ShowNestedMap(const TaskWrapper& task_wrapper, int nest) {
+void ShowNestedMap(IIoFacility& io, const TaskWrapper& task_wrapper, int nest) {
   for (const auto& i : task_wrapper.ShowStorage()) {
-    ShowTaskWithId(*(i.second), i.first, nest);
-    ShowNestedMap(i.second, nest + 2);
+    ShowTaskWithId(io, *(i.second), i.first, nest);
+    ShowNestedMap(io, i.second, nest + 2);
   }
 }
 
-std::string PrintAndGet(const std::string& str) {
-  std::cout << '[' << str << ']' << ": ";
-  std::string result;
-  std::getline(std::cin, result);
+std::string PrintAndGet(IIoFacility& io, const std::string& str) {
+  std::stringstream ss;
+  ss << '[' << str << ']' << ": ";
+  io.Print(ss.str());
+  std::string result = io.GetLine();
   return result;
 }

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <sstream>
 
 #include "IostreamStep.h"
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
@@ -11,18 +11,26 @@ IostreamCompleteTaskStep::IostreamCompleteTaskStep(
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamCompleteTaskStep::Run() {
-  std::cout << "You are going to complete such tasks:\n";
+  std::stringstream ss;
+  ss << "You are going to complete such tasks:\n";
+  io_facility_->Print(ss.str());
+  ss.str("");
   for (const auto i : task_wrappers_) {
-    ShowTask(*(i.get()));
-    std::cout << "  and its " << i.get().ShowStorage().size() << " children.\n";
+    ShowTask(*io_facility_, *(i.get()));
+    ss << "  and its " << i.get().ShowStorage().size() << " children.\n";
+    io_facility_->Print(ss.str());
+    ss.str("");
   }
 
-  std::cout << "Proceed to complete? [Y/n]: ";
-  std::string input;
-  std::getline(std::cin, input);
+  ss << "Proceed to complete? [Y/n]: ";
+  io_facility_->Print(ss.str());
+  ss.str("");
+  std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
-    std::cout << "Okay, I treat it as no\n";
+    ss << "Okay, I treat it as no\n";
+    io_facility_->Print(ss.str());
+    ss.str("");
     return StepResult{ConfirmationResult::kNo, {}};
   }
   return {*confirm, {}};

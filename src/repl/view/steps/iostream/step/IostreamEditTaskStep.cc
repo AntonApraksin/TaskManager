@@ -1,4 +1,4 @@
-#include <iostream>
+#include <sstream>
 
 #include "IostreamStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
@@ -16,11 +16,16 @@ IostreamEditTaskStep::IostreamEditTaskStep(
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamEditTaskStep::Run() {
-  std::cout << "You are going to edit:\n";
+  std::stringstream ss;
+  ss << "You are going to edit:\n";
+  io_facility_->Print(ss.str());
+  ss.str("");
   const auto &to_edit = *(task_wrapper_.get());
-  ShowTask(to_edit);
-  std::cout << "  it has " << task_wrapper_.get().ShowStorage().size()
+  ShowTask(*io_facility_, to_edit);
+  ss << "  it has " << task_wrapper_.get().ShowStorage().size()
             << " children.\n";
+  io_facility_->Print(ss.str());
+  ss.str("");
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
       TaskBuilder{/*.title =*/to_edit.GetTitle(),
@@ -37,13 +42,16 @@ StepResult IostreamEditTaskStep::Run() {
       small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
   sub_context.Run();
 
-  std::cout << "Proceed to edit? [Y/n]: ";
+  ss << "Proceed to edit? [Y/n]: ";
+  io_facility_->Print(ss.str());
+  ss.str("");
 
-  std::string input;
-  std::getline(std::cin, input);
+  std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
-    std::cout << "Okay, I treat it as no\n";
+    ss << "Okay, I treat it as no\n";
+    io_facility_->Print(ss.str());
+    ss.str("");
     return StepResult{ConfirmationResult::kNo,
                       sub_context.GetTaskBuilder().GetTask()};
   }

@@ -7,8 +7,8 @@
 
 IostreamStepFactory::IostreamStepFactory(
     const std::shared_ptr<IIoFacility> &io_facility,
-    const std::shared_ptr<ISmallStepFactory> &state_factory,
-    const std::shared_ptr<IValidator> &validator)
+    const std::shared_ptr<IValidator> &validator,
+    const std::shared_ptr<ISmallStepFactory> &state_factory)
     : state_factory_(state_factory),
       validator_(validator),
       io_facility_(io_facility) {}

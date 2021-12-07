@@ -2,12 +2,11 @@
 
 // TODO: inject View
 
-Controller::Controller(const std::shared_ptr<IIoFacility>& io_facility,
-                       const std::shared_ptr<IValidator>& validator,
+Controller::Controller(std::unique_ptr<View> view,
                        const std::shared_ptr<TaskManager>& task_manager,
                        std::unique_ptr<IStepFactory> step_factory)
     : task_manager_(task_manager),
-      view_(std::make_unique<View>(io_facility, validator)),
+      view_(std::move(view)),
       step_factory_(std::move(step_factory)) {}
 
 void Controller::Run() {

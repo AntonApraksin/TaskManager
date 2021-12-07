@@ -2,13 +2,15 @@
 #define TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMSTEPFACTORY_H_
 
 #include "IostreamStep.h"
+#include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/IStepFactory.h"
 
 class IostreamStepFactory final : public IStepFactory {
  public:
-  IostreamStepFactory(const std::shared_ptr<ISmallStepFactory> &state_factory,
+  IostreamStepFactory(const std::shared_ptr<IIoFacility> &io_facility,
+                      const std::shared_ptr<ISmallStepFactory> &state_factory,
                       const std::shared_ptr<IValidator> &validator);
 
   std::shared_ptr<IStep> GetAddTaskREPLState() override;
@@ -40,6 +42,7 @@ class IostreamStepFactory final : public IStepFactory {
 
   std::shared_ptr<ISmallStepFactory> state_factory_;
   std::shared_ptr<IValidator> validator_;
+  std::shared_ptr<IIoFacility> io_facility_;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMSTEPFACTORY_H_

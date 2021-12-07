@@ -1,12 +1,13 @@
 #include "Controller.h"
 
-// TODO: handle errors with id that is not present
+// TODO: inject View
 
-Controller::Controller(const std::shared_ptr<IValidator>& validator,
+Controller::Controller(const std::shared_ptr<IIoFacility>& io_facility,
+                       const std::shared_ptr<IValidator>& validator,
                        const std::shared_ptr<TaskManager>& task_manager,
                        std::unique_ptr<IStepFactory> step_factory)
     : task_manager_(task_manager),
-      view_(std::make_unique<View>(validator)),
+      view_(std::make_unique<View>(io_facility, validator)),
       step_factory_(std::move(step_factory)) {}
 
 void Controller::Run() {
@@ -109,8 +110,7 @@ void Controller::HandleEdit(TaskId task_id) {
 }
 
 // TODO: Prettify implementation
-void Controller::HandleComplete(
-    const std::vector<TaskId>& ids) {
+void Controller::HandleComplete(const std::vector<TaskId>& ids) {
   ICompleteTaskStep::TaskWrappers tasks;
 
   TaskId current_id = ids.at(0);
@@ -141,8 +141,7 @@ void Controller::HandleComplete(
 }
 
 // TODO: Prettify implementation
-void Controller::HandleDelete(
-    const std::vector<TaskId>& ids) {
+void Controller::HandleDelete(const std::vector<TaskId>& ids) {
   ICompleteTaskStep::TaskWrappers tasks;
   std::vector<TaskId> seen;
   TaskId current_id = ids.at(0);

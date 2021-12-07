@@ -7,7 +7,8 @@
 
 class Controller {
  public:
-  Controller(const std::shared_ptr<IValidator>&,
+  Controller(const std::shared_ptr<IIoFacility>& io_facility,
+             const std::shared_ptr<IValidator>&,
              const std::shared_ptr<TaskManager>&,
              std::unique_ptr<IStepFactory>);
 

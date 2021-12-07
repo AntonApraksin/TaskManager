@@ -2,11 +2,12 @@
 #define TASKMANAGER_SRC_REPL_STATE_FACTORY_DEFAULTSTATEFACTORY_H_
 
 #include "repl/view/steps/ISmallStepFactory.h"
+#include "repl/io_facility/IIoFacility.h"
 
 class IostreamSmallStepFactory : public ISmallStepFactory {
  public:
   explicit IostreamSmallStepFactory(
-      const std::shared_ptr<IValidator>& validator);
+      const std::shared_ptr<IIoFacility>& io_facility, const std::shared_ptr<IValidator>& validator);
 
   std::shared_ptr<IostreamSmallStep> GetREPLState(
       IostreamSmallStepEnum sse) override;
@@ -27,6 +28,7 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
   std::shared_ptr<IostreamReadStateSmallStep> iostream_read_state_small_step_;
 
   std::shared_ptr<IValidator> validator_;
+  std::shared_ptr<IIoFacility> io_facility_;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_FACTORY_DEFAULTSTATEFACTORY_H_

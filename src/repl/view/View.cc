@@ -4,8 +4,9 @@
 
 #include "repl/view/steps/TaskContext.h"
 
-View::View(const std::shared_ptr<IValidator>& validator)
-    : validator_(validator) {}
+View::View(const std::shared_ptr<IIoFacility>& io_facility,
+           const std::shared_ptr<IValidator>& validator)
+    : validator_(validator), io_facility_(io_facility) {}
 
 void View::SetState(const std::shared_ptr<IStep>& step) {
   current_step_ = step;

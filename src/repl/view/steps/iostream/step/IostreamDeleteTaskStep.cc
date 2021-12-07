@@ -4,8 +4,10 @@
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
 
 IostreamDeleteTaskStep::IostreamDeleteTaskStep(
-    TaskWrappers task_wrappers, const std::shared_ptr<IValidator> &validator)
+    const std::shared_ptr<IIoFacility>& io_facility,
+    const std::shared_ptr<IValidator>& validator, TaskWrappers task_wrappers)
     : IDeleteTaskStep(std::move(task_wrappers)),
+      IostreamStep(io_facility),
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamDeleteTaskStep::Run() {

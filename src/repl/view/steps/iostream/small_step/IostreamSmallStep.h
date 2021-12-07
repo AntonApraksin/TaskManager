@@ -3,16 +3,18 @@
 
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/ISmallStep.h"
+#include "repl/io_facility/IIoFacility.h"
 
 class Context;
 
 class IostreamSmallStep : public ISmallStep {
  public:
-  explicit IostreamSmallStep(const std::shared_ptr<IValidator>& validator)
-      : validator_(validator) {}
+  explicit IostreamSmallStep(const std::shared_ptr<IIoFacility>& io_facility, const std::shared_ptr<IValidator>& validator)
+      : validator_(validator), io_facility_(io_facility) {}
 
  protected:
   std::shared_ptr<IValidator> validator_;
+  std::shared_ptr<IIoFacility> io_facility_;
 };
 
 class IostreamReadTitleSmallStep : public IostreamSmallStep {

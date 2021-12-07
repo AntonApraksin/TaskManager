@@ -7,11 +7,12 @@
 #include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
 
 IostreamEditTaskStep::IostreamEditTaskStep(
-    TaskWrapperRef task_wrapper,
+    const std::shared_ptr<IIoFacility> &io_facility,
     const std::shared_ptr<ISmallStepFactory> &state_factory,
-    const std::shared_ptr<IValidator> &validator)
+    const std::shared_ptr<IValidator> &validator, TaskWrapperRef task_wrapper)
     : IEditTaskStep(task_wrapper),
-      IostreamStep(state_factory),
+      IostreamStep(io_facility),
+      IostreamWithSmallStepStep(state_factory),
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamEditTaskStep::Run() {
@@ -27,13 +28,13 @@ StepResult IostreamEditTaskStep::Run() {
                   /*.priority =*/to_edit.GetPriority(),
                   /*.state =*/to_edit.GetState()}));
   sub_context.PushState(
-      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
+      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
   sub_context.PushState(
-      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
+      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
   sub_context.PushState(
-      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
+      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
   sub_context.PushState(
-      state_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
+      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
   sub_context.Run();
 
   std::cout << "Proceed to edit? [Y/n]: ";

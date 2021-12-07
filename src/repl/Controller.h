@@ -23,14 +23,9 @@ class Controller {
   void HandleDelete(const std::vector<TaskId>&);
   void HandleShow();
   void HandleHelp();
-  void HandleInvalidId();
-  void HandleMultipleId();
-  void HandleShowId(TaskId);
-  void HandleRequiredId();
-  void HandleNotPresentId(TaskId);
-  void HandleUnknownCommand();
 
-  void ShowByMap(const std::map<TaskId, TaskWrapper>&);
+  void ReportMessage(MessageEnum);
+  void ReportMessage(MessageEnum, TaskId);
 
  private:
   std::shared_ptr<TaskManager> task_manager_;

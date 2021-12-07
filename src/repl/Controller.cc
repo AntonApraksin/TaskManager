@@ -24,7 +24,7 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
       if (ids.empty()) {
         HandleAdd();
       } else if (ids.size() > 1) {
-        HandleMultipleId();
+        ReportMessage(MessageEnum::kMultipleId);
       } else {
         HandleAdd(ids.at(0));
       }
@@ -32,26 +32,28 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
 
     case CommandEnum::kEdit:
       if (ids.empty()) {
-        HandleRequiredId();
+        ReportMessage(MessageEnum::kRequiredId);
+      } else if (ids.size() > 1) {
+        ReportMessage(MessageEnum::kMultipleId);
+      } else {
+        HandleEdit(ids.at(0));
       }
-      if (ids.size() > 1) {
-        HandleMultipleId();
-      }
-      HandleEdit(ids.at(0));
       break;
 
     case CommandEnum::kComplete:
       if (ids.empty()) {
-        HandleRequiredId();
+        ReportMessage(MessageEnum::kRequiredId);
+      } else {
+        HandleComplete(ids);
       }
-      HandleComplete(ids);
       break;
 
     case CommandEnum::kDelete:
       if (ids.empty()) {
-        HandleRequiredId();
+        ReportMessage(MessageEnum::kRequiredId);
+      } else {
+        HandleDelete(ids);
       }
-      HandleDelete(ids);
       break;
 
     case CommandEnum::kHelp:
@@ -59,7 +61,7 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
       break;
 
     case CommandEnum::kUnknown:
-      HandleUnknownCommand();
+      ReportMessage(MessageEnum::kUnknownCommand);
       break;
 
     case CommandEnum::kShow:
@@ -80,10 +82,10 @@ void Controller::HandleAdd(TaskId task_id) {
     auto [status, task] = view_->Run();
     if (*status == ConfirmationResult::kYes) {
       auto given_id = task_manager_->Add(task_id, *task);
-      HandleShowId(given_id);
+      ReportMessage(MessageEnum::kShowId, given_id);
     }
   } catch (const std::runtime_error&) {
-    HandleNotPresentId(task_id);
+    ReportMessage(MessageEnum::kNotPresentId, task_id);
   }
 }
 
@@ -92,7 +94,7 @@ void Controller::HandleAdd() {
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
     auto given_id = task_manager_->Add(*task);
-    HandleShowId(given_id);
+    ReportMessage(MessageEnum::kShowId, given_id);
   }
 }
 
@@ -105,7 +107,7 @@ void Controller::HandleEdit(TaskId task_id) {
       task_manager_->Edit(task_id, *task);
     }
   } catch (const std::runtime_error&) {
-    HandleNotPresentId(task_id);
+    ReportMessage(MessageEnum::kNotPresentId, task_id);
   }
 }
 
@@ -125,7 +127,7 @@ void Controller::HandleComplete(const std::vector<TaskId>& ids) {
       }
     });
   } catch (const std::runtime_error&) {
-    HandleNotPresentId(current_id);
+    ReportMessage(MessageEnum::kNotPresentId, current_id);
   }
 
   view_->SetState(step_factory_->GetCompleteTaskStep(std::move(tasks)));
@@ -155,7 +157,7 @@ void Controller::HandleDelete(const std::vector<TaskId>& ids) {
       }
     });
   } catch (const std::runtime_error&) {
-    HandleNotPresentId(current_id);
+    ReportMessage(MessageEnum::kNotPresentId, current_id);
   }
   view_->SetState(step_factory_->GetDeleteTaskStep(tasks));
   auto [status, task] = view_->Run();
@@ -180,32 +182,12 @@ void Controller::HandleHelp() {
   view_->Run();
 }
 
-void Controller::HandleInvalidId() {
-  view_->SetState(step_factory_->GetReportMessageStep(MessageEnum::kInvalidId));
+void Controller::ReportMessage(MessageEnum message_enum) {
+  view_->SetState(step_factory_->GetReportMessageStep(message_enum));
   view_->Run();
 }
-void Controller::HandleMultipleId() {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kMultipleId));
-  view_->Run();
-}
-void Controller::HandleShowId(TaskId task_id) {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kShowId, task_id));
-  view_->Run();
-}
-void Controller::HandleRequiredId() {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kRequiredId));
-  view_->Run();
-}
-void Controller::HandleNotPresentId(TaskId task_id) {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kNotPresentId, task_id));
-  view_->Run();
-}
-void Controller::HandleUnknownCommand() {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kUnknownCommand));
+
+void Controller::ReportMessage(MessageEnum message_enum, TaskId task_id) {
+  view_->SetState(step_factory_->GetReportMessageStep(message_enum, task_id));
   view_->Run();
 }

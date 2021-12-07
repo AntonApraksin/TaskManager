@@ -6,9 +6,9 @@
 #include "model/task/Task.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/IValidator.h"
+#include "repl/view/steps/CommandEnum.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/IStep.h"
-#include "repl/view/steps/CommandEnum.h"
 
 class View {
  public:

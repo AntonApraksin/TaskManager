@@ -1,19 +1,17 @@
 #ifndef TASKMANAGER_SRC_REPL_STATE_STATEENUM_H_
 #define TASKMANAGER_SRC_REPL_STATE_STATEENUM_H_
 
-enum class StateEnum {
+enum class CommandEnum {
   kMain,
   kAdd,
   kEdit,
   kComplete,
   kDelete,
-
-  kHelp,
   kShow,
-
+  kHelp,
+  kUnknown,
   kExit,
 
-  kUnknown,
 };
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_STATEENUM_H_

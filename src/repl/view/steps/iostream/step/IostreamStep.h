@@ -114,4 +114,17 @@ class IostreamShowSortedTasksStep final : public IShowSortedTasksStep,
   StepResult Run() override;
 };
 
+class IostreamShowHelpStep final : public IShowHelpStep, public IostreamStep {
+ public:
+  explicit IostreamShowHelpStep(const std::shared_ptr<IIoFacility>&);
+  StepResult Run() override;
+};
+
+class IostreamReportMessageStep final : public IReportMessageStep,
+                                        public IostreamStep {
+ public:
+  explicit IostreamReportMessageStep(const std::shared_ptr<IIoFacility>&);
+  StepResult Run() override;
+};
+
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMSTEP_H_

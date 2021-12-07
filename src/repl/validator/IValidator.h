@@ -7,7 +7,7 @@
 #include "model/id/TaskId.h"
 #include "model/task/Task.h"
 #include "model/task/TaskDate.h"
-#include "repl/view/StateEnum.h"
+#include "repl/view/steps/CommandEnum.h"
 
 enum class ConfirmationResult {
   kYes,
@@ -16,7 +16,7 @@ enum class ConfirmationResult {
 
 class IValidator {
  public:
-  virtual std::pair<StateEnum, std::vector<TaskId>> MakeRequest(
+  virtual std::pair<CommandEnum, std::vector<TaskId>> MakeRequest(
       const std::string& str) = 0;
 
   virtual std::optional<Task::Priority> ParseTaskPriority(

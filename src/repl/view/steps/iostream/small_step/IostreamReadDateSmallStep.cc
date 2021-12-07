@@ -13,7 +13,7 @@ void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
     auto time =
         std::chrono::system_clock::to_time_t(*ctx.GetTaskBuilder().date_);
     ss << "Leave empty for '"
-              << std::put_time(std::localtime(&time), kDatePattern) << "'\n";
+       << std::put_time(std::localtime(&time), kDatePattern) << "'\n";
     io_facility_->Print(ss.str());
     ss.str("");
   }
@@ -29,9 +29,9 @@ void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
   auto validated_date = validator_->ParseTaskDate(date_string);
   for (; !validated_date;) {
     ss << "Wrong date format.\n"
-    << "[due date(" << kDatePattern << ")]: ";
+       << "[due date(" << kDatePattern << ")]: ";
     io_facility_->Print(ss.str());
-    ss.str(""); // TODO: avoid refilling
+    ss.str("");  // TODO: avoid refilling
     date_string = io_facility_->GetLine();
     if (date_string.empty()) {
       ctx.PopState();

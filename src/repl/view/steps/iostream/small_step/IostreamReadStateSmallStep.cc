@@ -10,7 +10,7 @@ void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   std::stringstream ss;
   if (ctx.GetTaskBuilder().state_) {
     ss << "Leave empty for '" << to_string(*ctx.GetTaskBuilder().state_)
-              << "'. '-' - uncompleted, '+' - completed\n";
+       << "'. '-' - uncompleted, '+' - completed\n";
     io_facility_->Print(ss.str());
     ss.str("");
   }

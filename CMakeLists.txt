@@ -24,7 +24,7 @@ file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}
-)
+    src/repl/view/steps/MessageEnum.h src/repl/view/steps/iostream/step/IostreamShowHelpStep.cc src/repl/view/steps/iostream/step/IostreamReportMessageStep.cc)
 
 add_executable(main
         src/main.cc)

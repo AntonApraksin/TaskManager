@@ -5,6 +5,7 @@
 
 #include "StepResult.h"
 #include "model/task_wrapper/TaskWrapper.h"
+#include "repl/view/steps/MessageEnum.h"
 
 class IStep {
  public:
@@ -107,5 +108,20 @@ class IShowSortedTasksStep : public IStep {
 
  protected:
   Tasks tasks_;
+};
+
+class IShowHelpStep : public IStep {};
+
+class IReportMessageStep : public IStep {
+ public:
+  using OptionalTaskId = std::optional<TaskId>;
+
+  void SetTaskId(TaskId task_id) { task_id_ = task_id; }
+
+  void SetMessage(MessageEnum main_error) { main_error_ = main_error; }
+
+ protected:
+  OptionalTaskId task_id_;
+  MessageEnum main_error_;
 };
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

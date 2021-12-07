@@ -5,7 +5,7 @@
 
 class DefaultValidator : public IValidator {
  public:
-  std::pair<StateEnum, std::vector<TaskId>> MakeRequest(
+  std::pair<CommandEnum, std::vector<TaskId>> MakeRequest(
       const std::string &str) override;
   std::optional<Task::Priority> ParseTaskPriority(
       const std::string &str) override;
@@ -18,7 +18,7 @@ class DefaultValidator : public IValidator {
   std::optional<std::string> ValidateTitle(const std::string &str) override;
 
  private:
-  StateEnum MatchState(const std::string &str);
+  CommandEnum MatchState(const std::string &str);
 };
 
 #endif  // TASKMANAGER_SRC_REPL_PRINT_DEFAULTVALIDATOR_H_

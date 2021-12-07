@@ -29,9 +29,9 @@ void ShowTask(IIoFacility& io, const Task& task) {
   std::stringstream ss;
   auto time = std::chrono::system_clock::to_time_t(task.GetDueDate());
   ss << " [" << to_string(task.GetState()) << "] "
-            << "(" << to_string(task.GetPriority()) << ") "
-            << "{" << std::put_time(std::localtime(&time), kDatePattern) << "} "
-            << "'" << task.GetTitle() << "'\n";
+     << "(" << to_string(task.GetPriority()) << ") "
+     << "{" << std::put_time(std::localtime(&time), kDatePattern) << "} "
+     << "'" << task.GetTitle() << "'\n";
   io.Print(ss.str());
 }
 
@@ -41,14 +41,15 @@ void ShowTask(IIoFacility& io, const Task& task, int nest) {
   ShowTask(io, task);
 }
 
-void ShowTaskWithId(IIoFacility& io,const Task& task, TaskId task_id) {
+void ShowTaskWithId(IIoFacility& io, const Task& task, TaskId task_id) {
   std::stringstream ss;
   ss << "└─ " << task_id.GetId() << ' ';
   io.Print(ss.str());
   ShowTask(io, task);
 }
 
-void ShowTaskWithId(IIoFacility& io, const Task& task, TaskId task_id, int nest) {
+void ShowTaskWithId(IIoFacility& io, const Task& task, TaskId task_id,
+                    int nest) {
   std::stringstream ss;
   std::string indent(nest, ' ');
   ss << indent << "└─ " << task_id.GetId() << ' ';

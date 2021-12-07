@@ -23,7 +23,7 @@ StepResult IostreamEditTaskStep::Run() {
   const auto &to_edit = *(task_wrapper_.get());
   ShowTask(*io_facility_, to_edit);
   ss << "  it has " << task_wrapper_.get().ShowStorage().size()
-            << " children.\n";
+     << " children.\n";
   io_facility_->Print(ss.str());
   ss.str("");
   TaskContext sub_context;

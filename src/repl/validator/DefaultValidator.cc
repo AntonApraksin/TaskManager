@@ -14,31 +14,31 @@ void lower_string(std::string &str) {
                  [](auto c) { return std::tolower(c); });
 }
 
-StateEnum DefaultValidator::MatchState(const std::string &str) {
+CommandEnum DefaultValidator::MatchState(const std::string &str) {
   if (str == "a" || str == "add") {
-    return StateEnum::kAdd;
+    return CommandEnum::kAdd;
   }
   if (str == "ex" || str == "exit") {
-    return StateEnum::kExit;
+    return CommandEnum::kExit;
   }
   if (str == "h" || str == "help") {
-    return StateEnum::kHelp;
+    return CommandEnum::kHelp;
   }
   if (str == "d" || str == "delete") {
-    return StateEnum::kDelete;
+    return CommandEnum::kDelete;
   }
   if (str == "c" || str == "complete") {
-    return StateEnum::kComplete;
+    return CommandEnum::kComplete;
   }
   if (str == "ed" || str == "edit") {
-    return StateEnum::kEdit;
+    return CommandEnum::kEdit;
   }
   if (str == "s" || str == "show") {
-    return StateEnum::kShow;
+    return CommandEnum::kShow;
   }
-  return StateEnum::kUnknown;
+  return CommandEnum::kUnknown;
 }
-std::pair<StateEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
+std::pair<CommandEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
     const std::string &str) {
   std::string input(str);
   lower_string(input);

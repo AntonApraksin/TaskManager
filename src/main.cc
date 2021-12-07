@@ -10,7 +10,8 @@ int main() {
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_shared<TaskManager>(std::move(id_producer));
   auto io_facility = std::make_shared<IostreamIoFacility>();
-  auto state_factory = std::make_shared<IostreamSmallStepFactory>(io_facility, validator);
+  auto state_factory =
+      std::make_shared<IostreamSmallStepFactory>(io_facility, validator);
   auto step_factory = std::make_unique<IostreamStepFactory>(
       io_facility, state_factory, validator);
   Controller ctrl{io_facility, validator, task_manager,

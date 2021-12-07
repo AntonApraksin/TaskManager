@@ -15,7 +15,7 @@ class Controller {
   void Run();
 
  private:
-  void PerformAction(StateEnum, const std::vector<TaskId>& ids);
+  void PerformAction(CommandEnum, const std::vector<TaskId>& ids);
   void HandleAdd();
   void HandleAdd(TaskId);
   void HandleEdit(TaskId);
@@ -23,6 +23,12 @@ class Controller {
   void HandleDelete(const std::vector<TaskId>&);
   void HandleShow();
   void HandleHelp();
+  void HandleInvalidId();
+  void HandleMultipleId();
+  void HandleShowId(TaskId);
+  void HandleRequiredId();
+  void HandleNotPresentId(TaskId);
+  void HandleUnknownCommand();
 
   void ShowByMap(const std::map<TaskId, TaskWrapper>&);
 

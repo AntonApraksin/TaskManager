@@ -9,8 +9,8 @@
 void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
   std::stringstream ss;
   if (ctx.GetTaskBuilder().priority_) {
-    ss << "Leave empty for '"
-              << to_string(*ctx.GetTaskBuilder().priority_) << "'\n";
+    ss << "Leave empty for '" << to_string(*ctx.GetTaskBuilder().priority_)
+       << "'\n";
     io_facility_->Print(ss.str());
     ss.str("");
   }
@@ -24,7 +24,7 @@ void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
     ss << "Priority should be: low, medium, high.\n";
     io_facility_->Print(ss.str());
     ss.str("");
-    priority_string = PrintAndGet(*io_facility_,"priority");
+    priority_string = PrintAndGet(*io_facility_, "priority");
     if (priority_string.empty()) {
       ctx.PopState();
       return;

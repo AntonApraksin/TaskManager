@@ -64,7 +64,11 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
       break;
 
     case CommandEnum::kShow:
-      HandleShow();  // TODO: add support for subtasks and IDs
+      if (ids.empty()) {
+        HandleShow();
+      } else {
+        HandleShow(ids);
+      }
       break;
 
     case CommandEnum::kMain:
@@ -127,6 +131,7 @@ void Controller::HandleComplete(const std::vector<TaskId>& ids) {
     });
   } catch (const std::runtime_error&) {
     ReportMessage(MessageEnum::kNotPresentId, current_id);
+    return;
   }
 
   view_->SetState(step_factory_->GetCompleteTaskStep(std::move(tasks)));
@@ -157,6 +162,7 @@ void Controller::HandleDelete(const std::vector<TaskId>& ids) {
     });
   } catch (const std::runtime_error&) {
     ReportMessage(MessageEnum::kNotPresentId, current_id);
+    return;
   }
   view_->SetState(step_factory_->GetDeleteTaskStep(tasks));
   auto [status, task] = view_->Run();
@@ -168,6 +174,27 @@ void Controller::HandleDelete(const std::vector<TaskId>& ids) {
       }
     });
   }
+}
+
+void Controller::HandleShow(const std::vector<TaskId>& ids) {
+  IShowNTasksStep::TaskWrappers tasks;
+  std::vector<TaskId> seen;
+  TaskId current_id = ids.at(0);
+  auto storage = task_manager_->Show();
+  try {
+    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
+      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
+        seen.push_back(id);
+        current_id = id;
+        tasks.push_back(storage.Find(id));
+      }
+    });
+  } catch (const std::runtime_error&) {
+    ReportMessage(MessageEnum::kNotPresentId, current_id);
+    return;
+  }
+  view_->SetState(step_factory_->GetShowNTasksStep(tasks));
+  /*auto [status, task] =*/view_->Run();
 }
 
 void Controller::HandleShow() {

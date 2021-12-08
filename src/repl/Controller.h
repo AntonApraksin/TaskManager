@@ -20,6 +20,7 @@ class Controller {
   void HandleComplete(const std::vector<TaskId>&);
   void HandleDelete(const std::vector<TaskId>&);
   void HandleShow();
+  void HandleShow(const std::vector<TaskId>&);
   void HandleHelp();
 
   void ReportMessage(MessageEnum);

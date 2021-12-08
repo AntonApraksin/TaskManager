@@ -7,6 +7,7 @@ IostreamShowNTasksStep::IostreamShowNTasksStep(
 
 StepResult IostreamShowNTasksStep::Run() {
   for (const auto &i : task_wrappers_) {
+    ShowTask(*io_facility_, *i.get());
     ShowNestedMap(*io_facility_, i, 2);
   }
   return {{}, {}};

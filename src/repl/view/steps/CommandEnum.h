@@ -10,8 +10,7 @@ enum class CommandEnum {
   kShow,
   kHelp,
   kUnknown,
-  kExit,
-
+  kQuit,
 };
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_STATEENUM_H_

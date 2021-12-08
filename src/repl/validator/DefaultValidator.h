@@ -18,7 +18,7 @@ class DefaultValidator : public IValidator {
   std::optional<std::string> ValidateTitle(const std::string &str) override;
 
  private:
-  CommandEnum MatchState(const std::string &str);
+  CommandEnum MatchCommand(const std::string &str);
 };
 
 #endif  // TASKMANAGER_SRC_REPL_PRINT_DEFAULTVALIDATOR_H_

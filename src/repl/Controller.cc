@@ -11,7 +11,7 @@ Controller::Controller(std::unique_ptr<View> view,
 
 void Controller::Run() {
   auto command = view_->GetNextCommand();
-  for (; command.first != CommandEnum::kExit;) {
+  for (; command.first != CommandEnum::kQuit;) {
     PerformAction(command.first, command.second);
     command = view_->GetNextCommand();
   }
@@ -69,8 +69,8 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
 
     case CommandEnum::kMain:
       throw std::runtime_error("CommandEnum::kMain must be unreachable.");
-    case CommandEnum::kExit:
-      throw std::runtime_error("CommandEnum::kExit must be unreachable.");
+    case CommandEnum::kQuit:
+      throw std::runtime_error("CommandEnum::kQuit must be unreachable.");
   }
 }
 

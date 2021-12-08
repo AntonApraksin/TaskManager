@@ -14,12 +14,12 @@ void lower_string(std::string &str) {
                  [](auto c) { return std::tolower(c); });
 }
 
-CommandEnum DefaultValidator::MatchState(const std::string &str) {
+CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   if (str == "a" || str == "add") {
     return CommandEnum::kAdd;
   }
-  if (str == "ex" || str == "exit") {
-    return CommandEnum::kExit;
+  if (str == "q" || str == "quit") {
+    return CommandEnum::kQuit;
   }
   if (str == "h" || str == "help") {
     return CommandEnum::kHelp;
@@ -30,7 +30,7 @@ CommandEnum DefaultValidator::MatchState(const std::string &str) {
   if (str == "c" || str == "complete") {
     return CommandEnum::kComplete;
   }
-  if (str == "ed" || str == "edit") {
+  if (str == "e" || str == "edit") {
     return CommandEnum::kEdit;
   }
   if (str == "s" || str == "show") {
@@ -45,7 +45,7 @@ std::pair<CommandEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
   std::stringstream ss{input};
   std::string token;
   std::getline(ss, token, ' ');
-  auto state = MatchState(token);
+  auto state = MatchCommand(token);
   std::vector<TaskId> ids;
   for (; std::getline(ss, token, ' ');) {
     ids.push_back(TaskId::Create(std::stoi(token)));

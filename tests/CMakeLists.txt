@@ -23,7 +23,7 @@ set(MODEL_TESTS
   model/Task.cc
   model/Id.cc
   model/TaskManager.cc
-        model/TaskStorage.cc model/TaskWrapper.cc model/ModelUtils.h)
+        model/TaskStorage.cc model/TaskWrapper.cc model/ModelUtils.h repl/scenarios/ConfirmationNoShouldDoNothing.cc repl/scenarios/Framework.h repl/scenarios/AddAction.cc repl/scenarios/EditAction.cc repl/scenarios/CompleteAction.cc repl/scenarios/DeleteAction.cc repl/validator/DefaultValidator.cc)
 
 add_executable(ModelTest
   ${MODEL_TESTS}

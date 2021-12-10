@@ -17,24 +17,19 @@ add_link_options(-stdlib=libc++)
 
 enable_testing()
 
-set(TaskManager_SRCS
-        src/model/id/TaskId.cc
-        src/model/id/TaskIdProducer.cc
-        src/model/task/Task.cc
-        src/model/task/TaskDate.cc
-        src/model/task_manager/TaskManager.cc
-        src/model/id/TaskId.h
-        src/model/id/TaskIdProducer.h
-        src/model/task/Task.h
-        src/model/task/TaskDate.h
-        src/model/task_manager/TaskManager.h
-        src/model/task_wrapper/TaskWrapper.cc
-        src/model/task_wrapper/TaskWrapper.h
-        src/model/task_wrapper/TaskStorage.inl src/model/task_wrapper/TaskStorage.h)
+file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
+    "src/*.h"
+    "src/*.cc"
+)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS}
-)
+    src/repl/view/steps/MessageEnum.h src/repl/view/steps/iostream/step/IostreamShowHelpStep.cc src/repl/view/steps/iostream/step/IostreamReportMessageStep.cc)
+
+add_executable(main
+        src/main.cc)
+
+target_link_libraries(main TaskManager)
 
 target_include_directories(TaskManager
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src

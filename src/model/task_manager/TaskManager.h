@@ -14,12 +14,13 @@ class TaskManager final {
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
   TaskId Add(Task task);
+  TaskId Add(TaskId task_id, Task task);
 
   TaskManager& Edit(TaskId id, Task task);
   TaskManager& Complete(TaskId id);
   TaskManager& Delete(TaskId id);
 
-  const TaskStorage& Show() const;
+  TaskStorage Show() const;
 
  private:
   TaskStorage storage_;

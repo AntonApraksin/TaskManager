@@ -9,6 +9,13 @@ TaskId TaskManager::Add(Task task) {
   return next_id;
 }
 
+TaskId TaskManager::Add(TaskId task_id, Task task) {
+  auto next_id = id_producer_->GetNextId();
+  auto& add_to = storage_.Find(task_id);
+  add_to.Add(next_id, std::move(task));
+  return next_id;
+}
+
 TaskManager& TaskManager::Edit(TaskId id, Task task) {
   auto& to_edit = storage_.Find(id);
   to_edit.SetTask(task);
@@ -27,4 +34,4 @@ TaskManager& TaskManager::Delete(TaskId id) {
   return *this;
 }
 
-const TaskStorage& TaskManager::Show() const { return storage_; }
+TaskStorage TaskManager::Show() const { return storage_; }

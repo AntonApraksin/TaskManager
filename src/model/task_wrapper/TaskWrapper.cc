@@ -8,6 +8,8 @@ const Task& TaskWrapper::GetTask() const { return task_; }
 
 const Task& TaskWrapper::operator*() const { return task_; }
 
+const Task* TaskWrapper::operator->() const { return &task_; }
+
 void TaskWrapper::Complete() {
   task_ = *Task::Create(task_.GetTitle(), task_.GetPriority(),
                         task_.GetDueDate(), Task::State::kCompleted);

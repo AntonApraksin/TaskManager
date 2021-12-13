@@ -1,30 +1,25 @@
-#include <sstream>
-
 #include "IostreamSmallStep.h"
 #include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
-  std::stringstream ss;
   if (ctx.GetTaskBuilder().state_) {
-    ss << "Leave empty for '" << to_string(*ctx.GetTaskBuilder().state_)
-       << "'. '-' - uncompleted, '+' - completed\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
+    io_facility_->Print(IostreamStrings::kInvalidState);
+    io_facility_->Print(IostreamStrings::LeaveEmptyFor(
+        IostreamStrings::to_string(*ctx.GetTaskBuilder().state_)));
   }
-  auto state_string = PrintAndGet(*io_facility_, "state");
+  std::string prompt = IostreamStrings::GetPrompt("state");
+  auto state_string = PrintAndGet(*io_facility_, prompt);
   if (state_string.empty()) {
     ctx.PopState();
     return;
   }
   auto validated_state = validator_->ParseTaskState(state_string);
   for (; !validated_state;) {
-    ss << "State should be '+' for completed or '-' for uncompleted\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
-    state_string = PrintAndGet(*io_facility_, "state");
+    io_facility_->Print(IostreamStrings::kInvalidState);
+    state_string = PrintAndGet(*io_facility_, prompt);
     if (state_string.empty()) {
       ctx.PopState();
       return;

@@ -10,7 +10,7 @@
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
 #include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 
@@ -43,7 +43,8 @@ class TaskStringedDataProducer final {
     ++state_;
     std::stringstream ss_date;
     ss_date << std::put_time(std::localtime(&time), kDatePattern);
-    return {ss.str(), ss_date.str(), to_string(priority), to_string(state)};
+    return {ss.str(), ss_date.str(), IostreamStrings::to_string(priority),
+            IostreamStrings::to_string(state)};
   }
 
  private:

@@ -1,30 +1,24 @@
-#include <sstream>
-
 #include "IostreamSmallStep.h"
 #include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
-  std::stringstream ss;
   if (ctx.GetTaskBuilder().priority_) {
-    ss << "Leave empty for '" << to_string(*ctx.GetTaskBuilder().priority_)
-       << "'\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
+    io_facility_->Print(IostreamStrings::LeaveEmptyFor(
+        IostreamStrings::to_string(*ctx.GetTaskBuilder().priority_)));
   }
-  auto priority_string = PrintAndGet(*io_facility_, "priority");
+  std::string prompt = IostreamStrings::GetPrompt("priority");
+  auto priority_string = PrintAndGet(*io_facility_, prompt);
   if (priority_string.empty()) {
     ctx.PopState();
     return;
   }
   auto validated_priority = validator_->ParseTaskPriority(priority_string);
   for (; !validated_priority;) {
-    ss << "Priority should be: low, medium, high.\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
-    priority_string = PrintAndGet(*io_facility_, "priority");
+    io_facility_->Print(IostreamStrings::kInvalidPriority);
+    priority_string = PrintAndGet(*io_facility_, prompt);
     if (priority_string.empty()) {
       ctx.PopState();
       return;

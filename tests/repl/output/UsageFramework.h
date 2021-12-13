@@ -1,5 +1,5 @@
-#ifndef TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
-#define TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
+#ifndef TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_
+#define TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -51,16 +51,29 @@ class TaskStringedDataProducer final {
   int state_ = 0;
 };
 
-class MockIoFacility : public IIoFacility {
+class UsageMockIoFacility : public IIoFacility {
  public:
-  MOCK_METHOD(std::string, GetLine, (), (override));
-  MOCK_METHOD(void, Print, (const std::string&), (override));
+  void SetInput(std::vector<std::string> input) { input_ = std::move(input); }
+
+  std::vector<std::string> GetOutput() { return output_; }
+
+  std::string GetLine() override {
+    auto to_return = input_.back();
+    input_.pop_back();
+    return to_return;
+  }
+
+  void Print(const std::string& str) override { output_.push_back(str); }
+
+ private:
+  std::vector<std::string> input_;
+  std::vector<std::string> output_;
 };
 
-class Framework {
+class UsageFramework {
  protected:
   void SetUpImpl() {
-    io_facility_ = std::make_shared<MockIoFacility>();
+    io_facility_ = std::make_shared<UsageMockIoFacility>();
     auto id_producer = std::make_unique<TaskIdProducer>();
     task_manager_ = std::make_shared<TaskManager>(std::move(id_producer));
 
@@ -75,24 +88,14 @@ class Framework {
 
     controller_ = std::make_unique<Controller>(std::move(view), task_manager_,
                                                std::move(step_factory));
-
-    EXPECT_CALL(*io_facility_, Print).Times(testing::AtLeast(1));
   }
 
-  TaskStorage RunScenario(std::vector<std::string> commands) {
-    std::vector<std::string> vec(commands.crbegin(), commands.crend());
-    auto command_producer = [&vec]() mutable {
-      if (vec.empty()) {
-        std::logic_error("Vector ran out of commands");
-      }
-      const auto& command = vec.back();
-      vec.pop_back();
-      return command;
-    };
-    EXPECT_CALL(*io_facility_, GetLine)
-        .WillRepeatedly(testing::Invoke(command_producer));
+  std::pair<TaskStorage, std::vector<std::string>> RunScenario(
+      std::vector<std::string> commands) {
+    io_facility_->SetInput(
+        std::vector<std::string>(commands.crbegin(), commands.crend()));
     controller_->Run();
-    return task_manager_->Show();
+    return {task_manager_->Show(), io_facility_->GetOutput()};
   }
 
   Task TaskDataToTask(const TaskStringedData& data) {
@@ -103,10 +106,10 @@ class Framework {
   }
 
   std::unique_ptr<Controller> controller_;
-  std::shared_ptr<MockIoFacility> io_facility_;
+  std::shared_ptr<UsageMockIoFacility> io_facility_;
   std::shared_ptr<TaskManager> task_manager_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };
 
-#endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
+#endif  // TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_

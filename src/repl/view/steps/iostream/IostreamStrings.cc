@@ -28,9 +28,10 @@ const char* IostreamStrings::to_string(Task::State state) {
 std::string IostreamStrings::ShowTask(const Task& task) {
   std::stringstream ss;
   auto time = std::chrono::system_clock::to_time_t(task.GetDueDate());
+  auto localized_time = std::localtime(&time);
   ss << " [" << to_string(task.GetState()) << "] "
      << "(" << to_string(task.GetPriority()) << ") "
-     << "{" << std::put_time(std::localtime(&time), kDatePattern) << "} "
+     << "{" << std::put_time(localized_time, kDatePattern) << "} "
      << "'" << task.GetTitle() << "'\n";
   return ss.str();
 }

@@ -94,6 +94,7 @@ std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
   if (ss.fail()) {
     return std::nullopt;
   }
+  tm.tm_isdst = 1;  // TODO: FIX THIS. SUMMER/WINTER TIME SADNESS
   auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
   return tp;
 }

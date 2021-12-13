@@ -1,8 +1,7 @@
 #include "View.h"
 
-#include <sstream>
-
 #include "repl/view/steps/TaskContext.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 View::View(const std::shared_ptr<IIoFacility>& io_facility,
            const std::shared_ptr<IValidator>& validator)
@@ -15,9 +14,7 @@ void View::SetState(const std::shared_ptr<IStep>& step) {
 StepResult View::Run() { return current_step_->Run(); }
 
 std::pair<CommandEnum, std::vector<TaskId>> View::GetNextCommand() {
-  std::stringstream ss;
-  ss << "[]: ";
-  io_facility_->Print(ss.str());
-  std::string result = io_facility_->GetLine();
+  std::string result =
+      PrintAndGet(*io_facility_, IostreamStrings::GetPrompt(""));
   return validator_->MakeRequest(result);
 }

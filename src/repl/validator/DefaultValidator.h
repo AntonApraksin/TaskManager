@@ -5,7 +5,7 @@
 
 class DefaultValidator : public IValidator {
  public:
-  std::pair<CommandEnum, std::vector<TaskId>> MakeRequest(
+  std::pair<CommandEnum, std::optional<std::vector<TaskId>>> MakeRequest(
       const std::string &str) override;
   std::optional<Task::Priority> ParseTaskPriority(
       const std::string &str) override;

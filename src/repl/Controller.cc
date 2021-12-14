@@ -1,7 +1,5 @@
 #include "Controller.h"
 
-// TODO: inject View
-
 Controller::Controller(std::unique_ptr<View> view,
                        const std::shared_ptr<TaskManager>& task_manager,
                        std::unique_ptr<IStepFactory> step_factory)
@@ -12,7 +10,11 @@ Controller::Controller(std::unique_ptr<View> view,
 void Controller::Run() {
   auto command = view_->GetNextCommand();
   for (; command.first != CommandEnum::kQuit;) {
-    PerformAction(command.first, command.second);
+    if (command.second) {
+      PerformAction(command.first, *command.second);
+    } else {
+      ReportMessage(MessageEnum::kInvalidId);
+    }
     command = view_->GetNextCommand();
   }
 }

@@ -38,19 +38,23 @@ CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   }
   return CommandEnum::kUnknown;
 }
-std::pair<CommandEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
-    const std::string &str) {
+std::pair<CommandEnum, std::optional<std::vector<TaskId>>>
+DefaultValidator::MakeRequest(const std::string &str) {
   std::string input(str);
   lower_string(input);
   std::stringstream ss{input};
   std::string token;
   std::getline(ss, token, ' ');
   auto state = MatchCommand(token);
-  std::vector<TaskId> ids;
-  for (; std::getline(ss, token, ' ');) {
-    ids.push_back(TaskId::Create(std::stoi(token)));
+  try {
+    std::vector<TaskId> ids;
+    for (; std::getline(ss, token, ' ');) {
+      ids.push_back(TaskId::Create(std::stoi(token)));
+    }
+    return {state, ids};
+  } catch (const std::invalid_argument &) {
+    return {state, {}};
   }
-  return {state, ids};
 }
 
 std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(

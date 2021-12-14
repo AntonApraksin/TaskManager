@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package task_manager;
+
+message TaskId
+{
+    int32 id = 1;
+}

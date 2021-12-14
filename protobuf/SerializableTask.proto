@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Task.proto";
+import "TaskId.proto";
+
+package task_manager;
+
+message SerializableTask
+{
+    TaskId task_id = 1;
+    TaskId parent_id = 2;
+    Task task = 3;
+}

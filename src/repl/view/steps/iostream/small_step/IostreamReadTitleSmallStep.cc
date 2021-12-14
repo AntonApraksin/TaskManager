@@ -1,33 +1,25 @@
-#include <sstream>
-
 #include "IostreamSmallStep.h"
 #include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
-  std::stringstream ss;
+  std::string prompt = IostreamStrings::GetPrompt("title");
   if (ctx.GetTaskBuilder().title_) {
-    ss << "Leave empty for '" << *ctx.GetTaskBuilder().title_ << "'\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
-    auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, "title"));
+    io_facility_->Print(
+        IostreamStrings::LeaveEmptyFor(*ctx.GetTaskBuilder().title_));
+    auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
     if (title) {
       ctx.GetTaskBuilder().title_ = std::move(title);
-      ctx.PopState();
-      return;
-    } else {
-      ctx.PopState();
-      return;
     }
+    ctx.PopState();
+    return;
   }
-  auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, "title"));
+  auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
   for (; !title;) {
-    ss << "Title must not be empty.\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
-    title = validator_->ValidateTitle(PrintAndGet(*io_facility_, "title"));
+    io_facility_->Print(IostreamStrings::kTitleMustNotBeEmpty);
+    title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
   }
   ctx.GetTaskBuilder().title_ = std::move(title);
   ctx.PopState();

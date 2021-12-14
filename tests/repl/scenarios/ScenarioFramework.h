@@ -1,5 +1,5 @@
-#ifndef TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
-#define TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
+#ifndef TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
+#define TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -10,7 +10,7 @@
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
 #include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 
@@ -43,23 +43,24 @@ class TaskStringedDataProducer final {
     ++state_;
     std::stringstream ss_date;
     ss_date << std::put_time(std::localtime(&time), kDatePattern);
-    return {ss.str(), ss_date.str(), to_string(priority), to_string(state)};
+    return {ss.str(), ss_date.str(), IostreamStrings::to_string(priority),
+            IostreamStrings::to_string(state)};
   }
 
  private:
   int state_ = 0;
 };
 
-class MockIoFacility : public IIoFacility {
+class ScenarioMockIoFacility : public IIoFacility {
  public:
   MOCK_METHOD(std::string, GetLine, (), (override));
   MOCK_METHOD(void, Print, (const std::string&), (override));
 };
 
-class Framework {
+class ScenarioFramework {
  protected:
   void SetUpImpl() {
-    io_facility_ = std::make_shared<MockIoFacility>();
+    io_facility_ = std::make_shared<ScenarioMockIoFacility>();
     auto id_producer = std::make_unique<TaskIdProducer>();
     task_manager_ = std::make_shared<TaskManager>(std::move(id_producer));
 
@@ -84,7 +85,7 @@ class Framework {
       if (vec.empty()) {
         std::logic_error("Vector ran out of commands");
       }
-      const auto& command = vec.back();
+      auto command = vec.back();
       vec.pop_back();
       return command;
     };
@@ -102,10 +103,10 @@ class Framework {
   }
 
   std::unique_ptr<Controller> controller_;
-  std::shared_ptr<MockIoFacility> io_facility_;
+  std::shared_ptr<ScenarioMockIoFacility> io_facility_;
   std::shared_ptr<TaskManager> task_manager_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };
 
-#endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_FRAMEWORK_H_
+#endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_

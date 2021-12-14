@@ -1,5 +1,4 @@
-#include <sstream>
-
+#include "repl/view/steps/iostream/IostreamStrings.h"
 #include "repl/view/steps/iostream/step/IostreamStep.h"
 
 IostreamReportMessageStep::IostreamReportMessageStep(
@@ -9,35 +8,28 @@ IostreamReportMessageStep::IostreamReportMessageStep(
 StepResult IostreamReportMessageStep::Run() {
   switch (main_error_) {
     case MessageEnum::kUnknownCommand:
-      io_facility_->Print(
-          "Unknown command. Type 'help' to display all available commands.\n");
+      io_facility_->Print(IostreamStrings::kUnknownCommand);
       break;
 
     case MessageEnum::kInvalidId:
-      io_facility_->Print("Id should be numeric value.\n");
+      io_facility_->Print(IostreamStrings::kInvalidId);
       break;
 
-    case MessageEnum::kNotPresentId: {
-      std::stringstream ss;
-      ss << "Id " << task_id_->GetId() << " not present in store.\n";
-      io_facility_->Print(ss.str());
+    case MessageEnum::kNotPresentId:
+      io_facility_->Print(IostreamStrings::NotPresentId(task_id_->GetId()));
       break;
-    }
 
     case MessageEnum::kMultipleId:
-      io_facility_->Print("Multiple Id does not supported for this command.\n");
+      io_facility_->Print(IostreamStrings::kMultipleId);
       break;
 
     case MessageEnum::kRequiredId:
-      io_facility_->Print("Id is required for this command.\n");
+      io_facility_->Print(IostreamStrings::kRequiredId);
       break;
 
-    case MessageEnum::kShowId: {
-      std::stringstream ss;
-      ss << "Id " << task_id_->GetId() << ".\n";
-      io_facility_->Print(ss.str());
+    case MessageEnum::kShowId:
+      io_facility_->Print(IostreamStrings::ShowId(task_id_->GetId()));
       break;
-    }
   }
   return {{}, {}};
 }

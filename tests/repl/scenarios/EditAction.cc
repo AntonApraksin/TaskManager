@@ -1,6 +1,6 @@
-#include "Framework.h"
+#include "ScenarioFramework.h"
 
-class EditActionTest : public testing::Test, protected Framework {
+class EditActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
 };

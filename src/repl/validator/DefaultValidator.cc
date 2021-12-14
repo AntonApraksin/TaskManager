@@ -38,19 +38,23 @@ CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   }
   return CommandEnum::kUnknown;
 }
-std::pair<CommandEnum, std::vector<TaskId>> DefaultValidator::MakeRequest(
-    const std::string &str) {
+std::pair<CommandEnum, std::optional<std::vector<TaskId>>>
+DefaultValidator::MakeRequest(const std::string &str) {
   std::string input(str);
   lower_string(input);
   std::stringstream ss{input};
   std::string token;
   std::getline(ss, token, ' ');
   auto state = MatchCommand(token);
-  std::vector<TaskId> ids;
-  for (; std::getline(ss, token, ' ');) {
-    ids.push_back(TaskId::Create(std::stoi(token)));
+  try {
+    std::vector<TaskId> ids;
+    for (; std::getline(ss, token, ' ');) {
+      ids.push_back(TaskId::Create(std::stoi(token)));
+    }
+    return {state, ids};
+  } catch (const std::invalid_argument &) {
+    return {state, {}};
   }
-  return {state, ids};
 }
 
 std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
@@ -93,6 +97,11 @@ std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
   ss >> std::get_time(&tm, kDatePattern);
   if (ss.fail()) {
     return std::nullopt;
+  }
+  if (tm.tm_hour >= 12) {
+    tm.tm_isdst = -1;  // TODO: FIX THIS. SUMMER/WINTER TIME SADNESS
+  } else {
+    tm.tm_isdst = -1;  // TODO: FIX THIS. SUMMER/WINTER TIME SADNESS
   }
   auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
   return tp;

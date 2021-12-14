@@ -1,5 +1,5 @@
 #include "IostreamStep.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 IostreamShowAllTasksStep::IostreamShowAllTasksStep(
     const std::shared_ptr<IIoFacility> &io_facility,
@@ -8,8 +8,8 @@ IostreamShowAllTasksStep::IostreamShowAllTasksStep(
 
 StepResult IostreamShowAllTasksStep::Run() {
   for (const auto &i : task_storage_.get().ShowStorage()) {
-    ShowTaskWithId(*io_facility_, *i.second, i.first);
-    ShowNestedMap(*io_facility_, i.second, 3);
+    io_facility_->Print(IostreamStrings::ShowTaskWithId(*i.second, i.first));
+    io_facility_->Print(IostreamStrings::ShowNestedMap(i.second, 3));
   }
   return {{}, {}};
 }

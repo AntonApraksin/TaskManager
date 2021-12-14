@@ -1,7 +1,5 @@
-#include <sstream>
-
 #include "IostreamStep.h"
-#include "repl/view/steps/iostream/IostreamGeneralFunctional.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 IostreamCompleteTaskStep::IostreamCompleteTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
@@ -11,26 +9,18 @@ IostreamCompleteTaskStep::IostreamCompleteTaskStep(
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamCompleteTaskStep::Run() {
-  std::stringstream ss;
-  ss << "You are going to complete such tasks:\n";
-  io_facility_->Print(ss.str());
-  ss.str("");
+  io_facility_->Print(IostreamStrings::YouAreGoingTo("complete"));
   for (const auto i : task_wrappers_) {
-    ShowTask(*io_facility_, *(i.get()));
-    ss << "  and its " << i.get().ShowStorage().size() << " children.\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
+    io_facility_->Print(IostreamStrings::ShowTask(*(i.get())));
+    io_facility_->Print(
+        IostreamStrings::AndItsChildren(i.get().ShowStorage().size()));
   }
 
-  ss << "Proceed to complete? [Y/n]: ";
-  io_facility_->Print(ss.str());
-  ss.str("");
+  io_facility_->Print(IostreamStrings::ProceedTo("complete"));
   std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
-    ss << "Okay, I treat it as no\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
+    io_facility_->Print(IostreamStrings::kOkayITreatItAsNo);
     return StepResult{ConfirmationResult::kNo, {}};
   }
   return {*confirm, {}};

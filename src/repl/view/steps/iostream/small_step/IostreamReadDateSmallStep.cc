@@ -1,38 +1,32 @@
 #include <iomanip>
-#include <sstream>
 
 #include "IostreamSmallStep.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/view/steps/TaskContext.h"
+#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
-  std::stringstream ss;
   if (ctx.GetTaskBuilder().date_) {
     auto time =
         std::chrono::system_clock::to_time_t(*ctx.GetTaskBuilder().date_);
-    ss << "Leave empty for '"
-       << std::put_time(std::localtime(&time), kDatePattern) << "'\n";
-    io_facility_->Print(ss.str());
-    ss.str("");
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&time), kDatePattern);
+    std::string leave_empty_for = IostreamStrings::LeaveEmptyFor(ss.str());
+    io_facility_->Print(leave_empty_for);
   }
   // TODO: Rewrite to PrintAndGet
-  ss << "[due date(" << kDatePattern << ")]: ";
-  io_facility_->Print(ss.str());
-  ss.str("");
-  std::string date_string = io_facility_->GetLine();
+  std::string prompt = IostreamStrings::GetPrompt("due date", kDatePattern);
+  std::string date_string = PrintAndGet(*io_facility_, prompt);
   if (date_string.empty()) {
     ctx.PopState();
     return;
   }
   auto validated_date = validator_->ParseTaskDate(date_string);
   for (; !validated_date;) {
-    ss << "Wrong date format.\n"
-       << "[due date(" << kDatePattern << ")]: ";
-    io_facility_->Print(ss.str());
-    ss.str("");  // TODO: avoid refilling
-    date_string = io_facility_->GetLine();
+    io_facility_->Print(IostreamStrings::kInvalidDate);
+    date_string = PrintAndGet(*io_facility_, prompt);
     if (date_string.empty()) {
       ctx.PopState();
       return;

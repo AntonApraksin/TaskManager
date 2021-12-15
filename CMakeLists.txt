@@ -42,7 +42,7 @@ foreach(proto_file ${Proto_SRCS})
   set(PROTOBUF_GENERATED_SRCS ${PROTOBUF_GENERATED_SRCS}
       ${PROTOBUF_CPP_OUT_DIR}/${basename}.pb.h
       ${PROTOBUF_CPP_OUT_DIR}/${basename}.pb.cc
-)
+      )
 endforeach(proto_file)
 
 file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
@@ -54,11 +54,12 @@ set_source_files_properties(TaskManager_SRCS PROPERTIES COMPILE_FLAGS -Wall -Wex
 add_library(TaskManager
   STATIC ${TaskManager_SRCS} ${PROTOBUF_GENERATED_SRCS}
 )
+target_link_libraries(TaskManager PUBLIC protobuf::libprotobuf)
 
 add_executable(main
         src/main.cc)
 
-target_link_libraries(main TaskManager protobuf::libprotobuf)
+target_link_libraries(main TaskManager)
 
 target_include_directories(TaskManager
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -66,4 +67,5 @@ target_include_directories(TaskManager
     ${PROTOBUF_INCLUDE_DIR}
 )
 
+enable_testing()
 add_subdirectory(tests)

@@ -1,16 +1,12 @@
 #ifndef TASKMANAGER_TESTS_REPL_COMMON_H_
 #define TASKMANAGER_TESTS_REPL_COMMON_H_
 
+#include <google/protobuf/util/time_util.h>
+
+#include "../common.h"
 #include "model/task/Task.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/view/steps/iostream/IostreamStrings.h"
-
-inline bool operator==(const Task& lhs,
-                       const Task& rhs) {  // TODO: find it a better place
-  return lhs.GetTitle() == rhs.GetTitle() &&
-         lhs.GetPriority() == rhs.GetPriority() &&
-         lhs.GetDueDate() == rhs.GetDueDate();
-}
 
 struct TaskStringedData {
   std::string title;
@@ -24,16 +20,16 @@ class TaskStringedDataProducer final {
   TaskStringedData GetData() {
     std::stringstream ss;
     ss << "Sample task #" << state_;
-    Date_t chrono_time =
-        std::chrono::system_clock::now() + std::chrono::seconds(state_);
-    auto time = std::chrono::system_clock::to_time_t(chrono_time);
+    Date_t due_date =
+        google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
+    auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(due_date);
     Task::Priority priority = static_cast<Task::Priority>(state_ % 3);
-    Task::State state = static_cast<Task::State>(state_ % 2);
+    Task::Progress progress = static_cast<Task::Progress>(state_ % 2);
     ++state_;
     std::stringstream ss_date;
     ss_date << std::put_time(std::localtime(&time), kDatePattern);
     return {ss.str(), ss_date.str(), IostreamStrings::to_string(priority),
-            IostreamStrings::to_string(state)};
+            IostreamStrings::to_string(progress)};
   }
 
  private:

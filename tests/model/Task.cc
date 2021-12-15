@@ -9,23 +9,25 @@ class TaskTest : public ::testing::Test {};
 TEST_F(TaskTest, FieldsAreConsistent) {
   std::string task_title = "Test task title";
   Date_t task_due_date = parse_date("03/11/2020");
-  Task::Priority task_priority = Task::Priority::kMedium;
-  Task::State task_state = Task::State::kUncompleted;
+  Task::Priority task_priority = Task::kMedium;
+  Task::Progress task_progress = Task::kUncompleted;
 
   const auto task =
-      *Task::Create(task_title, task_priority, task_due_date, task_state);
+      *CreateTask(task_title, task_due_date, task_priority, task_progress);
 
-  EXPECT_EQ(task_title, task.GetTitle());
-  EXPECT_EQ(task_due_date, task.GetDueDate());
-  EXPECT_EQ(task_priority, task.GetPriority());
-  EXPECT_EQ(task_state, task.GetState());
+  EXPECT_EQ(task_title, task.title());
+  EXPECT_EQ(task_due_date, task.due_date());
+  EXPECT_EQ(task_priority, task.priority());
+  EXPECT_EQ(task_progress, task.progress());
 }
 
 TEST_F(TaskTest, EmptyOptionalOnEmptyTitle) {
   std::string task_title = "";
   Date_t task_due_date = parse_date("03/11/2020");
-  Task::Priority task_priority = Task::Priority::kMedium;
+  Task::Priority task_priority = Task::kMedium;
+  Task::Progress task_progress = Task::kCompleted;
 
   // NOLINTNEXTLINE
-  EXPECT_FALSE(Task::Create(task_title, task_priority, task_due_date));
+  EXPECT_FALSE(
+      CreateTask(task_title, task_due_date, task_priority, task_progress));
 }

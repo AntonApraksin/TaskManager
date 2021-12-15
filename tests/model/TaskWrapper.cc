@@ -29,7 +29,7 @@ TEST_F(TaskStorageTest, SimpleComplete) {
   auto task = tf.GetNextTask();
   TaskWrapper tw{task};
   tw.Complete();
-  ASSERT_EQ(tw->GetState(), Task::State::kCompleted);
+  ASSERT_EQ(tw->progress(), Task::kCompleted);
 }
 
 TEST_F(TaskStorageTest, CompleteOnNestedTasks) {
@@ -42,5 +42,5 @@ TEST_F(TaskStorageTest, CompleteOnNestedTasks) {
   tw.Add(nested_id, nested_task);
 
   tw.Complete();
-  ASSERT_EQ(tw.Find(nested_id)->GetState(), Task::State::kCompleted);
+  ASSERT_EQ(tw.Find(nested_id)->progress(), Task::kCompleted);
 }

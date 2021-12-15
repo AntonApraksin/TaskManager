@@ -9,7 +9,7 @@ struct TaskBuilder {
   std::optional<std::string> title_;
   std::optional<Date_t> date_;
   std::optional<Task::Priority> priority_;
-  std::optional<Task::State> state_;
+  std::optional<Task::Progress> progress_;
 };
 
 #endif  // TASKMANAGER_SRC_REPL_TASKBUILDER_H_

@@ -24,11 +24,10 @@ file(GLOB_RECURSE Tests_SRCS CONFIGURE_DEPENDS
     "*.cc"
   )
 
-enable_testing()
 
 add_executable(ModelTest
   ${Tests_SRCS}
-)
+    common.h)
 
 target_link_libraries(
   ModelTest

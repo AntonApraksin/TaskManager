@@ -16,7 +16,7 @@ StepResult IostreamReportMessageStep::Run() {
       break;
 
     case MessageEnum::kNotPresentId:
-      io_facility_->Print(IostreamStrings::NotPresentId(task_id_->GetId()));
+      io_facility_->Print(IostreamStrings::NotPresentId(task_id_->id()));
       break;
 
     case MessageEnum::kMultipleId:
@@ -28,7 +28,7 @@ StepResult IostreamReportMessageStep::Run() {
       break;
 
     case MessageEnum::kShowId:
-      io_facility_->Print(IostreamStrings::ShowId(task_id_->GetId()));
+      io_facility_->Print(IostreamStrings::ShowId(task_id_->id()));
       break;
   }
   return {{}, {}};

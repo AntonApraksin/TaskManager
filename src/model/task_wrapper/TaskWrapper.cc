@@ -11,8 +11,7 @@ const Task& TaskWrapper::operator*() const { return task_; }
 const Task* TaskWrapper::operator->() const { return &task_; }
 
 void TaskWrapper::Complete() {
-  task_ = *Task::Create(task_.GetTitle(), task_.GetPriority(),
-                        task_.GetDueDate(), Task::State::kCompleted);
+  task_.set_progress(Task::kCompleted);
   for (auto& i : children_) {
     i.second.Complete();
   }

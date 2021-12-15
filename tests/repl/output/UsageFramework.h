@@ -61,10 +61,9 @@ class UsageFramework {
   }
 
   Task TaskDataToTask(const TaskStringedData& data) {
-    return *Task::Create(data.title,
-                         *validator_->ParseTaskPriority(data.priority),
-                         *validator_->ParseTaskDate(data.date),
-                         *validator_->ParseTaskState(data.state));
+    return *CreateTask(data.title, *validator_->ParseTaskDate(data.date),
+                       *validator_->ParseTaskPriority(data.priority),
+                       *validator_->ParseTaskProgress(data.state));
   }
 
   std::unique_ptr<Controller> controller_;

@@ -1,3 +1,5 @@
+#include <google/protobuf/util/time_util.h>
+
 #include <iomanip>
 
 #include "IostreamSmallStep.h"
@@ -9,8 +11,8 @@
 
 void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().date_) {
-    auto time =
-        std::chrono::system_clock::to_time_t(*ctx.GetTaskBuilder().date_);
+    auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(
+        *ctx.GetTaskBuilder().date_);
     std::stringstream ss;
     ss << std::put_time(std::localtime(&time), kDatePattern);
     std::string leave_empty_for = IostreamStrings::LeaveEmptyFor(ss.str());

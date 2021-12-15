@@ -1,15 +1,17 @@
-#include "TaskId.h"
+#include "model/id/TaskId.h"
 
-int TaskId::GetId() const { return id_; }
+TaskId task_manager::CreateTaskId(google::protobuf::int32 id) {
+  TaskId task_id;
+  task_id.set_id(id);
+  return task_id;
+}
 
-TaskId TaskId::Create(int id) { return TaskId{id}; }
-
-TaskId::TaskId(int id) : id_(id) {}
+namespace task_manager {
+bool operator==(const TaskId& lhs, const TaskId& rhs) {
+  return lhs.id() == rhs.id();
+}
 
 bool operator<(const TaskId& lhs, const TaskId& rhs) {
-  return lhs.GetId() < rhs.GetId();
+  return lhs.id() < rhs.id();
 }
-
-bool operator==(const TaskId& lhs, const TaskId& rhs) {
-  return lhs.GetId() == rhs.GetId();
-}
+}  // namespace task_manager

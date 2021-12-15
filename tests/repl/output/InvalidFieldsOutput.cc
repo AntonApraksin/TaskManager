@@ -32,8 +32,7 @@ TEST_F(InvalidFieldsOutputTest, AddAction) {
       IostreamStrings::kInvalidDate,
       IostreamStrings::GetPrompt("due date", kDatePattern),
 
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::Priority::kLow)),
+      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
       IostreamStrings::kInvalidPriority,
       IostreamStrings::GetPrompt("priority"),
@@ -42,7 +41,7 @@ TEST_F(InvalidFieldsOutputTest, AddAction) {
 
       IostreamStrings::kInvalidState,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::State::kUncompleted)),
+          IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::kInvalidState,
       IostreamStrings::GetPrompt("state"),

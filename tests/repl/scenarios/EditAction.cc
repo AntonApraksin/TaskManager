@@ -15,18 +15,19 @@ TEST_F(EditActionTest, OneTaskShouldBeEdited) {
                    edited.priority, edited.state, "y", "q"});
 
   auto expected_task = TaskDataToTask(edited);
-  EXPECT_EQ(*storage.Find(TaskId::Create(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
 }
 
 TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
-  auto [title, date, priority, state] = task_stringed_data_producer_.GetData();
+  auto [title, date, priority, progress] =
+      task_stringed_data_producer_.GetData();
 
-  auto storage = RunScenario({"add", title, date, priority, state, "y",
+  auto storage = RunScenario({"add", title, date, priority, progress, "y",
                               "edit 0", "", "", "", "", "y", "q"});
 
-  auto expected_task = Task::Create(
-      title, *validator_->ParseTaskPriority(priority),
-      *validator_->ParseTaskDate(date), *validator_->ParseTaskState(state));
+  auto expected_task = CreateTask(title, *validator_->ParseTaskDate(date),
+                                  *validator_->ParseTaskPriority(priority),
+                                  *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(TaskId::Create(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
 }

@@ -20,12 +20,11 @@ TEST_F(AddOutputTest, AddOneTask) {
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(default_date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::Priority::kLow)),
+      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
       IostreamStrings::kInvalidState,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::State::kUncompleted)),
+          IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
       IostreamStrings::ShowId(0),
@@ -40,8 +39,8 @@ TEST_F(AddOutputTest, AddOneTask) {
 
 TEST_F(AddOutputTest, AddTaskAndSubTask) {
   std::string date = "10:38 17/09/2019";
-  std::string priority = IostreamStrings::to_string(Task::Priority::kMedium);
-  std::string state = IostreamStrings::to_string(Task::State::kUncompleted);
+  std::string priority = IostreamStrings::to_string(Task::kMedium);
+  std::string state = IostreamStrings::to_string(Task::kUncompleted);
   std::stringstream ss;
   auto time =
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -56,19 +55,18 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(default_date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::Priority::kLow)),
+      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
       IostreamStrings::kInvalidState,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::State::kUncompleted)),
+          IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
       IostreamStrings::ShowId(0),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(*task_storage.Find(TaskId::Create(0))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
 
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(date),

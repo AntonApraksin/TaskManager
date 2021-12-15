@@ -1,5 +1,7 @@
 #include "DefaultValidator.h"
 
+#include <google/protobuf/util/time_util.h>
+
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
@@ -49,7 +51,7 @@ DefaultValidator::MakeRequest(const std::string &str) {
   try {
     std::vector<TaskId> ids;
     for (; std::getline(ss, token, ' ');) {
-      ids.push_back(TaskId::Create(std::stoi(token)));
+      ids.push_back(CreateTaskId(std::stoi(token)));
     }
     return {state, ids};
   } catch (const std::invalid_argument &) {
@@ -63,26 +65,26 @@ std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
   lower_string(input);
 
   if (input == "high") {
-    return Task::Priority::kHigh;
+    return Task::kHigh;
   }
   if (input == "medium") {
-    return Task::Priority::kMedium;
+    return Task::kMedium;
   }
   if (input == "low") {
-    return Task::Priority::kLow;
+    return Task::kLow;
   }
   return std::nullopt;
 }
 
-std::optional<Task::State> DefaultValidator::ParseTaskState(
+std::optional<Task::Progress> DefaultValidator::ParseTaskProgress(
     const std::string &str) {
   std::string input(str);
   lower_string(input);
   if (str == "+") {
-    return Task::State::kCompleted;
+    return Task::kCompleted;
   }
   if (str == "-") {
-    return Task::State::kUncompleted;
+    return Task::kUncompleted;
   }
   return std::nullopt;
 }
@@ -103,7 +105,8 @@ std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
   } else {
     tm.tm_isdst = -1;  // TODO: FIX THIS. SUMMER/WINTER TIME SADNESS
   }
-  auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+  auto tp =
+      google::protobuf::util::TimeUtil::TimeTToTimestamp(std::mktime(&tm));
   return tp;
 }
 

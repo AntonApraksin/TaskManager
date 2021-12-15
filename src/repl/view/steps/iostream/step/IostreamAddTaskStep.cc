@@ -1,3 +1,5 @@
+#include <google/protobuf/util/time_util.h>
+
 #include "IostreamStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/TaskContext.h"
@@ -19,18 +21,19 @@ StepResult IostreamAddTaskStep::Run() {
     io_facility_->Print(IostreamStrings::ShowTask(*task_));
     sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
         TaskBuilder{/*.title = */ std::nullopt,
-                    /*.date_ =*/task_->GetDueDate(),
-                    /*.priority =*/task_->GetPriority(),
-                    /*.state =*/task_->GetState()}));
+                    /*.date_ =*/task_->due_date(),
+                    /*.priority =*/task_->priority(),
+                    /*.state =*/task_->progress()}));
     task_.reset();
   } else {
-    sub_context.PushState(
-        std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
-            /*.title =*/std::nullopt,
-            /*.date_ =*/std::chrono::system_clock::now(),  // TODO: give other
-                                                           // default value
-            /*.priority =*/Task::Priority::kLow,
-            /*.state =*/Task::State::kUncompleted}));
+    sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
+        TaskBuilder{/*.title =*/std::nullopt,
+                    /*.date_ =*/
+                    google::protobuf::util::TimeUtil::TimeTToTimestamp(
+                        std::time(nullptr)),  // TODO: give other
+                                              // default value
+                    /*.priority =*/Task::kLow,
+                    /*.progress =*/Task::kUncompleted}));
   }
 
   sub_context.PushState(

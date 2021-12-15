@@ -9,10 +9,10 @@ class TaskIdProducer final : public ITaskIdProducer {
  public:
   TaskIdProducer();
 
-  TaskId GetNextId() override;
+  task_manager::TaskId GetNextId() override;
 
  private:
-  int current_id_;
+  google::protobuf::int32 current_id_;
 };
 
 #endif  // TASKMANAGER_SRC_MODEL_ID_TASKIDPRODUCER_H_

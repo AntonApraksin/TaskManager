@@ -22,7 +22,8 @@ class IValidator {
   virtual std::optional<Task::Priority> ParseTaskPriority(
       const std::string& str) = 0;
 
-  virtual std::optional<Task::State> ParseTaskState(const std::string& str) = 0;
+  virtual std::optional<Task::Progress> ParseTaskProgress(
+      const std::string& str) = 0;
 
   virtual std::optional<Date_t> ParseTaskDate(const std::string& str) = 0;
   virtual std::optional<ConfirmationResult> ParseConfirmation(

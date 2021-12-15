@@ -6,15 +6,17 @@ class AddActionTest : public testing::Test, protected ScenarioFramework {
 };
 
 TEST_F(AddActionTest, OneTaskShouldBeAdded) {
-  auto [title, date, priority, state] = task_stringed_data_producer_.GetData();
+  auto [title, date, priority, progress] =
+      task_stringed_data_producer_.GetData();
 
-  auto storage = RunScenario({"add", title, date, priority, state, "y", "q"});
+  auto storage =
+      RunScenario({"add", title, date, priority, progress, "y", "q"});
 
-  auto expected_task = Task::Create(
-      title, *validator_->ParseTaskPriority(priority),
-      *validator_->ParseTaskDate(date), *validator_->ParseTaskState(state));
+  auto expected_task = CreateTask(title, *validator_->ParseTaskDate(date),
+                                  *validator_->ParseTaskPriority(priority),
+                                  *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(TaskId::Create(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
 }
 
 TEST_F(AddActionTest, NTasksShouldBeAdded) {
@@ -39,8 +41,7 @@ TEST_F(AddActionTest, NTasksShouldBeAdded) {
   auto storage = RunScenario(std::move(commands));
 
   for (int i{0}; i != kNTasks; ++i) {
-    EXPECT_EQ(*storage.Find(TaskId::Create(i)),
-              TaskDataToTask(tasks_data.at(i)));
+    EXPECT_EQ(*storage.Find(CreateTaskId(i)), TaskDataToTask(tasks_data.at(i)));
   }
 }
 
@@ -56,9 +57,9 @@ TEST_F(AddActionTest, NestedTasksShouldBeAdded) {
                               "y", "add 1", subsubtask.title, subsubtask.date,
                               subsubtask.priority, subsubtask.state, "y", "q"});
 
-  auto task_wrapper = storage.Find(TaskId::Create(0));
-  auto subtask_wrapper = task_wrapper.Find(TaskId::Create(1));
-  auto subsubtask_wrapper = subtask_wrapper.Find(TaskId::Create(2));
+  auto task_wrapper = storage.Find(CreateTaskId(0));
+  auto subtask_wrapper = task_wrapper.Find(CreateTaskId(1));
+  auto subsubtask_wrapper = subtask_wrapper.Find(CreateTaskId(2));
 
   EXPECT_EQ(*task_wrapper, TaskDataToTask(task));
   EXPECT_EQ(*subtask_wrapper, TaskDataToTask(subtask));
@@ -74,10 +75,10 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
   auto storage = RunScenario({"add", title, date, priority, state, "y", "add 0",
                               "subtitle", "", "", "", "y", "q"});
 
-  EXPECT_EQ(storage.Find(TaskId::Create(0))->GetDueDate(),
-            storage.Find(TaskId::Create(1))->GetDueDate());
-  EXPECT_EQ(storage.Find(TaskId::Create(0))->GetPriority(),
-            storage.Find(TaskId::Create(1))->GetPriority());
-  EXPECT_EQ(storage.Find(TaskId::Create(0))->GetState(),
-            storage.Find(TaskId::Create(1))->GetState());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->due_date(),
+            storage.Find(CreateTaskId(1))->due_date());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->priority(),
+            storage.Find(CreateTaskId(1))->priority());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->progress(),
+            storage.Find(CreateTaskId(1))->progress());
 }

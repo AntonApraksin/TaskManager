@@ -1,38 +1,36 @@
 #include "IostreamStrings.h"
 
+#include <google/protobuf/util/time_util.h>
+
 #include <iomanip>
 #include <sstream>
 
 #include "repl/validator/DateFormat.h"
 
 const char* IostreamStrings::to_string(Task::Priority priority) {
-  switch (priority) {
-    case Task::Priority::kLow:
-      return "low";
-    case Task::Priority::kMedium:
-      return "medium";
-    case Task::Priority::kHigh:
-      return "high";
-  }
+  if (priority == Task::kLow) return "low";
+  if (priority == Task::kMedium) return "medium";
+  if (priority == Task::kHigh) return "high";
+
+  std::terminate();  // TODO: Handle buggy behavior
 }
 
-const char* IostreamStrings::to_string(Task::State state) {
-  switch (state) {
-    case Task::State::kCompleted:
-      return "+";
-    case Task::State::kUncompleted:
-      return "-";
-  }
+const char* IostreamStrings::to_string(Task::Progress state) {
+  if (state == Task::kCompleted) return "+";
+  if (state == Task::kUncompleted) return "-";
+
+  std::terminate();  // TODO: Handle buggy behavior
 }
 
 std::string IostreamStrings::ShowTask(const Task& task) {
   std::stringstream ss;
-  auto time = std::chrono::system_clock::to_time_t(task.GetDueDate());
+  auto time =
+      google::protobuf::util::TimeUtil::TimestampToTimeT(task.due_date());
   auto localized_time = std::localtime(&time);
-  ss << " [" << to_string(task.GetState()) << "] "
-     << "(" << to_string(task.GetPriority()) << ") "
+  ss << " [" << to_string(task.progress()) << "] "
+     << "(" << to_string(task.priority()) << ") "
      << "{" << std::put_time(localized_time, kDatePattern) << "} "
-     << "'" << task.GetTitle() << "'\n";
+     << "'" << task.title() << "'\n";
   return ss.str();
 }
 
@@ -45,7 +43,7 @@ std::string IostreamStrings::ShowTask(const Task& task, int nest) {
 
 std::string IostreamStrings::ShowTaskWithId(const Task& task, TaskId task_id) {
   std::stringstream ss;
-  ss << "└─ " << task_id.GetId() << ' ' << ShowTask(task);
+  ss << "└─ " << task_id.id() << ' ' << ShowTask(task);
   return ss.str();
 }
 
@@ -53,7 +51,7 @@ std::string IostreamStrings::ShowTaskWithId(const Task& task, TaskId task_id,
                                             int nest) {
   std::stringstream ss;
   std::string indent(nest, ' ');
-  ss << indent << "└─ " << task_id.GetId() << ' ' << ShowTask(task);
+  ss << indent << "└─ " << task_id.id() << ' ' << ShowTask(task);
   return ss.str();
 }
 

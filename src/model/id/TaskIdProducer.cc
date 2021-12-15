@@ -2,4 +2,6 @@
 
 TaskIdProducer::TaskIdProducer() : current_id_{0} {}
 
-TaskId TaskIdProducer::GetNextId() { return TaskId::Create(current_id_++); }
+task_manager::TaskId TaskIdProducer::GetNextId() {
+  return CreateTaskId(current_id_++);
+}

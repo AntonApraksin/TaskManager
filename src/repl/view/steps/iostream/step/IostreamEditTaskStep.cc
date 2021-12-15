@@ -20,10 +20,10 @@ StepResult IostreamEditTaskStep::Run() {
   io_facility_->Print(IostreamStrings::ShowTask(to_edit));
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
-      TaskBuilder{/*.title =*/to_edit.GetTitle(),
-                  /*.date_ =*/to_edit.GetDueDate(),
-                  /*.priority =*/to_edit.GetPriority(),
-                  /*.state =*/to_edit.GetState()}));
+      TaskBuilder{/*.title =*/to_edit.title(),
+                  /*.date_ =*/to_edit.due_date(),
+                  /*.priority =*/to_edit.priority(),
+                  /*.progress =*/to_edit.progress()}));
   sub_context.PushState(
       small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
   sub_context.PushState(

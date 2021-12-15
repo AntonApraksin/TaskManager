@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 
+#include "ModelUtils.h"
 #include "model/id/TaskIdProducer.h"
-
-bool operator!=(const TaskId& lhs, const TaskId& rhs) { return !(lhs == rhs); }
 
 class IdTest : public ::testing::Test {};
 
@@ -32,6 +31,6 @@ TEST_F(IdTest, TestSequencing) {
   TaskIdProducer tp;
 
   for (int id{0}; id != kElems; ++id) {
-    EXPECT_EQ(tp.GetNextId().GetId(), id);
+    EXPECT_EQ(tp.GetNextId().id(), id);
   }
 }

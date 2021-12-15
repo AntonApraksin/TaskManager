@@ -3,8 +3,6 @@
 
 #include <sstream>
 
-#include "model/id/TaskId.h"
-#include "model/task/Task.h"
 #include "model/task_wrapper/TaskWrapper.h"
 #include "repl/io_facility/IIoFacility.h"
 
@@ -67,7 +65,7 @@ struct IostreamStrings {
   static std::string ShowTaskWithId(const Task&, TaskId, int);
 
   static const char* to_string(Task::Priority priority);
-  static const char* to_string(Task::State state);
+  static const char* to_string(Task::Progress state);
 
   static std::string ShowNestedMap(const TaskWrapper& task_wrapper, int nest);
 };

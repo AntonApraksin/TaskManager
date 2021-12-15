@@ -1,8 +1,8 @@
 #ifndef TASKMANAGER_SRC_MODEL_TASK_TASKDATE_H_
 #define TASKMANAGER_SRC_MODEL_TASK_TASKDATE_H_
 
-#include <chrono>
+#include <google/protobuf/timestamp.pb.h>
 
-using Date_t = std::chrono::time_point<std::chrono::system_clock>;
+using Date_t = google::protobuf::Timestamp;
 
 #endif  // TASKMANAGER_SRC_MODEL_TASK_TASKDATE_H_

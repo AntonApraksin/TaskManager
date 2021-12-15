@@ -54,12 +54,11 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(default_date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::Priority::kLow)),
+      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
       IostreamStrings::kInvalidState,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::State::kUncompleted)),
+          IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
       IostreamStrings::ShowId(0),
@@ -108,7 +107,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kYouAreGoingToEdit,
-      IostreamStrings::ShowTask(*task_storage.Find(TaskId::Create(0))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
       IostreamStrings::LeaveEmptyFor(edit_t1.title),
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(edit_t1.date),

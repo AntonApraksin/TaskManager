@@ -53,26 +53,26 @@ TEST_F(DefaultValidatorTest, NonEmptyTitleShouldBeItself) {
 }
 
 TEST_F(DefaultValidatorTest, PlusForCompletedMinusForUncompleted) {
-  EXPECT_EQ(*validator_.ParseTaskState("+"), Task::State::kCompleted);
-  EXPECT_EQ(*validator_.ParseTaskState("-"), Task::State::kUncompleted);
+  EXPECT_EQ(*validator_.ParseTaskProgress("+"), Task::kCompleted);
+  EXPECT_EQ(*validator_.ParseTaskProgress("-"), Task::kUncompleted);
 }
 
 TEST_F(DefaultValidatorTest, StringThatAreNotPlusOrMinusAreInvalidStates) {
-  EXPECT_EQ(validator_.ParseTaskState("y"), std::nullopt);
-  EXPECT_EQ(validator_.ParseTaskState("n"), std::nullopt);
-  EXPECT_EQ(validator_.ParseTaskState("completed"), std::nullopt);
-  EXPECT_EQ(validator_.ParseTaskState("uncompleted"), std::nullopt);
+  EXPECT_EQ(validator_.ParseTaskProgress("y"), std::nullopt);
+  EXPECT_EQ(validator_.ParseTaskProgress("n"), std::nullopt);
+  EXPECT_EQ(validator_.ParseTaskProgress("completed"), std::nullopt);
+  EXPECT_EQ(validator_.ParseTaskProgress("uncompleted"), std::nullopt);
 }
 
 TEST_F(DefaultValidatorTest, PriorityShouldBeLowMediumHigh) {
-  EXPECT_EQ(*validator_.ParseTaskPriority("low"), Task::Priority::kLow);
-  EXPECT_EQ(*validator_.ParseTaskPriority("LoW"), Task::Priority::kLow);
+  EXPECT_EQ(*validator_.ParseTaskPriority("low"), Task::kLow);
+  EXPECT_EQ(*validator_.ParseTaskPriority("LoW"), Task::kLow);
 
-  EXPECT_EQ(*validator_.ParseTaskPriority("medium"), Task::Priority::kMedium);
-  EXPECT_EQ(*validator_.ParseTaskPriority("MEdIUm"), Task::Priority::kMedium);
+  EXPECT_EQ(*validator_.ParseTaskPriority("medium"), Task::kMedium);
+  EXPECT_EQ(*validator_.ParseTaskPriority("MEdIUm"), Task::kMedium);
 
-  EXPECT_EQ(*validator_.ParseTaskPriority("high"), Task::Priority::kHigh);
-  EXPECT_EQ(*validator_.ParseTaskPriority("HIgH"), Task::Priority::kHigh);
+  EXPECT_EQ(*validator_.ParseTaskPriority("high"), Task::kHigh);
+  EXPECT_EQ(*validator_.ParseTaskPriority("HIgH"), Task::kHigh);
 }
 
 TEST_F(DefaultValidatorTest,
@@ -122,6 +122,6 @@ TEST_F(DefaultValidatorTest, CommandsWithIdsShouldBeParsedProperly) {
   ASSERT_EQ(command_ids->size(), ids.size());
 
   for (size_t i{0}; i != command_ids->size(); ++i) {
-    EXPECT_EQ(TaskId::Create(std::stoi(ids[i])), (*command_ids)[i]);
+    EXPECT_EQ(CreateTaskId(std::stoi(ids[i])), (*command_ids)[i]);
   }
 }

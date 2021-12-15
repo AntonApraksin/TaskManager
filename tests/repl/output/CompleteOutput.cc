@@ -42,12 +42,11 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(default_date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::Priority::kLow)),
+      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
       IostreamStrings::kInvalidState,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::State::kUncompleted)),
+          IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
       IostreamStrings::ShowId(0),
@@ -84,7 +83,7 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::YouAreGoingTo("complete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
       IostreamStrings::AndItsChildren(
-          task_storage.Find(TaskId::Create(0)).ShowStorage().size()),
+          task_storage.Find(CreateTaskId(0)).ShowStorage().size()),
       IostreamStrings::ProceedTo("complete"),
 
       IostreamStrings::GetPrompt(""),

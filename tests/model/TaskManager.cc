@@ -93,7 +93,7 @@ TEST_F(PlainTaskManagerTest, ProperCompletion) {
 
   auto storage = tm.Show().ShowStorage();
   for (const auto& i : storage) {
-    ASSERT_EQ(i.second->GetState(), Task::State::kCompleted);
+    ASSERT_EQ(i.second->progress(), Task::kCompleted);
   }
 }
 

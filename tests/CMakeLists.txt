@@ -19,15 +19,15 @@ ELSE (${GTEST_FOUND})
     gtest_main)
 ENDIF (${GTEST_FOUND})
 
-set(MODEL_TESTS
-  model/Task.cc
-  model/Id.cc
-  model/TaskManager.cc
-        model/TaskStorage.cc model/TaskWrapper.cc model/ModelUtils.h repl/scenarios/ConfirmationNoShouldDoNothing.cc repl/scenarios/ScenarioFramework.h repl/scenarios/AddAction.cc repl/scenarios/EditAction.cc repl/scenarios/CompleteAction.cc repl/scenarios/DeleteAction.cc repl/validator/DefaultValidator.cc repl/output/UsageFramework.h repl/output/AddOutput.cc repl/output/ShowAllOutput.cc repl/common.h repl/output/ShowNOutput.cc repl/output/EditOutput.cc repl/output/CompleteOutput.cc repl/output/DeleteOutput.cc repl/output/PlainOutput.cc repl/output/ConfirmationRandomInputOutput.cc repl/output/InvalidFieldsOutput.cc)
+file(GLOB_RECURSE Tests_SRCS CONFIGURE_DEPENDS
+    "*.h"
+    "*.cc"
+  )
+
 
 add_executable(ModelTest
-  ${MODEL_TESTS}
-)
+  ${Tests_SRCS}
+    common.h)
 
 target_link_libraries(
   ModelTest

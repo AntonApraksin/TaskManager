@@ -61,7 +61,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -75,7 +75,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(1),
+      IostreamStrings::ShowId(std::to_string(1)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -89,7 +89,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(sub_t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(2),
+      IostreamStrings::ShowId(std::to_string(2)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::GetPrompt("title"),
@@ -102,7 +102,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(3),
+      IostreamStrings::ShowId(std::to_string(3)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::GetPrompt("title"),
@@ -115,7 +115,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(4),
+      IostreamStrings::ShowId(std::to_string(4)),
       IostreamStrings::GetPrompt(""),
       IostreamStrings::ShowTaskWithId(
           *task_storage.Find(CreateTaskId(0))->second, CreateTaskId(0)),

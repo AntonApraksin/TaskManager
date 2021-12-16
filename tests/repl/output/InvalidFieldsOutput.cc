@@ -49,7 +49,7 @@ TEST_F(InvalidFieldsOutputTest, AddAction) {
       IostreamStrings::GetPrompt("state"),
 
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());

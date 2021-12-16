@@ -49,7 +49,7 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -63,7 +63,7 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(1),
+      IostreamStrings::ShowId(std::to_string(1)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -77,13 +77,13 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(sub_t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(2),
+      IostreamStrings::ShowId(std::to_string(2)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::YouAreGoingTo("complete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(
-          task_storage.Find(CreateTaskId(0))->second.ShowStorage().size()),
+      IostreamStrings::AndItsChildren(std::to_string(
+          task_storage.Find(CreateTaskId(0))->second.ShowStorage().size())),
       IostreamStrings::ProceedTo("complete"),
 
       IostreamStrings::GetPrompt(""),

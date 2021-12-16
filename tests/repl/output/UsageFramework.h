@@ -48,8 +48,8 @@ class UsageFramework {
 
     auto view = std::make_unique<View>(io_facility_, validator_);
 
-    controller_ = std::make_unique<Controller>(std::move(view), task_manager_,
-                                               std::move(step_factory));
+    controller_ = std::make_unique<Controller>(
+        std::move(view), task_manager_, validator_, std::move(step_factory));
   }
 
   std::pair<TaskStorage, std::vector<std::string>> RunScenario(

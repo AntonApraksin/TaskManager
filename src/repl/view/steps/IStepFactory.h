@@ -23,7 +23,8 @@ class IStepFactory {
   virtual std::shared_ptr<IStep> GetShowSortedTasksStep(
       IShowSortedTasksStep::Tasks) = 0;
   virtual std::shared_ptr<IStep> GetShowHelpStep() = 0;
-  virtual std::shared_ptr<IStep> GetReportMessageStep(MessageEnum, TaskId) = 0;
+  virtual std::shared_ptr<IStep> GetReportMessageStep(MessageEnum,
+                                                      std::string) = 0;
   virtual std::shared_ptr<IStep> GetReportMessageStep(MessageEnum) = 0;
 
   virtual ~IStepFactory() {}

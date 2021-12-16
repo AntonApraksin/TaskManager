@@ -114,14 +114,14 @@ class IShowHelpStep : public IStep {};
 
 class IReportMessageStep : public IStep {
  public:
-  using OptionalTaskId = std::optional<TaskId>;
+  using OptionalArg = std::optional<std::string>;
 
-  void SetTaskId(TaskId task_id) { task_id_ = task_id; }
+  void SetArg(std::string arg) { arg_ = std::move(arg); }
 
   void SetMessage(MessageEnum main_error) { main_error_ = main_error; }
 
  protected:
-  OptionalTaskId task_id_;
+  OptionalArg arg_;
   MessageEnum main_error_;
 };
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

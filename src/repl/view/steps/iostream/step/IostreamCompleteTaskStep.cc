@@ -12,8 +12,8 @@ StepResult IostreamCompleteTaskStep::Run() {
   io_facility_->Print(IostreamStrings::YouAreGoingTo("complete"));
   for (const auto i : task_wrappers_) {
     io_facility_->Print(IostreamStrings::ShowTask(*(i.get())));
-    io_facility_->Print(
-        IostreamStrings::AndItsChildren(i.get().ShowStorage().size()));
+    io_facility_->Print(IostreamStrings::AndItsChildren(
+        std::to_string(i.get().ShowStorage().size())));
   }
 
   io_facility_->Print(IostreamStrings::ProceedTo("complete"));

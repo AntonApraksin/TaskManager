@@ -7,24 +7,40 @@
 
 class Controller {
  public:
-  Controller(std::unique_ptr<View> view, const std::shared_ptr<TaskManager>&,
+  Controller(std::unique_ptr<View> view, std::shared_ptr<TaskManager>,
+             std::shared_ptr<IValidator> validator,
              std::unique_ptr<IStepFactory>);
 
   void Run();
 
  private:
-  void PerformAction(CommandEnum, const std::vector<TaskId>& ids);
+  void PerformAction(CommandEnum, std::string);
+
+  void HandleAdd(std::string);
   void HandleAdd();
   void HandleAdd(TaskId);
+
+  void HandleEdit(std::string);
   void HandleEdit(TaskId);
-  void HandleComplete(const std::vector<TaskId>&);
-  void HandleDelete(const std::vector<TaskId>&);
+
+  void HandleComplete(std::string);
+  void HandleComplete(std::vector<TaskId>);
+
+  void HandleDelete(std::string);
+  void HandleDelete(std::vector<TaskId>);
+
+  void HandleShow(std::string);
+  void HandleShow(std::vector<TaskId>);
   void HandleShow();
-  void HandleShow(const std::vector<TaskId>&);
+
+  void HandleHelp(std::string);
   void HandleHelp();
 
+  void HandleUnknown(std::string);
+  void HandleUnknown();
+
   void ReportMessage(MessageEnum);
-  void ReportMessage(MessageEnum, TaskId);
+  void ReportMessage(MessageEnum, std::string);
 
   std::optional<Task> GetTaskById(const TaskStorage&, TaskId);
   std::optional<TaskWrapper> GetTaskWrapperById(const TaskStorage&, TaskId);
@@ -32,6 +48,7 @@ class Controller {
  private:
   std::shared_ptr<TaskManager> task_manager_;
   std::unique_ptr<View> view_;
+  std::shared_ptr<IValidator> validator_;
 
   std::unique_ptr<IStepFactory> step_factory_;
 };

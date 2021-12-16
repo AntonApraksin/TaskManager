@@ -40,25 +40,26 @@ struct IostreamStrings {
       "  quit(q)\n"
       "    Quit.\n";
 
-  static std::string NotPresentId(int id);
+  static std::string NotPresentId(const std::string&);
 
-  static std::string ShowId(int id);
+  static std::string InvalidId(const std::string&);
 
-  static std::string YouAreGoingTo(const std::string& str);
+  static std::string ShowId(const std::string&);
 
-  static std::string AndItsChildren(size_t);
+  static std::string YouAreGoingTo(const std::string&);
 
-  static std::string LeaveEmptyFor(const std::string& str);
+  static std::string AndItsChildren(const std::string&);
+
+  static std::string LeaveEmptyFor(const std::string&);
 
   static std::string LeaveEmptyFor(const std::string& str1,
                                    const std::string& str2);
 
-  static std::string GetPrompt(const std::string& str);
+  static std::string GetPrompt(const std::string&);
 
-  static std::string GetPrompt(const std::string& str1,
-                               const std::string& str2);
+  static std::string GetPrompt(const std::string&, const std::string&);
 
-  static std::string ProceedTo(const std::string& str);
+  static std::string ProceedTo(const std::string&);
 
   static std::string ShowTask(const Task&);
   static std::string ShowTask(const Task&, int);

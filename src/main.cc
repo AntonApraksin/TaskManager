@@ -18,7 +18,8 @@ int main() {
       io_facility, validator, small_step_factory);
 
   auto view = std::make_unique<View>(io_facility, validator);
-  Controller ctrl{std::move(view), task_manager, std::move(step_factory)};
+  Controller ctrl{std::move(view), task_manager, validator,
+                  std::move(step_factory)};
   ctrl.Run();
 
   return 0;

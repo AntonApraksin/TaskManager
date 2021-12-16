@@ -49,7 +49,7 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -63,7 +63,7 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(1),
+      IostreamStrings::ShowId(std::to_string(1)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -77,12 +77,12 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(sub_t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(2),
+      IostreamStrings::ShowId(std::to_string(2)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::YouAreGoingTo("delete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(1),
+      IostreamStrings::AndItsChildren(std::to_string(1)),
       IostreamStrings::ProceedTo("delete"),
 
       IostreamStrings::GetPrompt(""),

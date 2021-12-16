@@ -61,7 +61,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kAddSubtaskTo,
@@ -75,7 +75,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::LeaveEmptyFor(t1.state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(1),
+      IostreamStrings::ShowId(std::to_string(1)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kYouAreGoingToEdit,

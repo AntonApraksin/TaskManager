@@ -64,7 +64,7 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kYouAreGoingToEdit,
@@ -117,12 +117,12 @@ TEST_F(ConfirmationRandomInputOutputTest, CompleteRandomInputMustCancel) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::YouAreGoingTo("complete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(0),
+      IostreamStrings::AndItsChildren(std::to_string(0)),
       IostreamStrings::ProceedTo("complete"),
       IostreamStrings::kOkayITreatItAsNo,
 
@@ -162,12 +162,12 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::YouAreGoingTo("delete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(0),
+      IostreamStrings::AndItsChildren(std::to_string(0)),
       IostreamStrings::ProceedTo("delete"),
       IostreamStrings::kOkayITreatItAsNo,
 

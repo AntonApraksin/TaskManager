@@ -16,8 +16,9 @@ enum class ConfirmationResult {
 
 class IValidator {
  public:
-  virtual std::pair<CommandEnum, std::optional<std::vector<TaskId>>>
-  MakeRequest(const std::string& str) = 0;
+  virtual std::pair<CommandEnum, std::string> MakeRequest(std::string str) = 0;
+
+  virtual std::string ConsumeOneTokenFrom(std::string&) = 0;
 
   virtual std::optional<Task::Priority> ParseTaskPriority(
       const std::string& str) = 0;
@@ -30,6 +31,8 @@ class IValidator {
       const std::string& str) = 0;
 
   virtual std::optional<std::string> ValidateTitle(const std::string& str) = 0;
+
+  virtual std::optional<int> ParseInt(const std::string&) = 0;
 
   virtual ~IValidator() {}
 };

@@ -25,7 +25,7 @@ TEST_F(PlainOutputTest, InvalidIdMustAppear) {
 
   std::vector<std::string> desired_output{
       IostreamStrings::GetPrompt(""),
-      IostreamStrings::kInvalidId,
+      IostreamStrings::InvalidId("oqpw"),
       IostreamStrings::GetPrompt(""),
   };
 
@@ -59,7 +59,7 @@ TEST_F(PlainOutputTest, MultipleIdMustAppear) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kMultipleId,
@@ -108,7 +108,7 @@ TEST_F(PlainOutputTest, NotPresentIdMustAppear) {  // TODO: fix this
 
   std::vector<std::string> desired_output{
       IostreamStrings::GetPrompt(""),
-      IostreamStrings::NotPresentId(0),
+      IostreamStrings::NotPresentId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
   };
 

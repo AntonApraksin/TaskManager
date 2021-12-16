@@ -27,7 +27,7 @@ TEST_F(AddOutputTest, AddOneTask) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());
@@ -62,7 +62,7 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
           IostreamStrings::to_string(Task::kUncompleted)),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(0),
+      IostreamStrings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
@@ -77,7 +77,7 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
       IostreamStrings::LeaveEmptyFor(state),
       IostreamStrings::GetPrompt("state"),
       IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(1),
+      IostreamStrings::ShowId(std::to_string(1)),
       IostreamStrings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());

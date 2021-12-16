@@ -12,11 +12,11 @@ StepResult IostreamReportMessageStep::Run() {
       break;
 
     case MessageEnum::kInvalidId:
-      io_facility_->Print(IostreamStrings::kInvalidId);
+      io_facility_->Print(IostreamStrings::InvalidId(*arg_));
       break;
 
     case MessageEnum::kNotPresentId:
-      io_facility_->Print(IostreamStrings::NotPresentId(task_id_->id()));
+      io_facility_->Print(IostreamStrings::NotPresentId(*arg_));
       break;
 
     case MessageEnum::kMultipleId:
@@ -28,7 +28,7 @@ StepResult IostreamReportMessageStep::Run() {
       break;
 
     case MessageEnum::kShowId:
-      io_facility_->Print(IostreamStrings::ShowId(task_id_->id()));
+      io_facility_->Print(IostreamStrings::ShowId(*arg_));
       break;
 
     case MessageEnum::kRepeatedId:

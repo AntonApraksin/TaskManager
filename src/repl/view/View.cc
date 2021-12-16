@@ -13,8 +13,7 @@ void View::SetState(const std::shared_ptr<IStep>& step) {
 
 StepResult View::Run() { return current_step_->Run(); }
 
-std::pair<CommandEnum, std::optional<std::vector<TaskId>>>
-View::GetNextCommand() {
+std::pair<CommandEnum, std::string> View::GetNextCommand() {
   std::string result =
       PrintAndGet(*io_facility_, IostreamStrings::GetPrompt(""));
   return validator_->MakeRequest(result);

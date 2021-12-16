@@ -17,7 +17,7 @@ class View {
 
   void SetState(const std::shared_ptr<IStep>&);
   StepResult Run();
-  std::pair<CommandEnum, std::optional<std::vector<TaskId>>> GetNextCommand();
+  std::pair<CommandEnum, std::string> GetNextCommand();
 
  private:
   std::shared_ptr<IValidator> validator_;

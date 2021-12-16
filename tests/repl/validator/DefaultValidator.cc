@@ -110,18 +110,3 @@ TEST_F(DefaultValidatorTest, DateIsAcceptedOnlyInSingleFormat) {
   //  EXPECT_EQ(validator_.ParseTaskDate("12:34 31/06/2021"), std::nullopt); //
   //  TODO: Catch this
 }
-
-TEST_F(DefaultValidatorTest, CommandsWithIdsShouldBeParsedProperly) {
-  std::vector<std::string> ids{"0", "12", "35", "-12"};
-  std::stringstream ss;
-  ss << "add";
-  std::for_each(ids.cbegin(), ids.cend(),
-                [&ss](const auto& i) { ss << ' ' << i; });
-  auto [command, command_ids] = validator_.MakeRequest(ss.str());
-  ASSERT_EQ(command, CommandEnum::kAdd);
-  ASSERT_EQ(command_ids->size(), ids.size());
-
-  for (size_t i{0}; i != command_ids->size(); ++i) {
-    EXPECT_EQ(CreateTaskId(std::stoi(ids[i])), (*command_ids)[i]);
-  }
-}

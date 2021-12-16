@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <regex>  // TODO: Avoid regex
 #include <sstream>
-#include <vector>
 
 #include "repl/validator/DateFormat.h"
 
@@ -40,23 +39,11 @@ CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   }
   return CommandEnum::kUnknown;
 }
-std::pair<CommandEnum, std::optional<std::vector<TaskId>>>
-DefaultValidator::MakeRequest(const std::string &str) {
-  std::string input(str);
-  lower_string(input);
-  std::stringstream ss{input};
-  std::string token;
-  std::getline(ss, token, ' ');
-  auto state = MatchCommand(token);
-  try {
-    std::vector<TaskId> ids;
-    for (; std::getline(ss, token, ' ');) {
-      ids.push_back(CreateTaskId(std::stoi(token)));
-    }
-    return {state, ids};
-  } catch (const std::invalid_argument &) {
-    return {state, {}};
-  }
+std::pair<CommandEnum, std::string> DefaultValidator::MakeRequest(
+    std::string str) {
+  lower_string(str);
+  auto command = MatchCommand(ConsumeOneTokenFrom(str));
+  return {command, str};
 }
 
 std::optional<Task::Priority> DefaultValidator::ParseTaskPriority(
@@ -129,5 +116,26 @@ std::optional<std::string> DefaultValidator::ValidateTitle(
     return std::nullopt;
   } else {
     return str;
+  }
+}
+
+std::string DefaultValidator::ConsumeOneTokenFrom(std::string &str) {
+  auto pos = str.find(' ');
+  if (pos == std::string::npos) {
+    // TODO: Handle error
+    auto to_return = str;
+    str = "";
+    return to_return;
+  }
+  auto to_return = str.substr(0, pos);
+  str.erase(0, pos + 1);
+  return to_return;
+}
+
+std::optional<int> DefaultValidator::ParseInt(const std::string &str) {
+  try {
+    return std::stoi(str);
+  } catch (std::invalid_argument) {
+    return {};
   }
 }

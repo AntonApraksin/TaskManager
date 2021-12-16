@@ -65,13 +65,13 @@ std::string IostreamStrings::ShowNestedMap(const TaskWrapper& task_wrapper,
   return ss.str();
 }
 
-std::string IostreamStrings::NotPresentId(int id) {
+std::string IostreamStrings::NotPresentId(const std::string& id) {
   std::stringstream ss;
   ss << "Id " << id << " not present in store.\n";
   return ss.str();
 }
 
-std::string IostreamStrings::ShowId(int id) {
+std::string IostreamStrings::ShowId(const std::string& id) {
   std::stringstream ss;
   ss << "Id " << id << ".\n";
   return ss.str();
@@ -83,7 +83,7 @@ std::string IostreamStrings::YouAreGoingTo(const std::string& str) {
   return ss.str();
 }
 
-std::string IostreamStrings::AndItsChildren(size_t n) {
+std::string IostreamStrings::AndItsChildren(const std::string& n) {
   std::stringstream ss;
   ss << "  and its " << n << " children.\n";
   return ss.str();
@@ -118,6 +118,12 @@ std::string IostreamStrings::GetPrompt(const std::string& str1,
 std::string IostreamStrings::ProceedTo(const std::string& str) {
   std::stringstream ss;
   ss << "Proceed to " << str << "? [Y/n]: ";
+  return ss.str();
+}
+
+std::string IostreamStrings::InvalidId(const std::string& str) {
+  std::stringstream ss;
+  ss << "Value '" << str << "' should be numeric.\n";
   return ss.str();
 }
 

@@ -23,8 +23,6 @@ file(GLOB_RECURSE Tests_SRCS CONFIGURE_DEPENDS
     "*.h"
     "*.cc"
   )
-
-
 add_executable(ModelTest
   ${Tests_SRCS}
     common.h)

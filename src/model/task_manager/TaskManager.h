@@ -35,6 +35,8 @@ class TaskManager final {
 
   TaskStorage Show() const;
 
+  TaskId GetLastGivenId() const;
+
  private:
   TaskStorage storage_;
   std::unique_ptr<ITaskIdProducer> id_producer_;

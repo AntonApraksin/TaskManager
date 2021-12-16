@@ -21,26 +21,10 @@ inline Date_t parse_date(std::string date) {
 class MockTaskIdProducer : public ITaskIdProducer {
  public:
   TaskId GetNextId() override { return CreateTaskId(current_++); }
+  TaskId GetCurrentId() override { return CreateTaskId(current_); }
 
  private:
   int current_ = 0;
-};
-
-class TaskFactory final {
- public:
-  Task GetNextTask() {
-    std::stringstream ss;
-    ss << "Sample task #" << state_;
-    Date_t due_date =
-        google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
-    Task::Priority priority = static_cast<Task::Priority>(state_ % 4);
-    Task::Progress progress = static_cast<Task::Progress>(state_ % 3);
-    ++state_;
-    return *CreateTask(ss.str(), due_date, priority, progress);
-  }
-
- private:
-  int state_ = 0;
 };
 
 #endif  // TASKMANAGER_TESTS_MODEL_MODELUTILS_H_

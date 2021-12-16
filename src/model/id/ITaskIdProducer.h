@@ -7,6 +7,7 @@
 class ITaskIdProducer {
  public:
   virtual task_manager::TaskId GetNextId() = 0;
+  virtual task_manager::TaskId GetCurrentId() = 0;
 
   virtual ~ITaskIdProducer(){};
 };

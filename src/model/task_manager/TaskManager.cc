@@ -1,37 +1,53 @@
 #include "TaskManager.h"
 
+// TODO: return errors on failure
+
 TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer)
     : id_producer_(std::move(id_producer)) {}
 
-TaskId TaskManager::Add(Task task) {
+std::pair<std::optional<TaskId>, TaskManager::ActionResult> TaskManager::Add(
+    Task task) {
   auto next_id = id_producer_->GetNextId();
   storage_.Add(next_id, std::move(task));
-  return next_id;
+  return {next_id, ActionResult::ok()};
 }
 
-TaskId TaskManager::Add(TaskId task_id, Task task) {
+std::pair<std::optional<TaskId>, TaskManager::ActionResult> TaskManager::Add(
+    TaskId task_id, Task task) {
   auto next_id = id_producer_->GetNextId();
-  auto& add_to = storage_.Find(task_id);
-  add_to.Add(next_id, std::move(task));
-  return next_id;
+  auto add_to = storage_.Find(task_id);
+  if (add_to != storage_.end()) {
+    add_to->second.Add(next_id, std::move(task));
+    return {next_id, ActionResult::ok()};
+  }
+  return {{}, ActionResult::error(ActionResult::Status::kNotPresentId)};
 }
 
-TaskManager& TaskManager::Edit(TaskId id, Task task) {
-  auto& to_edit = storage_.Find(id);
-  to_edit.SetTask(task);
-  return *this;
+TaskManager::ActionResult TaskManager::Edit(TaskId id, Task task) {
+  auto to_edit = storage_.Find(id);
+  if (to_edit != storage_.end()) {
+    to_edit->second.SetTask(task);
+    return ActionResult::ok();
+  }
+  return ActionResult::error(ActionResult::Status::kNotPresentId);
 }
 
-TaskManager& TaskManager::Complete(TaskId id) {
-  auto& to_edit = storage_.Find(id);
-  to_edit.Complete();
-  return *this;
+TaskManager::ActionResult TaskManager::Complete(TaskId id) {
+  auto to_complete = storage_.Find(id);
+  if (to_complete != storage_.end()) {
+    to_complete->second.Complete();
+    return ActionResult::ok();
+  }
+  return ActionResult::error(ActionResult::Status::kNotPresentId);
 }
 
-TaskManager& TaskManager::Delete(TaskId id) {
-  auto& parent_of = storage_.FindParentOf(id);
-  parent_of.Delete(id);
-  return *this;
+TaskManager::ActionResult TaskManager::Delete(TaskId id) {
+  auto parent_of = storage_.FindStorageContaining(id);
+  if (parent_of) {
+    parent_of->get().Delete(parent_of->get().Find(id));
+    return ActionResult::ok();
+  }
+  return ActionResult::error(ActionResult::Status::kNotPresentId);
 }
 
 TaskStorage TaskManager::Show() const { return storage_; }

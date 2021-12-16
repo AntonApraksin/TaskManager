@@ -66,7 +66,7 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
 
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(date),

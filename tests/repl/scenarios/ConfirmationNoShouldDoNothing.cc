@@ -27,7 +27,7 @@ TEST_F(ConfirmationNoTest, EditShouldNotBePerformed) {
                                   *validator_->ParseTaskPriority(priority),
                                   *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
 }
 
 TEST_F(ConfirmationNoTest, CompleteShouldNotBePerformed) {
@@ -36,7 +36,8 @@ TEST_F(ConfirmationNoTest, CompleteShouldNotBePerformed) {
   auto storage =
       RunScenario({"add", "gdfgd", "", "", state, "y", "complete 0", "n", "q"});
 
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->progress(), Task::kUncompleted);
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
+            Task::kUncompleted);
 }
 
 TEST_F(ConfirmationNoTest, DeleteShouldNotBePerformed) {

@@ -42,5 +42,5 @@ TEST_F(TaskStorageTest, CompleteOnNestedTasks) {
   tw.Add(nested_id, nested_task);
 
   tw.Complete();
-  ASSERT_EQ(tw.Find(nested_id)->progress(), Task::kCompleted);
+  ASSERT_EQ(tw.Find(nested_id)->second->progress(), Task::kCompleted);
 }

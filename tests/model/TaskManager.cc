@@ -24,37 +24,37 @@ TEST_F(PlainTaskManagerTest, TaskAddedProperly) {
   EXPECT_EQ(task, *tm.Show().ShowStorage().cbegin()->second);
 }
 
-TEST_F(PlainTaskManagerTest, RuntimeErrorOnDeleteWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
   tm.Add(task);
-  auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
+  auto tmp_id = tm.Show().cbegin()->first;
   tm.Delete(tmp_id);
-  // NOLINTNEXTLINE
-  EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
+  EXPECT_EQ(tm.Delete(tmp_id).status,
+            TaskManager::ActionResult::Status::kNotPresentId);
 }
 
-TEST_F(PlainTaskManagerTest, RuntimeErrorOnCompleteWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
   tm.Add(task);
   auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
   tm.Delete(tmp_id);
-  // NOLINTNEXTLINE
-  EXPECT_THROW(tm.Delete(tmp_id), std::runtime_error);
+  EXPECT_EQ(tm.Complete(tmp_id).status,
+            TaskManager::ActionResult::Status::kNotPresentId);
 }
 
-TEST_F(PlainTaskManagerTest, RuntimeErrorOnEditWithUnexistingId) {
+TEST_F(PlainTaskManagerTest, InvalidIdResultOnEditWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
   tm.Add(task);
   auto tmp_id = tm.Show().ShowStorage().cbegin()->first;
   tm.Delete(tmp_id);
-  // NOLINTNEXTLINE
-  EXPECT_THROW(tm.Edit(tmp_id, task), std::runtime_error);
+  EXPECT_EQ(tm.Edit(tmp_id, task).status,
+            TaskManager::ActionResult::Status::kNotPresentId);
 }
 
 TEST_F(PlainTaskManagerTest, ProperDeletion) {

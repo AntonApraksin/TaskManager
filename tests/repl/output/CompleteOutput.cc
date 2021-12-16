@@ -83,7 +83,7 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::YouAreGoingTo("complete"),
       IostreamStrings::ShowTask(TaskDataToTask(t1)),
       IostreamStrings::AndItsChildren(
-          task_storage.Find(CreateTaskId(0)).ShowStorage().size()),
+          task_storage.Find(CreateTaskId(0))->second.ShowStorage().size()),
       IostreamStrings::ProceedTo("complete"),
 
       IostreamStrings::GetPrompt(""),

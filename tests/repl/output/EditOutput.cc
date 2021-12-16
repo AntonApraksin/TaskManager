@@ -107,7 +107,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
 
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kYouAreGoingToEdit,
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
       IostreamStrings::LeaveEmptyFor(edit_t1.title),
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(edit_t1.date),

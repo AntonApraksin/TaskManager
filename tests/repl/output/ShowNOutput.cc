@@ -65,7 +65,7 @@ TEST_F(ShowNOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(t1.date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
@@ -79,7 +79,7 @@ TEST_F(ShowNOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::GetPrompt(""),
 
       IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(1))),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(1))->second),
       IostreamStrings::GetPrompt("title"),
       IostreamStrings::LeaveEmptyFor(sub_t1.date),
       IostreamStrings::GetPrompt("due date", kDatePattern),
@@ -118,14 +118,17 @@ TEST_F(ShowNOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       IostreamStrings::ShowId(4),
       IostreamStrings::GetPrompt(""),
 
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))),
-      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(0)), 2),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
+      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(0))->second,
+                                     2),
 
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(4))),
-      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(4)), 2),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(4))->second),
+      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(4))->second,
+                                     2),
 
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(1))),
-      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(1)), 2),
+      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(1))->second),
+      IostreamStrings::ShowNestedMap(task_storage.Find(CreateTaskId(1))->second,
+                                     2),
       IostreamStrings::GetPrompt(""),
   };
 

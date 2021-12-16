@@ -18,6 +18,23 @@ void Controller::Run() {
     command = view_->GetNextCommand();
   }
 }
+std::optional<Task> Controller::GetTaskById(const TaskStorage& storage,
+                                            TaskId id) {
+  auto found = storage.Find(id);
+  if (found == storage.cend()) {
+    return {};
+  }
+  return *found->second;
+}
+
+std::optional<TaskWrapper> Controller::GetTaskWrapperById(
+    const TaskStorage& storage, TaskId id) {
+  auto found = storage.Find(id);
+  if (found == storage.cend()) {
+    return {};
+  }
+  return found->second;
+}
 
 void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
   switch (se) {
@@ -81,16 +98,19 @@ void Controller::PerformAction(CommandEnum se, const std::vector<TaskId>& ids) {
 }
 
 void Controller::HandleAdd(TaskId task_id) {
-  try {
-    auto add_to = *task_manager_->Show().Find(task_id);
-    view_->SetState(step_factory_->GetAddTaskStep(add_to));
-    auto [status, task] = view_->Run();
-    if (*status == ConfirmationResult::kYes) {
-      auto given_id = task_manager_->Add(task_id, *task);
-      ReportMessage(MessageEnum::kShowId, given_id);
-    }
-  } catch (const std::runtime_error&) {
+  auto storage = task_manager_->Show();
+  auto add_to = GetTaskById(storage, task_id);
+  if (!add_to) {
     ReportMessage(MessageEnum::kNotPresentId, task_id);
+    return;
+  }
+  view_->SetState(step_factory_->GetAddTaskStep(*add_to));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes) {
+    auto result = task_manager_->Add(task_id, *task);
+    if (result.second.status == TaskManager::ActionResult::Status::kOk) {
+      ReportMessage(MessageEnum::kShowId, *result.first);
+    }
   }
 }
 
@@ -98,124 +118,116 @@ void Controller::HandleAdd() {
   view_->SetState(step_factory_->GetAddTaskStep());
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    auto given_id = task_manager_->Add(*task);
-    ReportMessage(MessageEnum::kShowId, given_id);
+    auto result = task_manager_->Add(*task);  // TODO: handle possible error
+    ReportMessage(MessageEnum::kShowId, *result.first);
   }
 }
 
 void Controller::HandleEdit(TaskId task_id) {
-  try {
-    auto to_edit = task_manager_->Show().Find(task_id);
-    view_->SetState(step_factory_->GetEditTaskStep(to_edit));
-    auto [status, task] = view_->Run();
-    if (*status == ConfirmationResult::kYes) {
-      task_manager_->Edit(task_id, *task);
-    }
-  } catch (const std::runtime_error&) {
+  auto storage = task_manager_->Show();
+  auto to_edit = GetTaskWrapperById(storage, task_id);
+  if (!to_edit) {
     ReportMessage(MessageEnum::kNotPresentId, task_id);
+    return;
+  }
+  view_->SetState(step_factory_->GetEditTaskStep(*to_edit));
+  auto [status, task] = view_->Run();
+  if (*status == ConfirmationResult::kYes) {
+    task_manager_->Edit(task_id, *task);  // TODO: handle error
   }
 }
 
 // TODO: Prettify implementation
 void Controller::HandleComplete(const std::vector<TaskId>& ids) {
+  if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
+    ReportMessage(MessageEnum::kRepeatedId);
+    return;
+  }
+  auto storage = task_manager_->Show();
+
   ICompleteTaskStep::TaskWrappers tasks;
 
   TaskId current_id = ids.at(0);
-  std::vector<TaskId> seen;
-  auto storage = task_manager_->Show();
-  try {
-    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
-      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
-        seen.push_back(id);
-        current_id = id;
-        tasks.push_back(storage.Find(id));
-      }
-    });
-  } catch (const std::runtime_error&) {
-    ReportMessage(MessageEnum::kNotPresentId, current_id);
-    return;
+  for (auto id : ids) {
+    auto found = storage.Find(id);
+    if (found == storage.end()) {
+      ReportMessage(MessageEnum::kNotPresentId, current_id);
+      return;
+    }
+    tasks.push_back(storage.Find(id)->second);
   }
 
   view_->SetState(step_factory_->GetCompleteTaskStep(std::move(tasks)));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    std::for_each(seen.cbegin(), seen.cend(), [this](auto id) {
-      try {
-        task_manager_->Complete(id);
-      } catch (const std::runtime_error&) {
-      }
-    });
+    std::for_each(ids.cbegin(), ids.cend(),
+                  [this](auto id) { task_manager_->Complete(id); });
   }
 }
 
 // TODO: Prettify implementation
 void Controller::HandleDelete(const std::vector<TaskId>& ids) {
-  ICompleteTaskStep::TaskWrappers tasks;
-  std::vector<TaskId> seen;
-  TaskId current_id = ids.at(0);
-  auto storage = task_manager_->Show();
-  try {
-    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
-      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
-        seen.push_back(id);
-        current_id = id;
-        tasks.push_back(storage.Find(id));
-      }
-    });
-  } catch (const std::runtime_error&) {
-    ReportMessage(MessageEnum::kNotPresentId, current_id);
+  if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
+    ReportMessage(MessageEnum::kRepeatedId);
     return;
+  }
+  auto storage = task_manager_->Show();
+  ICompleteTaskStep::TaskWrappers tasks;
+  TaskId current_id = ids.at(0);
+  for (auto id : ids) {
+    auto found = storage.Find(id);
+    if (found == storage.end()) {
+      ReportMessage(MessageEnum::kNotPresentId, current_id);
+      return;
+    }
+    tasks.push_back(storage.Find(id)->second);
   }
   view_->SetState(step_factory_->GetDeleteTaskStep(tasks));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    std::for_each(seen.cbegin(), seen.cend(), [this](auto id) {
-      try {
-        task_manager_->Delete(id);
-      } catch (const std::runtime_error&) {
-      }
-    });
+    std::for_each(ids.cbegin(), ids.cend(),
+                  [this](auto id) { task_manager_->Delete(id); });
   }
 }
 
 void Controller::HandleShow(const std::vector<TaskId>& ids) {
+  auto storage = task_manager_->Show();
   IShowNTasksStep::TaskWrappers tasks;
   std::vector<TaskId> seen;
   TaskId current_id = ids.at(0);
-  auto storage = task_manager_->Show();
-  try {
-    std::for_each(ids.cbegin(), ids.cend(), [&](auto id) {
-      if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
-        seen.push_back(id);
-        current_id = id;
-        tasks.push_back(storage.Find(id));
+  for (auto id : ids) {
+    if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
+      seen.push_back(id);
+      current_id = id;
+      auto found = storage.Find(id);
+      if (found == storage.end()) {
+        ReportMessage(MessageEnum::kNotPresentId, current_id);
+        return;
       }
-    });
-  } catch (const std::runtime_error&) {
-    ReportMessage(MessageEnum::kNotPresentId, current_id);
-    return;
+      tasks.push_back(storage.Find(id)->second);
+    }
   }
   view_->SetState(step_factory_->GetShowNTasksStep(tasks));
-  /*auto [status, task] =*/view_->Run();
+  /*auto [status, task] = */ view_->Run();
 }
 
 void Controller::HandleShow() {
   auto to_show = task_manager_->Show();
   view_->SetState(step_factory_->GetShowAllTasksStep(to_show));
-  view_->Run();
+  /*auto [status, task] = */ view_->Run();
 }
 
 void Controller::HandleHelp() {
   view_->SetState(step_factory_->GetShowHelpStep());
-  view_->Run();
+  /*auto [status, task] = */ view_->Run();
 }
 
 void Controller::ReportMessage(MessageEnum message_enum) {
   view_->SetState(step_factory_->GetReportMessageStep(message_enum));
-  view_->Run();
+  /*auto [status, task] = */ view_->Run();
 }
 
 void Controller::ReportMessage(MessageEnum message_enum, TaskId task_id) {
   view_->SetState(step_factory_->GetReportMessageStep(message_enum, task_id));
-  view_->Run();
+  /*auto [status, task] = */ view_->Run();
 }

@@ -16,7 +16,7 @@ TEST_F(AddActionTest, OneTaskShouldBeAdded) {
                                   *validator_->ParseTaskPriority(priority),
                                   *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
 }
 
 TEST_F(AddActionTest, NTasksShouldBeAdded) {
@@ -41,7 +41,8 @@ TEST_F(AddActionTest, NTasksShouldBeAdded) {
   auto storage = RunScenario(std::move(commands));
 
   for (int i{0}; i != kNTasks; ++i) {
-    EXPECT_EQ(*storage.Find(CreateTaskId(i)), TaskDataToTask(tasks_data.at(i)));
+    EXPECT_EQ(*storage.Find(CreateTaskId(i))->second,
+              TaskDataToTask(tasks_data.at(i)));
   }
 }
 
@@ -57,9 +58,9 @@ TEST_F(AddActionTest, NestedTasksShouldBeAdded) {
                               "y", "add 1", subsubtask.title, subsubtask.date,
                               subsubtask.priority, subsubtask.state, "y", "q"});
 
-  auto task_wrapper = storage.Find(CreateTaskId(0));
-  auto subtask_wrapper = task_wrapper.Find(CreateTaskId(1));
-  auto subsubtask_wrapper = subtask_wrapper.Find(CreateTaskId(2));
+  auto task_wrapper = storage.Find(CreateTaskId(0))->second;
+  auto subtask_wrapper = task_wrapper.Find(CreateTaskId(1))->second;
+  auto subsubtask_wrapper = subtask_wrapper.Find(CreateTaskId(2))->second;
 
   EXPECT_EQ(*task_wrapper, TaskDataToTask(task));
   EXPECT_EQ(*subtask_wrapper, TaskDataToTask(subtask));
@@ -75,10 +76,10 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
   auto storage = RunScenario({"add", title, date, priority, state, "y", "add 0",
                               "subtitle", "", "", "", "y", "q"});
 
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->due_date(),
-            storage.Find(CreateTaskId(1))->due_date());
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->priority(),
-            storage.Find(CreateTaskId(1))->priority());
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->progress(),
-            storage.Find(CreateTaskId(1))->progress());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->due_date(),
+            storage.Find(CreateTaskId(1))->second->due_date());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->priority(),
+            storage.Find(CreateTaskId(1))->second->priority());
+  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
+            storage.Find(CreateTaskId(1))->second->progress());
 }

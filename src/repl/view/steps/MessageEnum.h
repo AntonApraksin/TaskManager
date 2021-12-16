@@ -8,6 +8,7 @@ enum class MessageEnum {
   kNotPresentId,
   kShowId,
   kUnknownCommand,
+  kRepeatedId,
 };
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEPS_MESSAGEENUM_H_

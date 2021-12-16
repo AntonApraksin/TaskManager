@@ -13,18 +13,22 @@ class _TaskStorageImpl {  // NOLINT
 
  public:
   void Add(TaskId task_id, Task task);
-  void Delete(TaskId task_id);
+  void Delete(typename Storage::iterator to_delete);
 
   const Storage& ShowStorage() const;
-  const T& Find(TaskId) const;
-  T& Find(TaskId);
+  typename Storage::const_iterator Find(TaskId) const;
+  typename Storage::iterator Find(TaskId);
 
-  const _TaskStorageImpl& FindParentOf(TaskId) const;
-  _TaskStorageImpl& FindParentOf(TaskId);
+  std::optional<std::reference_wrapper<const _TaskStorageImpl>>
+      FindStorageContaining(TaskId) const;
+  std::optional<std::reference_wrapper<_TaskStorageImpl>> FindStorageContaining(
+      TaskId);
 
- private:
-  _TaskStorageImpl* FindParentOfImpl(TaskId task_id);
-  const _TaskStorageImpl* FindParentOfImpl(TaskId task_id) const;
+  typename Storage::iterator begin();
+  typename Storage::iterator end();
+
+  typename Storage::const_iterator cbegin() const;
+  typename Storage::const_iterator cend() const;
 
  protected:
   Storage children_;
@@ -36,76 +40,85 @@ void _TaskStorageImpl<T>::Add(TaskId task_id, Task task) {
 }
 
 template <typename T>
-void _TaskStorageImpl<T>::Delete(TaskId task_id) {
-  if (auto it = children_.find(task_id); it != children_.end()) {
-    children_.erase(it);
-    return;
-  }
-  throw std::runtime_error("Given Id does not exist");
+void _TaskStorageImpl<T>::Delete(
+    typename _TaskStorageImpl<T>::Storage::iterator to_delete) {
+  children_.erase(to_delete);
 }
 
 template <typename T>
-const T& _TaskStorageImpl<T>::Find(TaskId task_id) const {
-  const _TaskStorageImpl<T>& parent = FindParentOf(task_id);
-  return parent.children_.find(task_id)->second;
-}
-
-template <typename T>
-T& _TaskStorageImpl<T>::Find(TaskId task_id) {
-  _TaskStorageImpl<T>& parent = FindParentOf(task_id);
-  return parent.children_.find(task_id)->second;
-}
-
-template <typename T>
-_TaskStorageImpl<T>& _TaskStorageImpl<T>::FindParentOf(TaskId task_id) {
-  _TaskStorageImpl* parent_of = FindParentOfImpl(task_id);
-  if (parent_of == nullptr) {
-    throw std::runtime_error("Given Id does not exist");
-  }
-  return *parent_of;
-}
-
-template <typename T>
-const _TaskStorageImpl<T>& _TaskStorageImpl<T>::FindParentOf(
+typename _TaskStorageImpl<T>::Storage::const_iterator _TaskStorageImpl<T>::Find(
     TaskId task_id) const {
-  const _TaskStorageImpl* parent_of = FindParentOfImpl(task_id);
-  if (parent_of == nullptr) {
-    throw std::runtime_error("Given Id does not exist");
+  auto parent = FindStorageContaining(task_id);
+  if (parent) {
+    return parent->get().children_.find(task_id);
   }
-  return *parent_of;
+  return cend();
 }
 
 template <typename T>
-const _TaskStorageImpl<T>* _TaskStorageImpl<T>::FindParentOfImpl(
-    TaskId task_id) const {
+typename _TaskStorageImpl<T>::Storage::iterator _TaskStorageImpl<T>::Find(
+    TaskId task_id) {
+  auto parent = FindStorageContaining(task_id);
+  if (parent) {
+    return parent->get().children_.find(task_id);
+  }
+  return end();
+}
+
+template <typename T>
+std::optional<std::reference_wrapper<_TaskStorageImpl<T>>>
+_TaskStorageImpl<T>::FindStorageContaining(TaskId task_id) {
   if (auto it = children_.find(task_id); it != children_.end()) {
-    return this;
+    return std::ref(*this);
   }
   for (auto& i : children_) {
-    if (auto it = i.second.FindParentOfImpl(task_id); it != nullptr) {
+    if (auto it = i.second.FindStorageContaining(task_id); it) {
       return it;
     }
   }
-  return nullptr;
+  return {};
 }
 
 template <typename T>
-_TaskStorageImpl<T>* _TaskStorageImpl<T>::FindParentOfImpl(TaskId task_id) {
+std::optional<std::reference_wrapper<const _TaskStorageImpl<T>>>
+_TaskStorageImpl<T>::FindStorageContaining(TaskId task_id) const {
   if (auto it = children_.find(task_id); it != children_.end()) {
-    return this;
+    return std::cref(*this);
   }
   for (auto& i : children_) {
-    if (auto it = i.second.FindParentOfImpl(task_id); it != nullptr) {
+    if (auto it = i.second.FindStorageContaining(task_id); it) {
       return it;
     }
   }
-  return nullptr;
+  return {};
 }
 
 template <typename T>
 const typename _TaskStorageImpl<T>::Storage& _TaskStorageImpl<T>::ShowStorage()
     const {
   return children_;
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::iterator _TaskStorageImpl<T>::begin() {
+  return children_.begin();
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::iterator _TaskStorageImpl<T>::end() {
+  return children_.end();
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::const_iterator
+_TaskStorageImpl<T>::cbegin() const {
+  return children_.cbegin();
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::const_iterator
+_TaskStorageImpl<T>::cend() const {
+  return children_.cend();
 }
 
 #endif  // TASKMANAGER_SRC_MODEL_TASK_WRAPPER_TASKSTORAGE_H_

@@ -26,6 +26,9 @@ class Controller {
   void ReportMessage(MessageEnum);
   void ReportMessage(MessageEnum, TaskId);
 
+  std::optional<Task> GetTaskById(const TaskStorage&, TaskId);
+  std::optional<TaskWrapper> GetTaskWrapperById(const TaskStorage&, TaskId);
+
  private:
   std::shared_ptr<TaskManager> task_manager_;
   std::unique_ptr<View> view_;

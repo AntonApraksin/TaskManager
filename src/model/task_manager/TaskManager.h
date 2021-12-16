@@ -11,14 +11,27 @@
 
 class TaskManager final {
  public:
+  struct ActionResult {
+    enum class Status {
+      kOk,
+      kNotPresentId,
+      kFailure,
+    };
+    Status status;
+
+    static ActionResult error(Status status) { return ActionResult{status}; }
+
+    static ActionResult ok() { return ActionResult{Status::kOk}; }
+  };
+
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
-  TaskId Add(Task task);
-  TaskId Add(TaskId task_id, Task task);
+  std::pair<std::optional<TaskId>, ActionResult> Add(Task task);
+  std::pair<std::optional<TaskId>, ActionResult> Add(TaskId task_id, Task task);
 
-  TaskManager& Edit(TaskId id, Task task);
-  TaskManager& Complete(TaskId id);
-  TaskManager& Delete(TaskId id);
+  ActionResult Edit(TaskId id, Task task);
+  ActionResult Complete(TaskId id);
+  ActionResult Delete(TaskId id);
 
   TaskStorage Show() const;
 

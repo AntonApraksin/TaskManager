@@ -30,6 +30,10 @@ StepResult IostreamReportMessageStep::Run() {
     case MessageEnum::kShowId:
       io_facility_->Print(IostreamStrings::ShowId(task_id_->id()));
       break;
+
+    case MessageEnum::kRepeatedId:
+      io_facility_->Print(IostreamStrings::kRepeatedId);
+      break;
   }
   return {{}, {}};
 }

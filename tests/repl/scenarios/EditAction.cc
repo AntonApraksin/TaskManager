@@ -15,7 +15,7 @@ TEST_F(EditActionTest, OneTaskShouldBeEdited) {
                    edited.priority, edited.state, "y", "q"});
 
   auto expected_task = TaskDataToTask(edited);
-  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
 }
 
 TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
@@ -29,5 +29,5 @@ TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
                                   *validator_->ParseTaskPriority(priority),
                                   *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(CreateTaskId(0)), expected_task);
+  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
 }

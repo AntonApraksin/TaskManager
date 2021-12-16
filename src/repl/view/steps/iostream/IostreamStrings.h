@@ -24,6 +24,7 @@ struct IostreamStrings {
   static constexpr ccp kMultipleId =
       "Multiple Id does not supported for this command.\n";
   static constexpr ccp kRequiredId = "Id is required for this command.\n";
+  static constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
   static constexpr ccp kHelp =
       "Usage:\n"
       "  add(a) [id]\n"

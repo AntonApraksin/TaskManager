@@ -96,7 +96,7 @@ TEST_F(PlainOutputTest, UnknownCommandMustAppear) {
   }
 }
 
-TEST_F(PlainOutputTest, NotPresentIdMustAppear) {
+TEST_F(PlainOutputTest, NotPresentIdMustAppear) {  // TODO: fix this
   std::string date = "11:38 17/09/2019";
   std::stringstream ss;
   auto time =

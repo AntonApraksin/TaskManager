@@ -8,8 +8,10 @@
 class TaskIdProducer final : public ITaskIdProducer {
  public:
   TaskIdProducer();
+  TaskIdProducer(TaskId);
 
   task_manager::TaskId GetNextId() override;
+  task_manager::TaskId GetCurrentId() override;
 
  private:
   google::protobuf::int32 current_id_;

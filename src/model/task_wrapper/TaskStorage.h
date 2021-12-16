@@ -27,6 +27,9 @@ class _TaskStorageImpl {  // NOLINT
   typename Storage::iterator begin();
   typename Storage::iterator end();
 
+  typename Storage::const_iterator begin() const;
+  typename Storage::const_iterator end() const;
+
   typename Storage::const_iterator cbegin() const;
   typename Storage::const_iterator cend() const;
 
@@ -107,6 +110,18 @@ typename _TaskStorageImpl<T>::Storage::iterator _TaskStorageImpl<T>::begin() {
 template <typename T>
 typename _TaskStorageImpl<T>::Storage::iterator _TaskStorageImpl<T>::end() {
   return children_.end();
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::const_iterator
+_TaskStorageImpl<T>::begin() const {
+  return children_.cbegin();
+}
+
+template <typename T>
+typename _TaskStorageImpl<T>::Storage::const_iterator _TaskStorageImpl<T>::end()
+    const {
+  return children_.cend();
 }
 
 template <typename T>

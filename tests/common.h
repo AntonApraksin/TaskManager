@@ -34,5 +34,4 @@ class TaskFactory final {
   int state_ = 0;
 };
 
-
 #endif  // TASKMANAGER_TESTS_COMMON_H_

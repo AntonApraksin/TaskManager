@@ -50,4 +50,8 @@ TaskManager::ActionResult TaskManager::Delete(TaskId id) {
   return ActionResult::error(ActionResult::Status::kNotPresentId);
 }
 
+TaskId TaskManager::GetLastGivenId() const {
+  return id_producer_->GetCurrentId();
+}
+
 TaskStorage TaskManager::Show() const { return storage_; }

@@ -21,6 +21,7 @@ inline Date_t parse_date(std::string date) {
 class MockTaskIdProducer : public ITaskIdProducer {
  public:
   TaskId GetNextId() override { return CreateTaskId(current_++); }
+  TaskId GetCurrentId() override { return CreateTaskId(current_); }
 
  private:
   int current_ = 0;

@@ -27,6 +27,8 @@ class TaskManager final {
 
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
+  TaskManager(std::unique_ptr<ITaskIdProducer> id_producer, Storage);
+
   OperationResult<Status, TaskId> Add(Task task);
   OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
 

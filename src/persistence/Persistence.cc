@@ -28,7 +28,7 @@ void ProduceOneMessageToOstream(std::ostream& os,
 
 LoadResult Persistence::Load(std::istream& is) const {
   SolidTasks solid_tasks;
-  for (; is.rdbuf()->in_avail() > 0;) {
+  for (; !is.eof();) {
     solid_tasks.push_back(
         *ConsumeOneMessageFromIstream<SolidTask>(is));  // TODO: Handle error
   }

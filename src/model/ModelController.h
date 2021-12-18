@@ -1,6 +1,9 @@
 #ifndef TASKMANAGER_SRC_MODEL_MODELCONTROLLER_H_
 #define TASKMANAGER_SRC_MODEL_MODELCONTROLLER_H_
 
+#include <istream>
+#include <ostream>
+
 #include "model/OperationResult.h"
 #include "model/SolidTask.h"
 
@@ -26,6 +29,9 @@ class ModelController {
   OperationResult<Status, SolidTasks> GetAllSolidTasks();
   OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
       std::vector<TaskId>);
+
+  OperationResult<Status> LoadFrom(std::istream&);
+  OperationResult<Status> SaveTo(std::ostream&);
 
  private:
   std::unique_ptr<TaskManager> task_manager_;

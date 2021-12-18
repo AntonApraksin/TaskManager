@@ -17,6 +17,10 @@ using TMStatus = TaskManager::Status;
 TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer)
     : id_producer_(std::move(id_producer)) {}
 
+TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer,
+                         TaskManager::Storage storage)
+    : id_producer_(std::move(id_producer)), storage_(std::move(storage)) {}
+
 OperationResult<TMStatus, TaskId> TaskManager::Add(Task task) {
   auto next_id = id_producer_->GetNextId();
   storage_.tasks.insert({next_id, std::move(task)});

@@ -41,6 +41,9 @@ class UIController {
   void ReportMessage(MessageEnum);
   void ReportMessage(MessageEnum, std::string);
 
+  void HandleSave(std::string);
+  void HandleLoad(std::string);
+
  private:
   std::shared_ptr<ModelController> model_controller_;
   std::unique_ptr<View> view_;

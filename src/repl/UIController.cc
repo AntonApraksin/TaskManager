@@ -1,5 +1,7 @@
 #include "UIController.h"
 
+#include "fstream"
+
 UIController::UIController(std::unique_ptr<View> view,
                            std::shared_ptr<ModelController> model_controller,
                            std::shared_ptr<IValidator> validator,
@@ -39,6 +41,12 @@ void UIController::PerformAction(CommandEnum se, std::string args) {
 
     case CommandEnum::kShow:
       return HandleShow(std::move(args));
+
+    case CommandEnum::kSave:
+      return HandleSave(std::move(args));
+
+    case CommandEnum::kLoad:
+      return HandleLoad(std::move(args));
 
     case CommandEnum::kMain:
       std::terminate();  // TODO: Log?
@@ -319,4 +327,15 @@ void UIController::ReportMessage(MessageEnum message_enum, std::string arg) {
   view_->SetState(
       step_factory_->GetReportMessageStep(message_enum, std::move(arg)));
   /*auto [status, task] = */ view_->Run();
+}
+
+void UIController::HandleSave(std::string arg) {
+  auto filename = validator_->ConsumeOneTokenFrom(arg);
+  std::ofstream file(filename);
+  model_controller_->SaveTo(file);
+}
+void UIController::HandleLoad(std::string arg) {
+  auto filename = validator_->ConsumeOneTokenFrom(arg);
+  std::ifstream file(filename);
+  model_controller_->LoadFrom(file);
 }

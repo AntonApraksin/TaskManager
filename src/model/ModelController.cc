@@ -1,6 +1,7 @@
 #include "ModelController.h"
 
 #include "model/task_manager/TaskManager.h"
+#include "persistence/Persistence.h"
 
 using MCStatus = ModelController::Status;
 
@@ -124,4 +125,42 @@ OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
   storage.roots = std::move(ids);
   return OperationResult<Status, SolidTasks>::Ok(
       GetSolidTasksSorted(std::move(storage)));
+}
+
+OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
+  Persistence persistence;
+  auto result = persistence.Load(is);
+  TaskManager::Parents parents;
+  TaskManager::Tasks tasks;
+  TaskManager::Roots roots;
+  TaskId max_task_id = result.solid_tasks->back().task_id();
+  for (auto& i : *result.solid_tasks) {
+    if (i.task_id() > max_task_id) {
+      max_task_id = i.task_id();
+    }
+    if (!i.has_parent_id()) {
+      roots.push_back(i.task_id());
+      tasks.insert({i.task_id(), i.task()});
+    } else {
+      parents[i.parent_id()].push_back(i.task_id());
+      tasks.insert({i.task_id(), i.task()});
+    }
+  }
+  TaskManager::Storage storage;
+  storage.roots = std::move(roots);
+  storage.parents = std::move(parents);
+  storage.tasks = std::move(tasks);
+  auto task_id_producer =
+      std::make_unique<TaskIdProducer>(std::move(max_task_id));
+  task_id_producer->GetNextId();
+  task_manager_ = std::make_unique<TaskManager>(std::move(task_id_producer),
+                                                std::move(storage));
+  return OperationResult<Status>::Ok();
+}
+
+OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
+  auto solid_tasks = GetAllSolidTasks();
+  Persistence persistence;
+  persistence.Save(os, std::move(solid_tasks.AccessResult()));
+  return OperationResult<Status>::Ok();
 }

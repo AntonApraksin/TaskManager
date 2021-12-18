@@ -1,5 +1,6 @@
 #include "UsageFramework.h"
 
+#if 0
 class InvalidFieldsOutputTest : public ::testing::Test,
                                 protected UsageFramework {
  protected:
@@ -58,3 +59,4 @@ TEST_F(InvalidFieldsOutputTest, AddAction) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
+#endif

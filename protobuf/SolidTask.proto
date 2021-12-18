@@ -5,7 +5,7 @@ import "TaskId.proto";
 
 package task_manager;
 
-message SerializableTask
+message SolidTask
 {
     TaskId task_id = 1;
     TaskId parent_id = 2;

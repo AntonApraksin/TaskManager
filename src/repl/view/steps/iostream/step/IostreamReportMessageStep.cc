@@ -12,7 +12,11 @@ StepResult IostreamReportMessageStep::Run() {
       break;
 
     case MessageEnum::kInvalidId:
-      io_facility_->Print(IostreamStrings::InvalidId(*arg_));
+      if (arg_) {
+        io_facility_->Print(IostreamStrings::InvalidId(*arg_));
+      } else {
+        io_facility_->Print(IostreamStrings::kInvalidId);
+      }
       break;
 
     case MessageEnum::kNotPresentId:

@@ -1,15 +1,14 @@
-#ifndef TASKMANAGER_SRC_REPL_CONTROLLER_H_
-#define TASKMANAGER_SRC_REPL_CONTROLLER_H_
+#ifndef TASKMANAGER_SRC_REPL_UICONTROLLER_H_
+#define TASKMANAGER_SRC_REPL_UICONTROLLER_H_
 
-#include "model/task_manager/TaskManager.h"
+#include "model/ModelController.h"
 #include "repl/view/View.h"
 #include "repl/view/steps/IStepFactory.h"
 
-class Controller {
+class UIController {
  public:
-  Controller(std::unique_ptr<View> view, std::shared_ptr<TaskManager>,
-             std::shared_ptr<IValidator> validator,
-             std::unique_ptr<IStepFactory>);
+  UIController(std::unique_ptr<View>, std::shared_ptr<ModelController>,
+               std::shared_ptr<IValidator>, std::unique_ptr<IStepFactory>);
 
   void Run();
 
@@ -42,15 +41,12 @@ class Controller {
   void ReportMessage(MessageEnum);
   void ReportMessage(MessageEnum, std::string);
 
-  std::optional<Task> GetTaskById(const TaskStorage&, TaskId);
-  std::optional<TaskWrapper> GetTaskWrapperById(const TaskStorage&, TaskId);
-
  private:
-  std::shared_ptr<TaskManager> task_manager_;
+  std::shared_ptr<ModelController> model_controller_;
   std::unique_ptr<View> view_;
   std::shared_ptr<IValidator> validator_;
 
   std::unique_ptr<IStepFactory> step_factory_;
 };
 
-#endif  // TASKMANAGER_SRC_REPL_CONTROLLER_H_
+#endif  // TASKMANAGER_SRC_REPL_UICONTROLLER_H_

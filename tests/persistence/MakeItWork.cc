@@ -1,24 +1,11 @@
 #include <gtest/gtest.h>
 
 #include "../common.h"
+#include "model/ModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
 
 class PersistenceTest : public ::testing::Test {};
-
-bool CompareTwoTaskStorages(const TaskStorage& genuine,
-                            const TaskStorage& checkable) {
-  for (const auto& i : genuine) {
-    if (!(*i.second == *checkable.ShowStorage().find(i.first)->second)) {
-      return false;
-    }
-    if (!CompareTwoTaskStorages(
-            i.second, checkable.ShowStorage().find(i.first)->second)) {
-      return false;
-    }
-  }
-  return true;
-}
 
 TEST_F(PersistenceTest, MakeItWork) {
   TaskFactory task_factory;
@@ -32,31 +19,35 @@ TEST_F(PersistenceTest, MakeItWork) {
   auto t10 = task_factory.GetNextTask();
 
   auto id_producer = std::make_unique<TaskIdProducer>();
-  TaskManager task_manager{std::move(id_producer)};
-  auto i0 = *task_manager.Add(t0).first;
-  auto i1 = *task_manager.Add(t1).first;
-  auto i2 = *task_manager.Add(t2).first;
-  auto i00 = *task_manager.Add(i0, t00).first;
-  auto i01 = *task_manager.Add(i0, t01).first;
-  auto i000 = *task_manager.Add(i00, t000).first;
-  auto i0000 = *task_manager.Add(i000, t0000).first;
-  auto i10 = *task_manager.Add(i1, t10).first;
+  ModelController model_controller{
+      std::make_unique<TaskManager>(std::move(id_producer))};
 
-  auto genuine_storage = task_manager.Show();
-  auto genuine_last_given_id = task_manager.GetLastGivenId();
+  auto i0 = model_controller.Add(t0).AccessResult();
+  auto i1 = model_controller.Add(t1).AccessResult();
+  auto i2 = model_controller.Add(t2).AccessResult();
+  auto i00 = model_controller.Add(i0, t00).AccessResult();
+  auto i01 = model_controller.Add(i0, t01).AccessResult();
+  auto i000 = model_controller.Add(i00, t000).AccessResult();
+  auto i0000 = model_controller.Add(i000, t0000).AccessResult();
+  auto i10 = model_controller.Add(i1, t10).AccessResult();
+
+  auto genuine_solid_tasks = model_controller.GetAllSolidTasks().AccessResult();
   Persistence persistence;
   std::stringstream file;
-  Payload ipayload{task_manager.GetLastGivenId(), task_manager.Show()};
-  auto save_result = persistence.Save(file, ipayload);
+  auto save_result = persistence.Save(file, genuine_solid_tasks);
   ASSERT_EQ(save_result.status, SaveResult::Status::kOk);
 
   auto load_result = persistence.Load(file);
   ASSERT_EQ(load_result.status, LoadResult::Status::kOk);
-  auto loaded_payload = load_result.payload;
-  auto loaded_storage = loaded_payload->task_storage;
-  auto loaded_last_given_id = loaded_payload->last_given_id;
-
-  ASSERT_EQ(genuine_last_given_id.id(), loaded_last_given_id.id());
-
-  ASSERT_TRUE(CompareTwoTaskStorages(genuine_storage, loaded_storage));
+  auto loaded_solid_tasks = *load_result.solid_tasks;
+  ASSERT_EQ(genuine_solid_tasks.size(), loaded_solid_tasks.size());
+  for (size_t i{0}, sz{genuine_solid_tasks.size()}; i != sz; ++i) {
+    EXPECT_EQ(genuine_solid_tasks[i].task(), loaded_solid_tasks[i].task());
+    EXPECT_EQ(genuine_solid_tasks[i].task_id(),
+              loaded_solid_tasks[i].task_id());
+    if (genuine_solid_tasks[i].has_parent_id()) {
+      EXPECT_EQ(genuine_solid_tasks[i].parent_id(),
+                loaded_solid_tasks[i].parent_id());
+    }
+  }
 }

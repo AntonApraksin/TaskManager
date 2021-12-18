@@ -7,23 +7,21 @@
 IostreamEditTaskStep::IostreamEditTaskStep(
     const std::shared_ptr<IIoFacility> &io_facility,
     const std::shared_ptr<ISmallStepFactory> &state_factory,
-    const std::shared_ptr<IValidator> &validator, TaskWrapperRef task_wrapper)
-    : IEditTaskStep(task_wrapper),
-      IostreamStep(io_facility),
+    const std::shared_ptr<IValidator> &validator)
+    : IostreamStep(io_facility),
       IostreamWithSmallStepStep(state_factory),
       IostreamWithValidatorStep(validator) {}
 
 StepResult IostreamEditTaskStep::Run() {
   std::stringstream ss;
   io_facility_->Print(IostreamStrings::kYouAreGoingToEdit);
-  const auto &to_edit = *(task_wrapper_.get());
-  io_facility_->Print(IostreamStrings::ShowTask(to_edit));
+  io_facility_->Print(IostreamStrings::ShowSolidTask(solid_task_));
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
-      TaskBuilder{/*.title =*/to_edit.title(),
-                  /*.date_ =*/to_edit.due_date(),
-                  /*.priority =*/to_edit.priority(),
-                  /*.progress =*/to_edit.progress()}));
+      TaskBuilder{/*.title =*/solid_task_.task().title(),
+                  /*.date_ =*/solid_task_.task().due_date(),
+                  /*.priority =*/solid_task_.task().priority(),
+                  /*.progress =*/solid_task_.task().progress()}));
   sub_context.PushState(
       small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
   sub_context.PushState(

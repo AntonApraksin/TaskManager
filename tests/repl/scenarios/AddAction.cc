@@ -1,5 +1,7 @@
 #include "ScenarioFramework.h"
 
+#if 0
+
 class AddActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -83,3 +85,4 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
   EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
             storage.Find(CreateTaskId(1))->second->progress());
 }
+#endif

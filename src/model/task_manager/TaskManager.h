@@ -1,45 +1,47 @@
 #ifndef TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_
 #define TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_
-#pragma once
 
 #include <map>
 #include <memory>
 
+#include "model/OperationResult.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task/Task.h"
-#include "model/task_wrapper/TaskWrapper.h"
 
 class TaskManager final {
  public:
-  struct ActionResult {
-    enum class Status {
-      kOk,
-      kNotPresentId,
-      kFailure,
-    };
-    Status status;
+  using Tasks = std::unordered_map<TaskId, Task>;
+  using Parents = std::unordered_map<TaskId, std::vector<TaskId>>;
+  using Roots = std::vector<TaskId>;
 
-    static ActionResult error(Status status) { return ActionResult{status}; }
+  struct Storage {
+    Tasks tasks;
+    Parents parents;
+    Roots roots;
+  };
 
-    static ActionResult ok() { return ActionResult{Status::kOk}; }
+  enum class Status {
+    kOk,
+    kNotPresentId,
   };
 
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
-  std::pair<std::optional<TaskId>, ActionResult> Add(Task task);
-  std::pair<std::optional<TaskId>, ActionResult> Add(TaskId task_id, Task task);
+  OperationResult<Status, TaskId> Add(Task task);
+  OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
 
-  ActionResult Edit(TaskId id, Task task);
-  ActionResult Complete(TaskId id);
-  ActionResult Delete(TaskId id);
+  OperationResult<Status> Edit(TaskId id, Task task);
+  OperationResult<Status> Complete(TaskId id);
+  OperationResult<Status> Delete(TaskId id);
 
-  TaskStorage Show() const;
-
-  TaskId GetLastGivenId() const;
+  Storage Show() const;
 
  private:
-  TaskStorage storage_;
+  Storage storage_;
   std::unique_ptr<ITaskIdProducer> id_producer_;
 };
+
+void GetCompleteSubTree(TaskId id, const TaskManager::Parents&,
+                        std::vector<TaskId>&);
 
 #endif  // TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_

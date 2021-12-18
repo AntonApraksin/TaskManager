@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-#include "model/task_wrapper/TaskWrapper.h"
+#include "model/SolidTask.h"
 #include "repl/io_facility/IIoFacility.h"
 
 struct IostreamStrings {
@@ -61,15 +61,12 @@ struct IostreamStrings {
 
   static std::string ProceedTo(const std::string&);
 
-  static std::string ShowTask(const Task&);
-  static std::string ShowTask(const Task&, int);
-  static std::string ShowTaskWithId(const Task&, TaskId);
-  static std::string ShowTaskWithId(const Task&, TaskId, int);
-
   static const char* to_string(Task::Priority priority);
   static const char* to_string(Task::Progress state);
 
-  static std::string ShowNestedMap(const TaskWrapper& task_wrapper, int nest);
+  static std::string ShowSolidTask(SolidTask);
+
+  static std::string ShowSolidTasks(SolidTasks);
 };
 
 std::string PrintAndGet(IIoFacility& io, const std::string& str);

@@ -1,40 +1,23 @@
-#include "Controller.h"
+#include "UIController.h"
 
-Controller::Controller(std::unique_ptr<View> view,
-                       std::shared_ptr<TaskManager> task_manager,
-                       std::shared_ptr<IValidator> validator,
-                       std::unique_ptr<IStepFactory> step_factory)
-    : task_manager_(std::move(task_manager)),
+UIController::UIController(std::unique_ptr<View> view,
+                           std::shared_ptr<ModelController> model_controller,
+                           std::shared_ptr<IValidator> validator,
+                           std::unique_ptr<IStepFactory> step_factory)
+    : model_controller_(std::move(model_controller)),
       view_(std::move(view)),
       validator_(std::move(validator)),
       step_factory_(std::move(step_factory)) {}
 
-void Controller::Run() {
+void UIController::Run() {
   auto command = view_->GetNextCommand();
   for (; command.first != CommandEnum::kQuit;) {
     PerformAction(command.first, std::move(command.second));
     command = view_->GetNextCommand();
   }
 }
-std::optional<Task> Controller::GetTaskById(const TaskStorage& storage,
-                                            TaskId id) {
-  auto found = storage.Find(id);
-  if (found == storage.cend()) {
-    return {};
-  }
-  return *found->second;
-}
 
-std::optional<TaskWrapper> Controller::GetTaskWrapperById(
-    const TaskStorage& storage, TaskId id) {
-  auto found = storage.Find(id);
-  if (found == storage.cend()) {
-    return {};
-  }
-  return found->second;
-}
-
-void Controller::PerformAction(CommandEnum se, std::string args) {
+void UIController::PerformAction(CommandEnum se, std::string args) {
   switch (se) {
     case CommandEnum::kAdd:
       return HandleAdd(std::move(args));
@@ -64,7 +47,7 @@ void Controller::PerformAction(CommandEnum se, std::string args) {
   }
 }
 
-void Controller::HandleAdd(std::string args) {
+void UIController::HandleAdd(std::string args) {
   if (args.empty()) {
     return HandleAdd();
   } else {
@@ -81,33 +64,38 @@ void Controller::HandleAdd(std::string args) {
   }
 }
 
-void Controller::HandleAdd(TaskId task_id) {
-  auto storage = task_manager_->Show();
-  auto add_to = GetTaskById(storage, task_id);
-  if (!add_to) {
+void UIController::HandleAdd(TaskId task_id) {
+  auto solid_tasks = model_controller_->GetSpecificSolidTasks({task_id});
+  if (!solid_tasks) {
     ReportMessage(MessageEnum::kNotPresentId, std::to_string(task_id.id()));
     return;
   }
-  view_->SetState(step_factory_->GetAddTaskStep(*add_to));
+  for (const auto& i : solid_tasks.AccessResult()) {
+    if (i.task_id() == task_id) {
+      view_->SetState(step_factory_->GetAddTaskStep(i));
+    }
+  }
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    auto result = task_manager_->Add(task_id, *task);
-    if (result.second.status == TaskManager::ActionResult::Status::kOk) {
-      ReportMessage(MessageEnum::kShowId, std::to_string(result.first->id()));
+    auto result = model_controller_->Add(task_id, *task);
+    if (result) {
+      ReportMessage(MessageEnum::kShowId,
+                    std::to_string(result.AccessResult().id()));
     }
   }
 }
 
-void Controller::HandleAdd() {
+void UIController::HandleAdd() {
   view_->SetState(step_factory_->GetAddTaskStep());
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    auto result = task_manager_->Add(*task);  // TODO: handle possible error
-    ReportMessage(MessageEnum::kShowId, std::to_string(result.first->id()));
+    auto result = model_controller_->Add(*task);  // TODO: handle possible error
+    ReportMessage(MessageEnum::kShowId,
+                  std::to_string(result.AccessResult().id()));
   }
 }
 
-void Controller::HandleEdit(std::string args) {
+void UIController::HandleEdit(std::string args) {
   if (args.empty()) {
     return ReportMessage(MessageEnum::kRequiredId);
   } else {
@@ -124,21 +112,24 @@ void Controller::HandleEdit(std::string args) {
   }
 }
 
-void Controller::HandleEdit(TaskId task_id) {
-  auto storage = task_manager_->Show();
-  auto to_edit = GetTaskWrapperById(storage, task_id);
-  if (!to_edit) {
-    return ReportMessage(MessageEnum::kNotPresentId,
-                         std::to_string(task_id.id()));
+void UIController::HandleEdit(TaskId task_id) {
+  auto solid_tasks = model_controller_->GetSpecificSolidTasks({task_id});
+  if (!solid_tasks) {
+    ReportMessage(MessageEnum::kNotPresentId, std::to_string(task_id.id()));
+    return;
   }
-  view_->SetState(step_factory_->GetEditTaskStep(*to_edit));
+  for (const auto& i : solid_tasks.AccessResult()) {
+    if (i.task_id() == task_id) {
+      view_->SetState(step_factory_->GetEditTaskStep(i));
+    }
+  }
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    task_manager_->Edit(task_id, *task);  // TODO: handle error
+    model_controller_->Edit(task_id, *task);  // TODO: handle error
   }
 }
 
-void Controller::HandleComplete(std::string args) {
+void UIController::HandleComplete(std::string args) {
   if (args.empty()) {
     return ReportMessage(MessageEnum::kRequiredId);
   } else {
@@ -157,34 +148,55 @@ void Controller::HandleComplete(std::string args) {
   }
 }
 
-void Controller::HandleComplete(std::vector<TaskId> ids) {
+std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
+    const SolidTasks& tasks, const std::vector<TaskId>& ids) {
+  std::unordered_map<TaskId, std::vector<TaskId>> visited;
+  TaskId current_root_id;
+  for (const auto& i : tasks) {
+    if (i.has_parent_id()) {
+      visited[current_root_id].push_back(i.task_id());
+    } else {
+      current_root_id = i.task_id();
+    }
+  }
+  for (const auto& i : ids) {
+    auto it = std::find_if(visited.begin(), visited.end(), [&i](auto it) {
+      return std::find(it.second.begin(), it.second.end(), i) !=
+             it.second.end();
+    });
+    if (it != visited.end()) {
+      return std::make_pair(it->first, i);
+    }
+  }
+  return {};
+}
+
+void UIController::HandleComplete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
     ReportMessage(MessageEnum::kRepeatedId);
     return;
   }
-  auto storage = task_manager_->Show();
-
-  ICompleteTaskStep::TaskWrappers tasks;
-
-  TaskId current_id = ids.at(0);
-  for (auto id : ids) {
-    auto found = storage.Find(id);
-    if (found == storage.end()) {
-      return ReportMessage(MessageEnum::kNotPresentId,
-                           std::to_string(current_id.id()));
-    }
-    tasks.push_back(storage.Find(id)->second);
+  auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
+  if (!solid_tasks) {
+    ReportMessage(MessageEnum::kNotPresentId);
+    return;
   }
-
-  view_->SetState(step_factory_->GetCompleteTaskStep(std::move(tasks)));
+  auto has_parent_child_relationship =
+      HasParentChildRelationship(solid_tasks.AccessResult(), ids);
+  if (has_parent_child_relationship) {
+    // TODO: Handle Error
+    return;
+  }
+  view_->SetState(
+      step_factory_->GetCompleteTaskStep(solid_tasks.AccessResult()));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
     std::for_each(ids.cbegin(), ids.cend(),
-                  [this](auto id) { task_manager_->Complete(id); });
+                  [this](auto id) { model_controller_->Complete(id); });
   }
 }
 
-void Controller::HandleDelete(std::string args) {
+void UIController::HandleDelete(std::string args) {
   if (args.empty()) {
     return ReportMessage(MessageEnum::kRequiredId);
   } else {
@@ -203,30 +215,31 @@ void Controller::HandleDelete(std::string args) {
   }
 }
 // TODO: Prettify implementation
-void Controller::HandleDelete(std::vector<TaskId> ids) {
+void UIController::HandleDelete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
-    return ReportMessage(MessageEnum::kRepeatedId);
+    ReportMessage(MessageEnum::kRepeatedId);
+    return;
   }
-  auto storage = task_manager_->Show();
-  ICompleteTaskStep::TaskWrappers tasks;
-  TaskId current_id = ids.at(0);
-  for (auto id : ids) {
-    auto found = storage.Find(id);
-    if (found == storage.end()) {
-      return ReportMessage(MessageEnum::kNotPresentId,
-                           std::to_string(current_id.id()));
-    }
-    tasks.push_back(storage.Find(id)->second);
+  auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
+  if (!solid_tasks) {
+    ReportMessage(MessageEnum::kNotPresentId);
+    return;
   }
-  view_->SetState(step_factory_->GetDeleteTaskStep(tasks));
+  auto has_parent_child_relationship =
+      HasParentChildRelationship(solid_tasks.AccessResult(), ids);
+  if (has_parent_child_relationship) {
+    // TODO: Handle Error
+    return;
+  }
+  view_->SetState(step_factory_->GetDeleteTaskStep(solid_tasks.AccessResult()));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
     std::for_each(ids.cbegin(), ids.cend(),
-                  [this](auto id) { task_manager_->Delete(id); });
+                  [this](auto id) { model_controller_->Delete(id); });
   }
 }
 
-void Controller::HandleShow(std::string args) {
+void UIController::HandleShow(std::string args) {
   if (args.empty()) {
     return HandleShow();
   } else {
@@ -245,35 +258,32 @@ void Controller::HandleShow(std::string args) {
   }
 }
 
-void Controller::HandleShow(std::vector<TaskId> ids) {
-  auto storage = task_manager_->Show();
-  IShowNTasksStep::TaskWrappers tasks;
-  std::vector<TaskId> seen;
-  TaskId current_id = ids.at(0);
-  for (auto id : ids) {
-    if (std::find(seen.begin(), seen.end(), id) == seen.end()) {
-      seen.push_back(id);
-      current_id = id;
-      auto found = storage.Find(id);
-      if (found == storage.end()) {
-        ReportMessage(MessageEnum::kNotPresentId,
-                      std::to_string(current_id.id()));
-        return;
-      }
-      tasks.push_back(storage.Find(id)->second);
-    }
+void UIController::HandleShow(std::vector<TaskId> ids) {
+  if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
+    ReportMessage(MessageEnum::kRepeatedId);
+    return;
   }
-  view_->SetState(step_factory_->GetShowNTasksStep(tasks));
+  auto solid_tasks = model_controller_->GetSpecificSolidTasks(std::move(ids));
+
+  if (!solid_tasks) {
+    ReportMessage(MessageEnum::kNotPresentId);
+    return;
+  }
+  view_->SetState(step_factory_->GetShowStep(solid_tasks.AccessResult()));
   /*auto [status, task] = */ view_->Run();
 }
 
-void Controller::HandleShow() {
-  auto to_show = task_manager_->Show();
-  view_->SetState(step_factory_->GetShowAllTasksStep(to_show));
+void UIController::HandleShow() {
+  auto solid_tasks = model_controller_->GetAllSolidTasks();
+  if (!solid_tasks) {
+    ReportMessage(MessageEnum::kNotPresentId);
+    return;
+  }
+  view_->SetState(step_factory_->GetShowStep(solid_tasks.AccessResult()));
   /*auto [status, task] = */ view_->Run();
 }
 
-void Controller::HandleHelp(std::string args) {
+void UIController::HandleHelp(std::string args) {
   if (args.empty()) {
     return HandleHelp();
   } else {
@@ -281,12 +291,12 @@ void Controller::HandleHelp(std::string args) {
   }
 }
 
-void Controller::HandleHelp() {
+void UIController::HandleHelp() {
   view_->SetState(step_factory_->GetShowHelpStep());
   /*auto [status, task] = */ view_->Run();
 }
 
-void Controller::HandleUnknown(std::string args) {
+void UIController::HandleUnknown(std::string args) {
   if (args.empty()) {
     return HandleUnknown();
   } else {
@@ -294,18 +304,18 @@ void Controller::HandleUnknown(std::string args) {
   }
 }
 
-void Controller::HandleUnknown() {
+void UIController::HandleUnknown() {
   view_->SetState(
       step_factory_->GetReportMessageStep(MessageEnum::kUnknownCommand));
   /*auto [status, task] = */ view_->Run();
 }
 
-void Controller::ReportMessage(MessageEnum message_enum) {
+void UIController::ReportMessage(MessageEnum message_enum) {
   view_->SetState(step_factory_->GetReportMessageStep(message_enum));
   /*auto [status, task] = */ view_->Run();
 }
 
-void Controller::ReportMessage(MessageEnum message_enum, std::string arg) {
+void UIController::ReportMessage(MessageEnum message_enum, std::string arg) {
   view_->SetState(
       step_factory_->GetReportMessageStep(message_enum, std::move(arg)));
   /*auto [status, task] = */ view_->Run();

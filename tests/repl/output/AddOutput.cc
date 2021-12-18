@@ -1,5 +1,7 @@
 #include "UsageFramework.h"
 
+#if 0
+
 class AddOutputTest : public ::testing::Test, protected UsageFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -86,3 +88,4 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
+#endif

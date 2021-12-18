@@ -1,5 +1,7 @@
 #include "ScenarioFramework.h"
 
+#if 0
+
 class EditActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -31,3 +33,4 @@ TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
 
   EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
 }
+#endif

@@ -1,5 +1,7 @@
 #include "ScenarioFramework.h"
 
+#if 0
+
 class ConfirmationNoTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -46,3 +48,5 @@ TEST_F(ConfirmationNoTest, DeleteShouldNotBePerformed) {
 
   EXPECT_NO_THROW(storage.Find(CreateTaskId(0)));  // NOLINT
 }
+
+#endif

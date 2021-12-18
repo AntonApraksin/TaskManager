@@ -1,5 +1,7 @@
 #include "ScenarioFramework.h"
 
+#if 0
+
 class DeleteActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -18,3 +20,5 @@ TEST_F(DeleteActionTest, NestedTasksShouldBeDeleted) {
        "y",   "add 1", "qwqq", "", "", "",  "y",     "delete 0", "y", "q"});
   EXPECT_EQ(storage.ShowStorage().size(), 0);
 }
+
+#endif

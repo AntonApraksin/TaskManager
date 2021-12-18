@@ -1,5 +1,7 @@
 #include "ScenarioFramework.h"
 
+#if 0
+
 class CompleteActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -51,3 +53,4 @@ TEST_F(CompleteActionTest, NestedTasksShouldBeCompleted) {
   EXPECT_EQ(subtask_wrapper->progress(), Task::kCompleted);
   EXPECT_EQ(subsubtask_wrapper->progress(), Task::kCompleted);
 }
+#endif

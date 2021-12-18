@@ -1,6 +1,7 @@
 #ifndef TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
 #define TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
 
+#if 0
 #include <gmock/gmock.h>
 #include <google/protobuf/util/time_util.h>
 #include <gtest/gtest.h>
@@ -8,7 +9,7 @@
 #include "../common.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
-#include "repl/Controller.h"
+#include "repl/UIController.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
@@ -38,7 +39,7 @@ class ScenarioFramework {
 
     auto view = std::make_unique<View>(io_facility_, validator_);
 
-    controller_ = std::make_unique<Controller>(
+    controller_ = std::make_unique<UIController>(
         std::move(view), task_manager_, validator_, std::move(step_factory));
 
     EXPECT_CALL(*io_facility_, Print).Times(testing::AtLeast(1));
@@ -66,11 +67,13 @@ class ScenarioFramework {
                        *validator_->ParseTaskProgress(data.state));
   }
 
-  std::unique_ptr<Controller> controller_;
+  std::unique_ptr<UIController> controller_;
   std::shared_ptr<ScenarioMockIoFacility> io_facility_;
   std::shared_ptr<TaskManager> task_manager_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };
+
+#endif
 
 #endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_

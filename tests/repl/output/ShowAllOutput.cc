@@ -1,5 +1,7 @@
 #include "UsageFramework.h"
 
+#if 0
+
 class ShowAllOutputTest : public ::testing::Test, protected UsageFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -138,3 +140,4 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
+#endif

@@ -5,13 +5,7 @@
 #include <memory>
 #include <ostream>
 
-#include "model/id/TaskId.h"
-#include "model/task_wrapper/TaskWrapper.h"
-
-struct Payload {
-  TaskId last_given_id;
-  TaskStorage task_storage;
-};
+#include "model/SolidTask.h"
 
 struct LoadResult {
   enum class Status {
@@ -19,7 +13,7 @@ struct LoadResult {
     kFailure,
   };
   Status status;
-  std::optional<Payload> payload;
+  std::optional<SolidTasks> solid_tasks;
 };
 
 struct SaveResult {
@@ -32,7 +26,7 @@ struct SaveResult {
 
 class Persistence {
  public:
-  SaveResult Save(std::ostream&, Payload) const;
+  SaveResult Save(std::ostream&, SolidTasks) const;
   LoadResult Load(std::istream&) const;
 };
 

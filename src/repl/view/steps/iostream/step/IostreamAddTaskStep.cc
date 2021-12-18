@@ -16,15 +16,15 @@ IostreamAddTaskStep::IostreamAddTaskStep(
 
 StepResult IostreamAddTaskStep::Run() {
   TaskContext sub_context;
-  if (task_) {
+  if (solid_task_) {
     io_facility_->Print(IostreamStrings::kAddSubtaskTo);
-    io_facility_->Print(IostreamStrings::ShowTask(*task_));
+    io_facility_->Print(IostreamStrings::ShowSolidTask(*solid_task_));
     sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
         TaskBuilder{/*.title = */ std::nullopt,
-                    /*.date_ =*/task_->due_date(),
-                    /*.priority =*/task_->priority(),
-                    /*.state =*/task_->progress()}));
-    task_.reset();
+                    /*.date_ =*/solid_task_->task().due_date(),
+                    /*.priority =*/solid_task_->task().priority(),
+                    /*.state =*/solid_task_->task().progress()}));
+    solid_task_.reset();
   } else {
     sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
         TaskBuilder{/*.title =*/std::nullopt,

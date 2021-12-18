@@ -1,13 +1,15 @@
 #ifndef TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_
 #define TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_
 
+#if 0
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "../common.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
-#include "repl/Controller.h"
+#include "repl/UIController.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DefaultValidator.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
@@ -48,7 +50,7 @@ class UsageFramework {
 
     auto view = std::make_unique<View>(io_facility_, validator_);
 
-    controller_ = std::make_unique<Controller>(
+    controller_ = std::make_unique<UIController>(
         std::move(view), task_manager_, validator_, std::move(step_factory));
   }
 
@@ -66,11 +68,13 @@ class UsageFramework {
                        *validator_->ParseTaskProgress(data.state));
   }
 
-  std::unique_ptr<Controller> controller_;
+  std::unique_ptr<UIController> controller_;
   std::shared_ptr<UsageMockIoFacility> io_facility_;
   std::shared_ptr<TaskManager> task_manager_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };
+
+#endif
 
 #endif  // TASKMANAGER_TESTS_REPL_TEST_USAGE_USAGEFRAMEWORK_H_

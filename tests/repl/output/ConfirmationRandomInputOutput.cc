@@ -1,5 +1,7 @@
 #include "UsageFramework.h"
 
+#if 0
+
 class ConfirmationRandomInputOutputTest : public ::testing::Test,
                                           protected UsageFramework {
  protected:
@@ -180,3 +182,4 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
+#endif

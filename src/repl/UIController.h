@@ -36,10 +36,8 @@ class UIController {
   void HandleHelp();
 
   void HandleUnknown(std::string);
-  void HandleUnknown();
 
-  void ReportMessage(MessageEnum);
-  void ReportMessage(MessageEnum, std::string);
+  void ReportMessage(std::string);
 
   void HandleSave(std::string);
   void HandleLoad(std::string);

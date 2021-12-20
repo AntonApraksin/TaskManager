@@ -1,14 +1,13 @@
 #include "IostreamSmallStep.h"
+#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
-  std::string prompt = IostreamStrings::GetPrompt("title");
+  std::string prompt = Strings::GetPrompt("title");
   if (ctx.GetTaskBuilder().title_) {
-    io_facility_->Print(
-        IostreamStrings::LeaveEmptyFor(*ctx.GetTaskBuilder().title_));
+    io_facility_->Print(Strings::LeaveEmptyFor(*ctx.GetTaskBuilder().title_));
     auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
     if (title) {
       ctx.GetTaskBuilder().title_ = std::move(title);
@@ -18,7 +17,7 @@ void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
   }
   auto title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
   for (; !title;) {
-    io_facility_->Print(IostreamStrings::kTitleMustNotBeEmpty);
+    io_facility_->Print(Strings::kTitleMustNotBeEmpty);
     title = validator_->ValidateTitle(PrintAndGet(*io_facility_, prompt));
   }
   ctx.GetTaskBuilder().title_ = std::move(title);

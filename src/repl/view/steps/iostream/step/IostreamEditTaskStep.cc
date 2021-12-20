@@ -1,8 +1,8 @@
 #include "IostreamStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
+#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
-#include "repl/view/steps/iostream/IostreamStrings.h"
 
 IostreamEditTaskStep::IostreamEditTaskStep(
     const std::shared_ptr<IIoFacility> &io_facility,
@@ -14,8 +14,8 @@ IostreamEditTaskStep::IostreamEditTaskStep(
 
 StepResult IostreamEditTaskStep::Run() {
   std::stringstream ss;
-  io_facility_->Print(IostreamStrings::kYouAreGoingToEdit);
-  io_facility_->Print(IostreamStrings::ShowSolidTask(solid_task_));
+  io_facility_->Print(Strings::kYouAreGoingToEdit);
+  io_facility_->Print(Strings::ShowSolidTask(solid_task_));
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
       TaskBuilder{/*.title =*/solid_task_.task().title(),
@@ -32,12 +32,12 @@ StepResult IostreamEditTaskStep::Run() {
       small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
   sub_context.Run();
 
-  io_facility_->Print(IostreamStrings::ProceedTo("edit"));
+  io_facility_->Print(Strings::ProceedTo("edit"));
 
   std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
-    io_facility_->Print(IostreamStrings::kOkayITreatItAsNo);
+    io_facility_->Print(Strings::kOkayITreatItAsNo);
     return StepResult{ConfirmationResult::kNo,
                       sub_context.GetTaskBuilder().GetTask()};
   }

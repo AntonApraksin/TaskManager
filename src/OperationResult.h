@@ -5,7 +5,7 @@
 #include <type_traits>
 
 template <typename StatusEnum, typename Result = std::nullopt_t>
-class OperationResult {
+class [[nodiscard]] OperationResult {
   static_assert(std::is_enum_v<StatusEnum>,
                 "StatusEnum must be an enumeration type");
   static_assert(
@@ -38,7 +38,7 @@ class OperationResult {
 };
 
 template <typename StatusEnum>
-class OperationResult<StatusEnum, std::nullopt_t> {
+class [[nodiscard]] OperationResult<StatusEnum, std::nullopt_t> {
   static_assert(std::is_enum_v<StatusEnum>,
                 "StatusEnum must be an enumeration type");
   static_assert(

@@ -1,6 +1,9 @@
 #include "UIController.h"
 
-#include "fstream"
+#include <filesystem>
+#include <fstream>
+
+#include "repl/view/steps/Strings.h"
 
 UIController::UIController(std::unique_ptr<View> view,
                            std::shared_ptr<ModelController> model_controller,
@@ -65,17 +68,17 @@ void UIController::HandleAdd(std::string args) {
       if (add_to) {
         return HandleAdd(CreateTaskId(*add_to));
       } else {
-        return ReportMessage(MessageEnum::kInvalidId, token);
+        return ReportMessage(Strings::InvalidId(token));
       }
     }
-    return ReportMessage(MessageEnum::kMultipleId);
+    return ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
   }
 }
 
 void UIController::HandleAdd(TaskId task_id) {
   auto solid_tasks = model_controller_->GetSpecificSolidTasks({task_id});
   if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId, std::to_string(task_id.id()));
+    ReportMessage(Strings::NotPresentId(std::to_string(task_id.id())));
     return;
   }
   for (const auto& i : solid_tasks.AccessResult()) {
@@ -87,8 +90,8 @@ void UIController::HandleAdd(TaskId task_id) {
   if (*status == ConfirmationResult::kYes) {
     auto result = model_controller_->Add(task_id, *task);
     if (result) {
-      ReportMessage(MessageEnum::kShowId,
-                    std::to_string(result.AccessResult().id()));
+      ReportMessage(
+          Strings::ShowId(std::to_string(result.AccessResult().id())));
     }
   }
 }
@@ -98,14 +101,13 @@ void UIController::HandleAdd() {
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
     auto result = model_controller_->Add(*task);  // TODO: handle possible error
-    ReportMessage(MessageEnum::kShowId,
-                  std::to_string(result.AccessResult().id()));
+    ReportMessage(Strings::ShowId(std::to_string(result.AccessResult().id())));
   }
 }
 
 void UIController::HandleEdit(std::string args) {
   if (args.empty()) {
-    return ReportMessage(MessageEnum::kRequiredId);
+    return ReportMessage(Strings::kRequiredId);
   } else {
     auto token = validator_->ConsumeOneTokenFrom(args);
     auto to_edit = validator_->ParseInt(token);
@@ -113,17 +115,17 @@ void UIController::HandleEdit(std::string args) {
       if (to_edit) {
         return HandleEdit(CreateTaskId(*to_edit));
       } else {
-        return ReportMessage(MessageEnum::kInvalidId, token);
+        return ReportMessage(Strings::InvalidId(token));
       }
     }
-    return ReportMessage(MessageEnum::kMultipleId);
+    return ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
   }
 }
 
 void UIController::HandleEdit(TaskId task_id) {
   auto solid_tasks = model_controller_->GetSpecificSolidTasks({task_id});
   if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId, std::to_string(task_id.id()));
+    ReportMessage(Strings::NotPresentId(std::to_string(task_id.id())));
     return;
   }
   for (const auto& i : solid_tasks.AccessResult()) {
@@ -133,13 +135,13 @@ void UIController::HandleEdit(TaskId task_id) {
   }
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    model_controller_->Edit(task_id, *task);  // TODO: handle error
+    auto _ = model_controller_->Edit(task_id, *task);  // TODO: handle error
   }
 }
 
 void UIController::HandleComplete(std::string args) {
   if (args.empty()) {
-    return ReportMessage(MessageEnum::kRequiredId);
+    return ReportMessage(Strings::kRequiredId);
   } else {
     std::vector<TaskId> ids;
     std::string token;
@@ -148,7 +150,7 @@ void UIController::HandleComplete(std::string args) {
       token = validator_->ConsumeOneTokenFrom(args);
       to_complete = validator_->ParseInt(token);
       if (!to_complete) {
-        return ReportMessage(MessageEnum::kInvalidId, token);
+        return ReportMessage(Strings::InvalidId(token));
       }
       ids.push_back(CreateTaskId(*to_complete));
     }
@@ -181,32 +183,36 @@ std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
 
 void UIController::HandleComplete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
-    ReportMessage(MessageEnum::kRepeatedId);
+    ReportMessage(Strings::kRepeatedId);
     return;
   }
   auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
   if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId);
+    ReportMessage(
+        Strings::NotPresentId(""));  // TODO: determine which one is missing
     return;
   }
   auto has_parent_child_relationship =
       HasParentChildRelationship(solid_tasks.AccessResult(), ids);
   if (has_parent_child_relationship) {
-    // TODO: Handle Error
+    ReportMessage(Strings::IdIsSubIdOf(
+        std::to_string(has_parent_child_relationship->first.id()),
+        std::to_string(has_parent_child_relationship->second.id())));
     return;
   }
   view_->SetState(
       step_factory_->GetCompleteTaskStep(solid_tasks.AccessResult()));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    std::for_each(ids.cbegin(), ids.cend(),
-                  [this](auto id) { model_controller_->Complete(id); });
+    std::for_each(ids.cbegin(), ids.cend(), [this](auto id) {
+      auto _ = model_controller_->Complete(id);
+    });  // TODO: Handle
   }
 }
 
 void UIController::HandleDelete(std::string args) {
   if (args.empty()) {
-    return ReportMessage(MessageEnum::kRequiredId);
+    return ReportMessage(Strings::kRequiredId);
   } else {
     std::vector<TaskId> ids;
     std::string token;
@@ -215,7 +221,7 @@ void UIController::HandleDelete(std::string args) {
       token = validator_->ConsumeOneTokenFrom(args);
       to_delete = validator_->ParseInt(token);
       if (!to_delete) {
-        return ReportMessage(MessageEnum::kInvalidId, token);
+        return ReportMessage(Strings::InvalidId(token));
       }
       ids.push_back(CreateTaskId(*to_delete));
     }
@@ -225,25 +231,28 @@ void UIController::HandleDelete(std::string args) {
 // TODO: Prettify implementation
 void UIController::HandleDelete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
-    ReportMessage(MessageEnum::kRepeatedId);
+    ReportMessage(Strings::kRepeatedId);
     return;
   }
   auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
   if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId);
+    ReportMessage(Strings::NotPresentId(""));
     return;
   }
   auto has_parent_child_relationship =
       HasParentChildRelationship(solid_tasks.AccessResult(), ids);
   if (has_parent_child_relationship) {
-    // TODO: Handle Error
+    ReportMessage(Strings::IdIsSubIdOf(
+        std::to_string(has_parent_child_relationship->first.id()),
+        std::to_string(has_parent_child_relationship->second.id())));
     return;
   }
   view_->SetState(step_factory_->GetDeleteTaskStep(solid_tasks.AccessResult()));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    std::for_each(ids.cbegin(), ids.cend(),
-                  [this](auto id) { model_controller_->Delete(id); });
+    std::for_each(ids.cbegin(), ids.cend(), [this](auto id) {
+      auto _ = model_controller_->Delete(id);
+    });  // TODO: handle
   }
 }
 
@@ -258,7 +267,7 @@ void UIController::HandleShow(std::string args) {
       token = validator_->ConsumeOneTokenFrom(args);
       to_show = validator_->ParseInt(token);
       if (!to_show) {
-        return ReportMessage(MessageEnum::kInvalidId, token);
+        return ReportMessage(Strings::InvalidId(token));
       }
       ids.push_back(CreateTaskId(*to_show));
     }
@@ -268,13 +277,13 @@ void UIController::HandleShow(std::string args) {
 
 void UIController::HandleShow(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
-    ReportMessage(MessageEnum::kRepeatedId);
+    ReportMessage(Strings::kRepeatedId);
     return;
   }
   auto solid_tasks = model_controller_->GetSpecificSolidTasks(std::move(ids));
 
   if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId);
+    ReportMessage(Strings::NotPresentId(""));
     return;
   }
   view_->SetState(step_factory_->GetShowStep(solid_tasks.AccessResult()));
@@ -283,10 +292,6 @@ void UIController::HandleShow(std::vector<TaskId> ids) {
 
 void UIController::HandleShow() {
   auto solid_tasks = model_controller_->GetAllSolidTasks();
-  if (!solid_tasks) {
-    ReportMessage(MessageEnum::kNotPresentId);
-    return;
-  }
   view_->SetState(step_factory_->GetShowStep(solid_tasks.AccessResult()));
   /*auto [status, task] = */ view_->Run();
 }
@@ -295,7 +300,6 @@ void UIController::HandleHelp(std::string args) {
   if (args.empty()) {
     return HandleHelp();
   } else {
-    // TODO: Add handler here
   }
 }
 
@@ -304,38 +308,56 @@ void UIController::HandleHelp() {
   /*auto [status, task] = */ view_->Run();
 }
 
-void UIController::HandleUnknown(std::string args) {
-  if (args.empty()) {
-    return HandleUnknown();
-  } else {
-    // TODO: Add handler here
-  }
-}
-
-void UIController::HandleUnknown() {
+void UIController::HandleUnknown(std::string /*args*/) {
   view_->SetState(
-      step_factory_->GetReportMessageStep(MessageEnum::kUnknownCommand));
+      step_factory_->GetReportMessageStep(Strings::kUnknownCommand));
   /*auto [status, task] = */ view_->Run();
 }
 
-void UIController::ReportMessage(MessageEnum message_enum) {
-  view_->SetState(step_factory_->GetReportMessageStep(message_enum));
-  /*auto [status, task] = */ view_->Run();
-}
-
-void UIController::ReportMessage(MessageEnum message_enum, std::string arg) {
-  view_->SetState(
-      step_factory_->GetReportMessageStep(message_enum, std::move(arg)));
+void UIController::ReportMessage(std::string str) {
+  view_->SetState(step_factory_->GetReportMessageStep(std::move(str)));
   /*auto [status, task] = */ view_->Run();
 }
 
 void UIController::HandleSave(std::string arg) {
   auto filename = validator_->ConsumeOneTokenFrom(arg);
+  if (!arg.empty()) {
+    ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
+    return;
+  }
   std::ofstream file(filename);
-  model_controller_->SaveTo(file);
+  if (!file.is_open()) {
+    ReportMessage(Strings::ErrorDuringOpeningFile(filename));
+    return;
+  }
+  auto result = model_controller_->SaveTo(file);
+  if (result) {
+    if (result.GetStatus() == ModelController::Status::kSaveFailure) {
+      ReportMessage(Strings::FailureDuringSaving(filename));
+      return;
+    }
+  }
 }
 void UIController::HandleLoad(std::string arg) {
   auto filename = validator_->ConsumeOneTokenFrom(arg);
+  if (!arg.empty()) {
+    ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
+    return;
+  }
+  if (!std::filesystem::exists(filename)) {
+    ReportMessage(Strings::FilenameDoesNotExist(filename));
+    return;
+  }
   std::ifstream file(filename);
-  model_controller_->LoadFrom(file);
+  if (!file.is_open()) {
+    ReportMessage(Strings::ErrorDuringOpeningFile(filename));
+    return;
+  }
+  auto result = model_controller_->LoadFrom(file);
+  if (result) {
+    if (result.GetStatus() == ModelController::Status::kSaveFailure) {
+      ReportMessage(Strings::FailureDuringLoading(filename));
+      return;
+    }
+  }
 }

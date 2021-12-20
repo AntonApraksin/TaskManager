@@ -24,9 +24,7 @@ class IostreamStepFactory final : public IStepFactory {
 
   std::shared_ptr<IStep> GetShowHelpStep() override;
 
-  std::shared_ptr<IStep> GetReportMessageStep(MessageEnum) override;
-  std::shared_ptr<IStep> GetReportMessageStep(MessageEnum,
-                                              std::string) override;
+  std::shared_ptr<IStep> GetReportMessageStep(std::string) override;
 
  private:
   std::shared_ptr<IostreamAddTaskStep> iostream_add_task_step_;

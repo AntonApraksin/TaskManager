@@ -6,23 +6,22 @@
 #include "model/SolidTask.h"
 #include "repl/io_facility/IIoFacility.h"
 
-struct IostreamStrings {
+struct Strings {
   using ccp = const char*;
 
   static constexpr ccp kTitleMustNotBeEmpty = "Title must not be empty.\n";
-  static constexpr ccp kInvalidState =
+  static constexpr ccp kStateShouldBe =
       "State should be '+' for completed or '-' for uncompleted\n";
-  static constexpr ccp kInvalidPriority =
+  static constexpr ccp kPriorityShouldBe =
       "Priority should be: low, medium, high.\n";
-  static constexpr ccp kInvalidDate = "Wrong date format.\n";
+  static constexpr ccp kWrongDateFormat = "Wrong date format.\n";
   static constexpr ccp kAddSubtaskTo = "Add subtask to:\n";
   static constexpr ccp kOkayITreatItAsNo = "Okay, i treat it as no\n";
   static constexpr ccp kYouAreGoingToEdit = "You are going to edit:\n";
   static constexpr ccp kUnknownCommand =
       "Unknown command. Type 'help' to display all available commands.\n";
-  static constexpr ccp kInvalidId = "Id should be numeric value.\n";
-  static constexpr ccp kMultipleId =
-      "Multiple Id does not supported for this command.\n";
+  static constexpr ccp kMultipleArgumentDoesNotSupported =
+      "Multiple arguments does not supported for this command.\n";
   static constexpr ccp kRequiredId = "Id is required for this command.\n";
   static constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
   static constexpr ccp kHelp =
@@ -48,12 +47,9 @@ struct IostreamStrings {
 
   static std::string YouAreGoingTo(const std::string&);
 
-  static std::string AndItsChildren(const std::string&);
-
   static std::string LeaveEmptyFor(const std::string&);
 
-  static std::string LeaveEmptyFor(const std::string& str1,
-                                   const std::string& str2);
+  static std::string LeaveEmptyFor(const std::string&, const std::string&);
 
   static std::string GetPrompt(const std::string&);
 
@@ -61,14 +57,21 @@ struct IostreamStrings {
 
   static std::string ProceedTo(const std::string&);
 
-  static const char* to_string(Task::Priority priority);
-  static const char* to_string(Task::Progress state);
-
   static std::string ShowSolidTask(SolidTask);
 
   static std::string ShowSolidTasks(SolidTasks);
+
+  static std::string IdIsSubIdOf(const std::string&, const std::string&);
+
+  static std::string FilenameDoesNotExist(const std::string&);
+  static std::string ErrorDuringOpeningFile(const std::string&);
+  static std::string FailureDuringSaving(const std::string&);
+  static std::string FailureDuringLoading(const std::string&);
+
+  static const char* to_string(Task::Priority);
+  static const char* to_string(Task::Progress);
 };
 
-std::string PrintAndGet(IIoFacility& io, const std::string& str);
+std::string PrintAndGet(IIoFacility&, const std::string&);
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMGENERALFUNCTIONAL_H_

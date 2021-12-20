@@ -130,17 +130,21 @@ OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
 OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
   Persistence persistence;
   auto result = persistence.Load(is);
+  if (!result) {
+    return OperationResult<MCStatus>::Error(Status::kLoadFailure);
+  }
   TaskManager::Parents parents;
   TaskManager::Tasks tasks;
   TaskManager::Roots roots;
-  TaskId max_task_id = result.solid_tasks->back().task_id();
-  for (auto& i : *result.solid_tasks) {
+  TaskId max_task_id = result.AccessResult().back().task_id();
+  for (auto& i : result.AccessResult()) {
     if (i.task_id() > max_task_id) {
       max_task_id = i.task_id();
     }
     if (!i.has_parent_id()) {
       roots.push_back(i.task_id());
       tasks.insert({i.task_id(), i.task()});
+      parents[i.task_id()];
     } else {
       parents[i.parent_id()].push_back(i.task_id());
       tasks.insert({i.task_id(), i.task()});
@@ -161,6 +165,9 @@ OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
 OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
   auto solid_tasks = GetAllSolidTasks();
   Persistence persistence;
-  persistence.Save(os, std::move(solid_tasks.AccessResult()));
+  auto result = persistence.Save(os, std::move(solid_tasks.AccessResult()));
+  if (!result) {
+    return OperationResult<MCStatus>::Error(Status::kSaveFailure);
+  }
   return OperationResult<Status>::Ok();
 }

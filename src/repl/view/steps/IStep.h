@@ -56,14 +56,9 @@ class IShowHelpStep : public IStep {};
 
 class IReportMessageStep : public IStep {
  public:
-  using OptionalArg = std::optional<std::string>;
-
-  void SetArg(std::string arg) { arg_ = std::move(arg); }
-
-  void SetMessage(MessageEnum main_error) { main_error_ = main_error; }
+  void SetMessage(std::string message) { message_ = std::move(message); }
 
  protected:
-  OptionalArg arg_;
-  MessageEnum main_error_;
+  std::string message_;
 };
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

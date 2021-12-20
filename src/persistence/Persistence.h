@@ -5,29 +5,19 @@
 #include <memory>
 #include <ostream>
 
+#include "OperationResult.h"
 #include "model/SolidTask.h"
-
-struct LoadResult {
-  enum class Status {
-    kOk,
-    kFailure,
-  };
-  Status status;
-  std::optional<SolidTasks> solid_tasks;
-};
-
-struct SaveResult {
-  enum class Status {
-    kOk,
-    kFailure,
-  };
-  Status status;
-};
 
 class Persistence {
  public:
-  SaveResult Save(std::ostream&, SolidTasks) const;
-  LoadResult Load(std::istream&) const;
+  enum class Status {
+    kOk,
+    kFailure,
+  };
+
+ public:
+  OperationResult<Status> Save(std::ostream&, SolidTasks) const;
+  OperationResult<Status, SolidTasks> Load(std::istream&) const;
 };
 
 #endif  // TASKMANAGER_SRC_PERSISTENCE_PERSISTENCE_H_

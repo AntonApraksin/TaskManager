@@ -4,7 +4,7 @@
 #include <map>
 #include <memory>
 
-#include "model/OperationResult.h"
+#include "OperationResult.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task/Task.h"
 

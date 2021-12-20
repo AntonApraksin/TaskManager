@@ -1,4 +1,4 @@
-#include "IostreamStrings.h"
+#include "Strings.h"
 
 #include <google/protobuf/util/time_util.h>
 
@@ -7,7 +7,7 @@
 
 #include "repl/validator/DateFormat.h"
 
-const char* IostreamStrings::to_string(Task::Priority priority) {
+const char* Strings::to_string(Task::Priority priority) {
   if (priority == Task::kLow) {
     return "low";
   }
@@ -21,7 +21,7 @@ const char* IostreamStrings::to_string(Task::Priority priority) {
   std::terminate();  // TODO: Handle buggy behavior
 }
 
-const char* IostreamStrings::to_string(Task::Progress state) {
+const char* Strings::to_string(Task::Progress state) {
   if (state == Task::kCompleted) {
     return "+";
   }
@@ -32,65 +32,59 @@ const char* IostreamStrings::to_string(Task::Progress state) {
   std::terminate();  // TODO: Handle buggy behavior
 }
 
-std::string IostreamStrings::NotPresentId(const std::string& id) {
+std::string Strings::NotPresentId(const std::string& id) {
   std::stringstream ss;
-  ss << "Id " << id << " not present in store.\n";
+  ss << "Task '" << id << "' not present in store.\n";
   return ss.str();
 }
 
-std::string IostreamStrings::ShowId(const std::string& id) {
+std::string Strings::ShowId(const std::string& id) {
   std::stringstream ss;
   ss << "Id " << id << ".\n";
   return ss.str();
 }
 
-std::string IostreamStrings::YouAreGoingTo(const std::string& str) {
+std::string Strings::YouAreGoingTo(const std::string& str) {
   std::stringstream ss;
   ss << "You are going to " << str << " such tasks:\n";
   return ss.str();
 }
 
-std::string IostreamStrings::AndItsChildren(const std::string& n) {
-  std::stringstream ss;
-  ss << "  and its " << n << " children.\n";
-  return ss.str();
-}
-
-std::string IostreamStrings::LeaveEmptyFor(const std::string& str) {
+std::string Strings::LeaveEmptyFor(const std::string& str) {
   std::stringstream ss;
   ss << "Leave empty for '" << str << "'\n";
   return ss.str();
 }
 
-std::string IostreamStrings::LeaveEmptyFor(const std::string& str1,
-                                           const std::string& str2) {
+std::string Strings::LeaveEmptyFor(const std::string& str1,
+                                   const std::string& str2) {
   std::stringstream ss;
   ss << "Leave empty for '" << str1 << "'. " << str2 << "\n";
   return ss.str();
 }
 
-std::string IostreamStrings::GetPrompt(const std::string& str) {
+std::string Strings::GetPrompt(const std::string& str) {
   std::stringstream ss;
   ss << '[' << str << "]: ";
   return ss.str();
 }
 
-std::string IostreamStrings::GetPrompt(const std::string& str1,
-                                       const std::string& str2) {
+std::string Strings::GetPrompt(const std::string& str1,
+                               const std::string& str2) {
   std::stringstream ss;
   ss << '[' << str1 << "(" << str2 << ")]: ";
   return ss.str();
 }
 
-std::string IostreamStrings::ProceedTo(const std::string& str) {
+std::string Strings::ProceedTo(const std::string& str) {
   std::stringstream ss;
   ss << "Proceed to " << str << "? [Y/n]: ";
   return ss.str();
 }
 
-std::string IostreamStrings::InvalidId(const std::string& str) {
+std::string Strings::InvalidId(const std::string& str) {
   std::stringstream ss;
-  ss << "Value '" << str << "' expected to be numeric.\n";
+  ss << "Value '" << str << "' is expected to be numeric.\n";
   return ss.str();
 }
 
@@ -100,7 +94,7 @@ std::string PrintAndGet(IIoFacility& io, const std::string& str) {
   return input;
 }
 
-std::string IostreamStrings::ShowSolidTask(SolidTask solid_task) {
+std::string Strings::ShowSolidTask(SolidTask solid_task) {
   std::stringstream ss;
   auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(
       solid_task.task().due_date());
@@ -113,7 +107,7 @@ std::string IostreamStrings::ShowSolidTask(SolidTask solid_task) {
   return ss.str();
 }
 
-std::string IostreamStrings::ShowSolidTasks(SolidTasks solid_tasks) {
+std::string Strings::ShowSolidTasks(SolidTasks solid_tasks) {
   std::stringstream ss;
   std::vector<TaskId> id_stack;
   for (const auto& i : solid_tasks) {
@@ -138,5 +132,32 @@ std::string IostreamStrings::ShowSolidTasks(SolidTasks solid_tasks) {
       }
     }
   }
+  return ss.str();
+}
+
+std::string Strings::IdIsSubIdOf(const std::string& parent,
+                                 const std::string& child) {
+  std::stringstream ss;
+  ss << "Task '" << child << "' is a subtask of task '" << parent << "'.\n";
+  return ss.str();
+}
+std::string Strings::FilenameDoesNotExist(const std::string& filename) {
+  std::stringstream ss;
+  ss << "File '" << filename << "' does not exists.\n";
+  return ss.str();
+}
+std::string Strings::ErrorDuringOpeningFile(const std::string& filename) {
+  std::stringstream ss;
+  ss << "An error occurred when opening '" << filename << "'.\n";
+  return ss.str();
+}
+std::string Strings::FailureDuringSaving(const std::string& filename) {
+  std::stringstream ss;
+  ss << "An error occurred while was saving to '" << filename << "'.\n";
+  return ss.str();
+}
+std::string Strings::FailureDuringLoading(const std::string& filename) {
+  std::stringstream ss;
+  ss << "An error occurred while was loading from '" << filename << "'.\n";
   return ss.str();
 }

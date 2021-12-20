@@ -63,17 +63,9 @@ std::shared_ptr<IStep> IostreamStepFactory::GetShowHelpStep() {
 }
 
 std::shared_ptr<IStep> IostreamStepFactory::GetReportMessageStep(
-    MessageEnum message_enum) {
+    std::string arg) {
   GENERATE_GETTER_FOR_POINTER(IostreamReportMessageStep,
                               iostream_report_message_step_, (io_facility_))
-  iostream_report_message_step_->SetMessage(message_enum);
-  return iostream_report_message_step_;
-}
-std::shared_ptr<IStep> IostreamStepFactory::GetReportMessageStep(
-    MessageEnum message_enum, std::string arg) {
-  GENERATE_GETTER_FOR_POINTER(IostreamReportMessageStep,
-                              iostream_report_message_step_, (io_facility_))
-  iostream_report_message_step_->SetMessage(message_enum);
-  iostream_report_message_step_->SetArg(std::move(arg));
+  iostream_report_message_step_->SetMessage(std::move(arg));
   return iostream_report_message_step_;
 }

@@ -13,7 +13,7 @@
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/iostream/IostreamStrings.h"
+#include "repl/view/steps/iostream/Strings.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
 #include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 

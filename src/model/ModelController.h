@@ -4,7 +4,7 @@
 #include <istream>
 #include <ostream>
 
-#include "model/OperationResult.h"
+#include "OperationResult.h"
 #include "model/SolidTask.h"
 
 class TaskManager;
@@ -14,6 +14,8 @@ class ModelController {
   enum class Status {
     kOk,
     kNotPresentId,
+    kLoadFailure,
+    kSaveFailure,
   };
 
  public:

@@ -9,6 +9,8 @@ enum class MessageEnum {
   kShowId,
   kUnknownCommand,
   kRepeatedId,
+  kFilenameDoesNotExist,
+  kErrorOpeningFile
 };
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEPS_MESSAGEENUM_H_

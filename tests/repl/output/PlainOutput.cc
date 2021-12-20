@@ -11,9 +11,9 @@ TEST_F(PlainOutputTest, HelpMustAppear) {
   auto [task_storage, output] = RunScenario({"h", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::kHelp,
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
+      Strings::kHelp,
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -26,8 +26,8 @@ TEST_F(PlainOutputTest, InvalidIdMustAppear) {
   auto [task_storage, output] = RunScenario({"a oqpw", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::InvalidId("oqpw"),
+      Strings::GetPrompt(""),
+      Strings::InvalidId("oqpw"),
       IostreamStrings::GetPrompt(""),
   };
 
@@ -50,22 +50,22 @@ TEST_F(PlainOutputTest, MultipleIdMustAppear) {
       RunScenario({"a", "t", "", "", "", "y", "a 0 1", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      IostreamStrings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
+      IostreamStrings::kStateShouldBe,
       IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
+          Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
       IostreamStrings::GetPrompt(""),
 
-      IostreamStrings::kMultipleId,
-      IostreamStrings::GetPrompt(""),
+      Strings::kMultipleArgumentDoesNotSupported,
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -87,7 +87,7 @@ TEST_F(PlainOutputTest, UnknownCommandMustAppear) {
 
   std::vector<std::string> desired_output{
       IostreamStrings::GetPrompt(""),
-      IostreamStrings::kUnknownCommand,
+      Strings::kUnknownCommand,
       IostreamStrings::GetPrompt(""),
   };
 
@@ -110,8 +110,8 @@ TEST_F(PlainOutputTest, NotPresentIdMustAppear) {  // TODO: fix this
 
   std::vector<std::string> desired_output{
       IostreamStrings::GetPrompt(""),
-      IostreamStrings::NotPresentId(std::to_string(0)),
-      IostreamStrings::GetPrompt(""),
+      Strings::NotPresentId(std::to_string(0)),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -134,7 +134,7 @@ TEST_F(PlainOutputTest, RequiredIdMustAppear) {
   std::vector<std::string> desired_output{
       IostreamStrings::GetPrompt(""),
       IostreamStrings::kRequiredId,
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());

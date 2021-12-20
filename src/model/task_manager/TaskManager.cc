@@ -65,12 +65,21 @@ OperationResult<TMStatus> TaskManager::Delete(TaskId id) {
     std::vector<TaskId> to_delete;
     GetCompleteSubTree(id, storage_.parents, to_delete);
     for (const auto& i : to_delete) {
-      storage_.tasks.erase(it);
+      storage_.tasks.erase(storage_.tasks.find(i));
       storage_.parents.erase(storage_.parents.find(i));
       if (auto root =
               std::find(storage_.roots.begin(), storage_.roots.end(), i);
           root != storage_.roots.end()) {
         storage_.roots.erase(root);
+      } else {
+        for (auto& potential_parent : storage_.parents) {
+          if (auto parent = std::find(potential_parent.second.begin(),
+                                      potential_parent.second.end(), id);
+              parent != potential_parent.second.end()) {
+            potential_parent.second.erase(parent);
+            break;
+          }
+        }
       }
     }
     return OperationResult<Status>::Ok();

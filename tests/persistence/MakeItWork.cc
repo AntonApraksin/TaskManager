@@ -37,7 +37,6 @@ TEST_F(PersistenceTest, MakeItWork) {
   auto save_result = persistence.Save(ofile, genuine_solid_tasks);
   ASSERT_EQ(save_result.GetStatus(), Persistence::Status::kOk);
 
-
   std::istringstream ifile(ofile.str());
   auto load_result = persistence.Load(ifile);
   ASSERT_EQ(load_result.GetStatus(), Persistence::Status::kOk);

@@ -1,7 +1,5 @@
 #include "UsageFramework.h"
 
-#if 0
-
 class PlainOutputTest : public ::testing::Test, protected UsageFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -28,7 +26,7 @@ TEST_F(PlainOutputTest, InvalidIdMustAppear) {
   std::vector<std::string> desired_output{
       Strings::GetPrompt(""),
       Strings::InvalidId("oqpw"),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -54,15 +52,14 @@ TEST_F(PlainOutputTest, MultipleIdMustAppear) {
       Strings::GetPrompt("title"),
       Strings::LeaveEmptyFor(default_date),
       Strings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kStateShouldBe,
-      IostreamStrings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
 
       Strings::kMultipleArgumentDoesNotSupported,
       Strings::GetPrompt(""),
@@ -86,9 +83,9 @@ TEST_F(PlainOutputTest, UnknownCommandMustAppear) {
   auto [task_storage, output] = RunScenario({"sheesh", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
       Strings::kUnknownCommand,
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -109,7 +106,7 @@ TEST_F(PlainOutputTest, NotPresentIdMustAppear) {  // TODO: fix this
   auto [task_storage, output] = RunScenario({"e 0", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
       Strings::NotPresentId(std::to_string(0)),
       Strings::GetPrompt(""),
   };
@@ -132,8 +129,8 @@ TEST_F(PlainOutputTest, RequiredIdMustAppear) {
   auto [task_storage, output] = RunScenario({"e", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::kRequiredId,
+      Strings::GetPrompt(""),
+      Strings::kRequiredId,
       Strings::GetPrompt(""),
   };
 
@@ -143,4 +140,3 @@ TEST_F(PlainOutputTest, RequiredIdMustAppear) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
-#endif

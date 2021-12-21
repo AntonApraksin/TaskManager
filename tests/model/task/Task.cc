@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "ModelUtils.h"
+#include "../ModelUtils.h"
 
 class TaskTest : public ::testing::Test {};
 

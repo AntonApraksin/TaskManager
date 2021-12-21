@@ -1,7 +1,5 @@
 #include "UsageFramework.h"
 
-#if 0
-
 class ShowAllOutputTest : public ::testing::Test, protected UsageFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -20,7 +18,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
   auto t2 = task_stringed_data_producer_.GetData();
   auto t3 = task_stringed_data_producer_.GetData();
   auto [task_storage, output] = RunScenario({"a",
-                                             "title",
+                                             t1.title,
                                              t1.date,
                                              t1.priority,
                                              t1.state,
@@ -59,15 +57,14 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
       Strings::GetPrompt(""),
 
       Strings::kAddSubtaskTo,
-      Strings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
+      Strings::ShowSolidTask(TaskDataToSolidTask(t1, 0)),
       Strings::GetPrompt("title"),
       Strings::LeaveEmptyFor(t1.date),
       Strings::GetPrompt("due date", kDatePattern),
@@ -81,7 +78,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::GetPrompt(""),
 
       Strings::kAddSubtaskTo,
-      Strings::ShowTask(*task_storage.Find(CreateTaskId(1))->second),
+      Strings::ShowSolidTask(TaskDataToSolidTask(sub_t1, 1)),
       Strings::GetPrompt("title"),
       Strings::LeaveEmptyFor(sub_t1.date),
       Strings::GetPrompt("due date", kDatePattern),
@@ -100,8 +97,7 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(3)),
@@ -113,24 +109,12 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(4)),
       Strings::GetPrompt(""),
-      Strings::ShowTaskWithId(
-          *task_storage.Find(CreateTaskId(0))->second, CreateTaskId(0)),
-      Strings::ShowNestedMap(task_storage.Find(CreateTaskId(0))->second,
-                                     3),
-      Strings::ShowTaskWithId(
-          *task_storage.Find(CreateTaskId(3))->second, CreateTaskId(3)),
-      Strings::ShowNestedMap(task_storage.Find(CreateTaskId(3))->second,
-                                     3),
-      Strings::ShowTaskWithId(
-          *task_storage.Find(CreateTaskId(4))->second, CreateTaskId(4)),
-      Strings::ShowNestedMap(task_storage.Find(CreateTaskId(4))->second,
-                                     3),
+      Strings::ShowSolidTasks(task_storage),
       Strings::GetPrompt(""),
   };
 
@@ -140,4 +124,3 @@ TEST_F(ShowAllOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
-#endif

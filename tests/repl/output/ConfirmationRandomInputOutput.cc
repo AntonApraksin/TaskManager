@@ -1,7 +1,5 @@
 #include "UsageFramework.h"
 
-#if 0
-
 class ConfirmationRandomInputOutputTest : public ::testing::Test,
                                           protected UsageFramework {
  protected:
@@ -26,8 +24,7 @@ TEST_F(ConfirmationRandomInputOutputTest, AddRandomInputMustCancel) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::kOkayITreatItAsNo,
@@ -47,12 +44,16 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
   ss << std::put_time(std::localtime(&time), kDatePattern);
 
   std::string default_date = ss.str();
-  auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
+  auto st0 = task_stringed_data_producer_.GetData();
+  auto edit_st0 = task_stringed_data_producer_.GetData();
 
-  auto [task_storage, output] = RunScenario(
-      {"a", t1.title, t1.date, t1.priority, t1.state, "y", "e 0", edit_t1.title,
-       edit_t1.date, edit_t1.priority, edit_t1.state, "sheesh", "q"});
+  auto [task_storage, output] =
+      RunScenario({"a", st0.title, st0.date, st0.priority, st0.state, "y",
+                   "e 0", edit_st0.title, edit_st0.date, edit_st0.priority,
+                   edit_st0.state, "sheesh", "q"});
+
+  SolidTask t0 = TaskDataToSolidTask(st0, 0);
+  SolidTask edit_t0 = TaskDataToSolidTask(edit_st0, 0);
 
   std::vector<std::string> desired_output{
       Strings::GetPrompt(""),
@@ -62,23 +63,22 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
       Strings::kYouAreGoingToEdit,
-      Strings::ShowTask(TaskDataToTask(t1)),
-      Strings::LeaveEmptyFor(t1.title),
+      Strings::ShowSolidTask(t0),
+      Strings::LeaveEmptyFor(st0.title),
       Strings::GetPrompt("title"),
-      Strings::LeaveEmptyFor(t1.date),
+      Strings::LeaveEmptyFor(st0.date),
       Strings::GetPrompt("due date", kDatePattern),
-      Strings::LeaveEmptyFor(t1.priority),
+      Strings::LeaveEmptyFor(st0.priority),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(t1.state),
+      Strings::LeaveEmptyFor(st0.state),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("edit"),
       Strings::kOkayITreatItAsNo,
@@ -101,7 +101,6 @@ TEST_F(ConfirmationRandomInputOutputTest, CompleteRandomInputMustCancel) {
 
   std::string default_date = ss.str();
   auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
 
   auto [task_storage, output] =
       RunScenario({"a", t1.title, t1.date, t1.priority, t1.state, "y", "c 0",
@@ -115,16 +114,14 @@ TEST_F(ConfirmationRandomInputOutputTest, CompleteRandomInputMustCancel) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
       Strings::YouAreGoingTo("complete"),
-      Strings::ShowTask(TaskDataToTask(t1)),
-      Strings::AndItsChildren(std::to_string(0)),
+      Strings::ShowSolidTasks(task_storage),
       Strings::ProceedTo("complete"),
       Strings::kOkayITreatItAsNo,
 
@@ -146,7 +143,6 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
 
   std::string default_date = ss.str();
   auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
 
   auto [task_storage, output] =
       RunScenario({"a", t1.title, t1.date, t1.priority, t1.state, "y", "d 0",
@@ -160,16 +156,14 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          Strings::to_string(Task::kUncompleted)),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
       Strings::YouAreGoingTo("delete"),
-      Strings::ShowTask(TaskDataToTask(t1)),
-      Strings::AndItsChildren(std::to_string(0)),
+      Strings::ShowSolidTasks(task_storage),
       Strings::ProceedTo("delete"),
       Strings::kOkayITreatItAsNo,
 
@@ -182,4 +176,3 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
-#endif

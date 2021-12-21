@@ -1,7 +1,6 @@
 #ifndef TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
 #define TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_
 
-#if 0
 #include <gmock/gmock.h>
 #include <google/protobuf/util/time_util.h>
 #include <gtest/gtest.h>
@@ -13,7 +12,7 @@
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/iostream/Strings.h"
+#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
 #include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 
@@ -28,7 +27,9 @@ class ScenarioFramework {
   void SetUpImpl() {
     io_facility_ = std::make_shared<ScenarioMockIoFacility>();
     auto id_producer = std::make_unique<TaskIdProducer>();
-    task_manager_ = std::make_shared<TaskManager>(std::move(id_producer));
+    auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
+    model_controller_ =
+        std::make_shared<ModelController>(std::move(task_manager));
 
     validator_ = std::make_shared<DefaultValidator>();
 
@@ -39,13 +40,14 @@ class ScenarioFramework {
 
     auto view = std::make_unique<View>(io_facility_, validator_);
 
-    controller_ = std::make_unique<UIController>(
-        std::move(view), task_manager_, validator_, std::move(step_factory));
+    controller_ =
+        std::make_unique<UIController>(std::move(view), model_controller_,
+                                       validator_, std::move(step_factory));
 
     EXPECT_CALL(*io_facility_, Print).Times(testing::AtLeast(1));
   }
 
-  TaskStorage RunScenario(std::vector<std::string> commands) {
+  SolidTasks RunScenario(std::vector<std::string> commands) {
     std::vector<std::string> vec(commands.crbegin(), commands.crend());
     auto command_producer = [&vec]() mutable {
       if (vec.empty()) {
@@ -58,22 +60,41 @@ class ScenarioFramework {
     EXPECT_CALL(*io_facility_, GetLine)
         .WillRepeatedly(testing::Invoke(command_producer));
     controller_->Run();
-    return task_manager_->Show();
+    return model_controller_->GetAllSolidTasks().AccessResult();
   }
 
-  Task TaskDataToTask(const TaskStringedData& data) {
-    return *CreateTask(data.title, *validator_->ParseTaskDate(data.date),
-                       *validator_->ParseTaskPriority(data.priority),
-                       *validator_->ParseTaskProgress(data.state));
+  SolidTask TaskDataToSolidTask(const TaskStringedData& data,
+                                google::protobuf::int32 id) {
+    auto task = *CreateTask(data.title, *validator_->ParseTaskDate(data.date),
+                            *validator_->ParseTaskPriority(data.priority),
+                            *validator_->ParseTaskProgress(data.state));
+    auto task_id = CreateTaskId(id);
+    SolidTask solid_task;
+    solid_task.set_allocated_task(new Task(std::move(task)));
+    solid_task.set_allocated_task_id(new TaskId(task_id));
+    return solid_task;
+  }
+
+  SolidTask TaskDataToSolidTask(const TaskStringedData& data,
+                                google::protobuf::int32 id,
+                                google::protobuf::int32 parent_id) {
+    auto solid_task = TaskDataToSolidTask(data, id);
+    auto parent_task_id = CreateTaskId(parent_id);
+    solid_task.set_allocated_parent_id(new TaskId(parent_task_id));
+    return solid_task;
   }
 
   std::unique_ptr<UIController> controller_;
   std::shared_ptr<ScenarioMockIoFacility> io_facility_;
-  std::shared_ptr<TaskManager> task_manager_;
+  std::shared_ptr<ModelController> model_controller_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };
 
-#endif
+inline SolidTask FindSolidTask(const SolidTasks& solid_tasks,
+                               google::protobuf::int32 id) {
+  return *std::find_if(solid_tasks.cbegin(), solid_tasks.cend(),
+                       [id](const auto& i) { return i.task_id().id() == id; });
+}
 
 #endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_

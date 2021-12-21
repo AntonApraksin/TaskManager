@@ -1,7 +1,5 @@
 #include "ScenarioFramework.h"
 
-#if 0
-
 class ConfirmationNoTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -12,7 +10,7 @@ TEST_F(ConfirmationNoTest, AddShouldNotBePerformed) {
 
   auto storage = RunScenario({"add", title_1, "", "", "", "n", "q"});
 
-  EXPECT_EQ(storage.ShowStorage().size(), 0);
+  EXPECT_EQ(storage.size(), 0);
 }
 
 TEST_F(ConfirmationNoTest, EditShouldNotBePerformed) {
@@ -29,7 +27,7 @@ TEST_F(ConfirmationNoTest, EditShouldNotBePerformed) {
                                   *validator_->ParseTaskPriority(priority),
                                   *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
+  EXPECT_EQ(FindSolidTask(storage, 0).task(), expected_task);
 }
 
 TEST_F(ConfirmationNoTest, CompleteShouldNotBePerformed) {
@@ -38,15 +36,12 @@ TEST_F(ConfirmationNoTest, CompleteShouldNotBePerformed) {
   auto storage =
       RunScenario({"add", "gdfgd", "", "", state, "y", "complete 0", "n", "q"});
 
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
-            Task::kUncompleted);
+  EXPECT_EQ(FindSolidTask(storage, 0).task().progress(), Task::kUncompleted);
 }
 
 TEST_F(ConfirmationNoTest, DeleteShouldNotBePerformed) {
   auto storage =
       RunScenario({"add", "gdfgd", "", "", "", "y", "delete 0", "n", "q"});
 
-  EXPECT_NO_THROW(storage.Find(CreateTaskId(0)));  // NOLINT
+  ASSERT_EQ(storage.size(), 1);
 }
-
-#endif

@@ -1,7 +1,5 @@
 #include "ScenarioFramework.h"
 
-#if 0
-
 class DeleteActionTest : public testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -10,7 +8,7 @@ class DeleteActionTest : public testing::Test, protected ScenarioFramework {
 TEST_F(DeleteActionTest, TaskShouldBeDeleted) {
   auto storage =
       RunScenario({"add", "fd", "", "", "", "y", "delete 0", "y", "q"});
-  EXPECT_EQ(storage.ShowStorage().size(), 0);
+  EXPECT_EQ(storage.size(), 0);
 }
 
 TEST_F(DeleteActionTest, NestedTasksShouldBeDeleted) {
@@ -18,7 +16,5 @@ TEST_F(DeleteActionTest, NestedTasksShouldBeDeleted) {
   auto storage = RunScenario(
       {"add", "fdj",   "",     "", "", "y", "add 0", "fsdfs",    "",  "", "",
        "y",   "add 1", "qwqq", "", "", "",  "y",     "delete 0", "y", "q"});
-  EXPECT_EQ(storage.ShowStorage().size(), 0);
+  EXPECT_EQ(storage.size(), 0);
 }
-
-#endif

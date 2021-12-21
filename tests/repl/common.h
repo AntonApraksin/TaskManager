@@ -15,6 +15,18 @@ struct TaskStringedData {
   std::string state;
 };
 
+namespace task_manager {
+inline bool operator==(const task_manager::SolidTask& lhs,
+                       const task_manager::SolidTask& rhs) {
+  if ((lhs.has_parent_id() && !rhs.has_parent_id()) or
+      (!lhs.has_parent_id() && rhs.has_parent_id())) {
+    return false;
+  }
+  return lhs.task() == rhs.task() && lhs.task_id() == rhs.task_id() &&
+         lhs.parent_id() == rhs.parent_id();
+}
+}  // namespace task_manager
+
 class TaskStringedDataProducer final {
  public:
   TaskStringedData GetData() {

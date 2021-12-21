@@ -1,7 +1,5 @@
 #include "UsageFramework.h"
 
-#if 0
-
 class DeleteOutputTest : public ::testing::Test, protected UsageFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
@@ -16,6 +14,13 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
   auto t1 = task_stringed_data_producer_.GetData();
   auto sub_t1 = task_stringed_data_producer_.GetData();
   auto sub_sub_t1 = task_stringed_data_producer_.GetData();
+
+  SolidTasks genuine_storage{
+      TaskDataToSolidTask(t1, 0),
+      TaskDataToSolidTask(sub_t1, 1, 0),
+      TaskDataToSolidTask(sub_sub_t1, 2, 1),
+  };
+
   auto [task_storage, output] = RunScenario({"a",
                                              t1.title,
                                              t1.date,
@@ -47,47 +52,45 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
       Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(0)),
       Strings::GetPrompt(""),
 
       Strings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
+      Strings::ShowSolidTask(TaskDataToSolidTask(t1, 0)),
       Strings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(t1.date),
+      Strings::LeaveEmptyFor(t1.date),
       Strings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(t1.priority),
+      Strings::LeaveEmptyFor(t1.priority),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
       Strings::LeaveEmptyFor(t1.state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(1)),
       Strings::GetPrompt(""),
 
       Strings::kAddSubtaskTo,
-      Strings::ShowTask(TaskDataToTask(sub_t1)),
+      Strings::ShowSolidTask(TaskDataToSolidTask(sub_t1, 1)),
       Strings::GetPrompt("title"),
       Strings::LeaveEmptyFor(sub_t1.date),
       Strings::GetPrompt("due date", kDatePattern),
       Strings::LeaveEmptyFor(sub_t1.priority),
-      IostreamStrings::GetPrompt("priority"),
+      Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      IostreamStrings::LeaveEmptyFor(sub_t1.state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
+      Strings::LeaveEmptyFor(sub_t1.state),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
       Strings::ShowId(std::to_string(2)),
 
       Strings::GetPrompt(""),
       Strings::YouAreGoingTo("delete"),
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      Strings::AndItsChildren(std::to_string(1)),
+      Strings::ShowSolidTasks(genuine_storage),
       Strings::ProceedTo("delete"),
 
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -96,4 +99,3 @@ TEST_F(DeleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
     EXPECT_EQ(output[i], desired_output[i]);
   }
 }
-#endif

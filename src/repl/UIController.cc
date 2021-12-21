@@ -354,8 +354,8 @@ void UIController::HandleLoad(std::string arg) {
     return;
   }
   auto result = model_controller_->LoadFrom(file);
-  if (result) {
-    if (result.GetStatus() == ModelController::Status::kSaveFailure) {
+  if (!result) {
+    if (result.GetStatus() == ModelController::Status::kLoadFailure) {
       ReportMessage(Strings::FailureDuringLoading(filename));
       return;
     }

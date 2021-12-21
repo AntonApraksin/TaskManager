@@ -33,13 +33,15 @@ TEST_F(PersistenceTest, MakeItWork) {
 
   auto genuine_solid_tasks = model_controller.GetAllSolidTasks().AccessResult();
   Persistence persistence;
-  std::stringstream file;
-  auto save_result = persistence.Save(file, genuine_solid_tasks);
-  ASSERT_EQ(save_result.status, SaveResult::Status::kOk);
+  std::ostringstream ofile;
+  auto save_result = persistence.Save(ofile, genuine_solid_tasks);
+  ASSERT_EQ(save_result.GetStatus(), Persistence::Status::kOk);
 
-  auto load_result = persistence.Load(file);
-  ASSERT_EQ(load_result.status, LoadResult::Status::kOk);
-  auto loaded_solid_tasks = *load_result.solid_tasks;
+
+  std::istringstream ifile(ofile.str());
+  auto load_result = persistence.Load(ifile);
+  ASSERT_EQ(load_result.GetStatus(), Persistence::Status::kOk);
+  auto loaded_solid_tasks = load_result.AccessResult();
   ASSERT_EQ(genuine_solid_tasks.size(), loaded_solid_tasks.size());
   for (size_t i{0}, sz{genuine_solid_tasks.size()}; i != sz; ++i) {
     EXPECT_EQ(genuine_solid_tasks[i].task(), loaded_solid_tasks[i].task());

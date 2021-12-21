@@ -131,7 +131,7 @@ OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
   Persistence persistence;
   auto result = persistence.Load(is);
   if (!result) {
-    return OperationResult<MCStatus>::Error(Status::kLoadFailure);
+    return OperationResult<Status>::Error(Status::kLoadFailure);
   }
   TaskManager::Parents parents;
   TaskManager::Tasks tasks;

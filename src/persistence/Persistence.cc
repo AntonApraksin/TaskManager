@@ -50,7 +50,7 @@ OperationResult<Persistence::Status> ProduceOneMessageToOstream(
 OperationResult<Persistence::Status, SolidTasks> Persistence::Load(
     std::istream& is) const {
   SolidTasks solid_tasks;
-  for (; !is.eof();) {
+  for (; is.peek() != EOF;) {
     auto value = ConsumeOneMessageFromIstream<SolidTask>(is);
     if (value) {
       solid_tasks.push_back(value.AccessResult());

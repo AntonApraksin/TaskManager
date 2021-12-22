@@ -7,7 +7,7 @@
 #include "../common.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
-#include "repl/Controller.h"
+#include "repl/UIController.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DefaultValidator.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
@@ -37,7 +37,9 @@ class UsageFramework {
   void SetUpImpl() {
     io_facility_ = std::make_shared<UsageMockIoFacility>();
     auto id_producer = std::make_unique<TaskIdProducer>();
-    task_manager_ = std::make_shared<TaskManager>(std::move(id_producer));
+    auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
+    model_controller_ =
+        std::make_shared<ModelController>(std::move(task_manager));
 
     validator_ = std::make_shared<DefaultValidator>();
 
@@ -48,27 +50,44 @@ class UsageFramework {
 
     auto view = std::make_unique<View>(io_facility_, validator_);
 
-    controller_ = std::make_unique<Controller>(
-        std::move(view), task_manager_, validator_, std::move(step_factory));
+    controller_ =
+        std::make_unique<UIController>(std::move(view), model_controller_,
+                                       validator_, std::move(step_factory));
   }
 
-  std::pair<TaskStorage, std::vector<std::string>> RunScenario(
+  std::pair<SolidTasks, std::vector<std::string>> RunScenario(
       std::vector<std::string> commands) {
     io_facility_->SetInput(
         std::vector<std::string>(commands.crbegin(), commands.crend()));
     controller_->Run();
-    return {task_manager_->Show(), io_facility_->GetOutput()};
+    return {model_controller_->GetAllSolidTasks().AccessResult(),
+            io_facility_->GetOutput()};
   }
 
-  Task TaskDataToTask(const TaskStringedData& data) {
-    return *CreateTask(data.title, *validator_->ParseTaskDate(data.date),
-                       *validator_->ParseTaskPriority(data.priority),
-                       *validator_->ParseTaskProgress(data.state));
+  SolidTask TaskDataToSolidTask(const TaskStringedData& data,
+                                google::protobuf::int32 id) {
+    auto task = *CreateTask(data.title, *validator_->ParseTaskDate(data.date),
+                            *validator_->ParseTaskPriority(data.priority),
+                            *validator_->ParseTaskProgress(data.state));
+    auto task_id = CreateTaskId(id);
+    SolidTask solid_task;
+    solid_task.set_allocated_task(new Task(std::move(task)));
+    solid_task.set_allocated_task_id(new TaskId(task_id));
+    return solid_task;
   }
 
-  std::unique_ptr<Controller> controller_;
+  SolidTask TaskDataToSolidTask(const TaskStringedData& data,
+                                google::protobuf::int32 id,
+                                google::protobuf::int32 parent_id) {
+    auto solid_task = TaskDataToSolidTask(data, id);
+    auto parent_task_id = CreateTaskId(parent_id);
+    solid_task.set_allocated_parent_id(new TaskId(parent_task_id));
+    return solid_task;
+  }
+
+  std::unique_ptr<UIController> controller_;
   std::shared_ptr<UsageMockIoFacility> io_facility_;
-  std::shared_ptr<TaskManager> task_manager_;
+  std::shared_ptr<ModelController> model_controller_;
   std::shared_ptr<IValidator> validator_;
   TaskStringedDataProducer task_stringed_data_producer_;
 };

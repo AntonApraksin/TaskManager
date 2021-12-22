@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "StepResult.h"
-#include "model/task_wrapper/TaskWrapper.h"
+#include "model/SolidTask.h"
 #include "repl/view/steps/MessageEnum.h"
 
 class IStep {
@@ -15,113 +15,50 @@ class IStep {
 
 class IAddTaskStep : public IStep {
  public:
-  void SetTask(Task task) { task_ = task; }
-
-  void ResetTask() { task_.reset(); }
+  void SetSolidTask(SolidTask solid_task) {
+    solid_task_ = std::move(solid_task);
+  }
 
  protected:
-  std::optional<Task> task_;
+  std::optional<task_manager::SolidTask> solid_task_;
 };
 
 class IEditTaskStep : public IStep {
  public:
-  using TaskWrapperRef = std::reference_wrapper<const TaskWrapper>;
-
-  explicit IEditTaskStep(TaskWrapperRef task_wrapper)
-      : task_wrapper_(task_wrapper) {}
-
-  void SetTaskWrapper(TaskWrapperRef task_wrapper) {
-    task_wrapper_ = task_wrapper;
+  void SetSolidTask(SolidTask solid_task) {
+    solid_task_ = std::move(solid_task);
   }
 
  protected:
-  TaskWrapperRef task_wrapper_;
+  SolidTask solid_task_;
 };
 
-class IDeleteTaskStep : public IStep {
+class StepWithSolidTasks {
  public:
-  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
-
-  explicit IDeleteTaskStep(TaskWrappers task_wrappers)
-      : task_wrappers_(std::move(task_wrappers)) {}
-
-  void SetTaskWrappers(TaskWrappers task_wrappers) {
-    task_wrappers_ = std::move(task_wrappers);
+  void SetSolidTasks(SolidTasks solid_tasks) {
+    solid_tasks_ = std::move(solid_tasks);
   }
 
  protected:
-  TaskWrappers task_wrappers_;
-};
-
-class ICompleteTaskStep : public IStep {
- public:
-  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
-
-  explicit ICompleteTaskStep(TaskWrappers task_wrappers)
-      : task_wrappers_(std::move(task_wrappers)) {}
-
-  void SetTaskWrappers(TaskWrappers task_wrappers) {
-    task_wrappers_ = std::move(task_wrappers);
-  }
+  ~StepWithSolidTasks() = default;
 
  protected:
-  TaskWrappers task_wrappers_;
+  SolidTasks solid_tasks_;
 };
 
-class IShowAllTasksStep : public IStep {
- public:
-  using TaskStorageRef = std::reference_wrapper<const TaskStorage>;
+class IDeleteTaskStep : public StepWithSolidTasks, public IStep {};
 
-  explicit IShowAllTasksStep(TaskStorageRef task_storage)
-      : task_storage_(task_storage) {}
+class ICompleteTaskStep : public StepWithSolidTasks, public IStep {};
 
-  void SetTaskStorage(TaskStorageRef task_storage) {
-    task_storage_ = task_storage;
-  }
-
- protected:
-  TaskStorageRef task_storage_;
-};
-
-class IShowNTasksStep : public IStep {
- public:
-  using TaskWrappers = std::vector<std::reference_wrapper<const TaskWrapper>>;
-
-  explicit IShowNTasksStep(TaskWrappers task_wrappers)
-      : task_wrappers_(task_wrappers) {}
-
-  void SetTaskWrappers(TaskWrappers task_wrappers) {
-    task_wrappers_ = task_wrappers;
-  }
-
- protected:
-  TaskWrappers task_wrappers_;
-};
-
-class IShowSortedTasksStep : public IStep {
- public:
-  using Tasks = std::vector<std::pair<TaskId, Task>>;
-
-  explicit IShowSortedTasksStep(Tasks tasks) : tasks_(tasks) {}
-
-  void SetTasks(Tasks tasks) { tasks_ = tasks; }
-
- protected:
-  Tasks tasks_;
-};
+class IShowStep : public StepWithSolidTasks, public IStep {};
 
 class IShowHelpStep : public IStep {};
 
 class IReportMessageStep : public IStep {
  public:
-  using OptionalArg = std::optional<std::string>;
-
-  void SetArg(std::string arg) { arg_ = std::move(arg); }
-
-  void SetMessage(MessageEnum main_error) { main_error_ = main_error; }
+  void SetMessage(std::string message) { message_ = std::move(message); }
 
  protected:
-  OptionalArg arg_;
-  MessageEnum main_error_;
+  std::string message_;
 };
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

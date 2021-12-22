@@ -6,7 +6,7 @@
 #include "../common.h"
 #include "model/task/Task.h"
 #include "repl/validator/DateFormat.h"
-#include "repl/view/steps/iostream/IostreamStrings.h"
+#include "repl/view/steps/Strings.h"
 
 struct TaskStringedData {
   std::string title;
@@ -28,8 +28,8 @@ class TaskStringedDataProducer final {
     ++state_;
     std::stringstream ss_date;
     ss_date << std::put_time(std::localtime(&time), kDatePattern);
-    return {ss.str(), ss_date.str(), IostreamStrings::to_string(priority),
-            IostreamStrings::to_string(progress)};
+    return {ss.str(), ss_date.str(), Strings::to_string(priority),
+            Strings::to_string(progress)};
   }
 
  private:

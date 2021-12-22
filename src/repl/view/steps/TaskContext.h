@@ -11,7 +11,6 @@ class TaskContext {
  public:
   void PushState(const std::shared_ptr<ISmallStep>&);
   void PopState();
-  void ClearStates();
 
   TaskBuilder& GetTaskBuilder();
 

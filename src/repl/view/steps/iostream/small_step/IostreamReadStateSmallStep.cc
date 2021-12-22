@@ -1,16 +1,16 @@
 #include "IostreamSmallStep.h"
+#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/iostream/IostreamStrings.h"
 
 // TODO: Prettify implementation
 
 void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().progress_) {
-    io_facility_->Print(IostreamStrings::kInvalidState);
-    io_facility_->Print(IostreamStrings::LeaveEmptyFor(
-        IostreamStrings::to_string(*ctx.GetTaskBuilder().progress_)));
+    io_facility_->Print(Strings::kStateShouldBe);
+    io_facility_->Print(Strings::LeaveEmptyFor(
+        Strings::to_string(*ctx.GetTaskBuilder().progress_)));
   }
-  std::string prompt = IostreamStrings::GetPrompt("state");
+  std::string prompt = Strings::GetPrompt("state");
   auto progress_string = PrintAndGet(*io_facility_, prompt);
   if (progress_string.empty()) {
     ctx.PopState();
@@ -18,7 +18,7 @@ void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   }
   auto validated_state = validator_->ParseTaskProgress(progress_string);
   for (; !validated_state;) {
-    io_facility_->Print(IostreamStrings::kInvalidState);
+    io_facility_->Print(Strings::kStateShouldBe);
     progress_string = PrintAndGet(*io_facility_, prompt);
     if (progress_string.empty()) {
       ctx.PopState();

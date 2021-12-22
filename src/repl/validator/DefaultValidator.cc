@@ -37,6 +37,12 @@ CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   if (str == "s" || str == "show") {
     return CommandEnum::kShow;
   }
+  if (str == "save") {
+    return CommandEnum::kSave;
+  }
+  if (str == "load") {
+    return CommandEnum::kLoad;
+  }
   return CommandEnum::kUnknown;
 }
 std::pair<CommandEnum, std::string> DefaultValidator::MakeRequest(

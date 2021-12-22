@@ -10,6 +10,8 @@ enum class CommandEnum {
   kShow,
   kHelp,
   kUnknown,
+  kSave,
+  kLoad,
   kQuit,
 };
 

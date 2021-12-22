@@ -6,8 +6,6 @@ void TaskContext::PushState(const std::shared_ptr<ISmallStep>& state) {
 
 void TaskContext::PopState() { states_.pop_front(); }
 
-void TaskContext::ClearStates() { states_.clear(); }
-
 TaskBuilder& TaskContext::GetTaskBuilder() { return task_builder_; }
 
 void TaskContext::Run() {

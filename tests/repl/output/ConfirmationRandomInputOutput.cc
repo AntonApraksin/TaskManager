@@ -17,19 +17,18 @@ TEST_F(ConfirmationRandomInputOutputTest, AddRandomInputMustCancel) {
       RunScenario({"a", "title", date, "", "", "ui", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::kOkayITreatItAsNo,
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::kOkayITreatItAsNo,
+      Strings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());
 
@@ -45,43 +44,46 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
   ss << std::put_time(std::localtime(&time), kDatePattern);
 
   std::string default_date = ss.str();
-  auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
+  auto st0 = task_stringed_data_producer_.GetData();
+  auto edit_st0 = task_stringed_data_producer_.GetData();
 
-  auto [task_storage, output] = RunScenario(
-      {"a", t1.title, t1.date, t1.priority, t1.state, "y", "e 0", edit_t1.title,
-       edit_t1.date, edit_t1.priority, edit_t1.state, "sheesh", "q"});
+  auto [task_storage, output] =
+      RunScenario({"a", st0.title, st0.date, st0.priority, st0.state, "y",
+                   "e 0", edit_st0.title, edit_st0.date, edit_st0.priority,
+                   edit_st0.state, "sheesh", "q"});
+
+  SolidTask t0 = TaskDataToSolidTask(st0, 0);
+  SolidTask edit_t0 = TaskDataToSolidTask(edit_st0, 0);
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
 
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::kYouAreGoingToEdit,
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::LeaveEmptyFor(t1.title),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(t1.date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(t1.priority),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(t1.state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("edit"),
-      IostreamStrings::kOkayITreatItAsNo,
+      Strings::GetPrompt(""),
+      Strings::kYouAreGoingToEdit,
+      Strings::ShowSolidTask(t0),
+      Strings::LeaveEmptyFor(st0.title),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(st0.date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(st0.priority),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(st0.state),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("edit"),
+      Strings::kOkayITreatItAsNo,
 
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -99,34 +101,31 @@ TEST_F(ConfirmationRandomInputOutputTest, CompleteRandomInputMustCancel) {
 
   std::string default_date = ss.str();
   auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
 
   auto [task_storage, output] =
       RunScenario({"a", t1.title, t1.date, t1.priority, t1.state, "y", "c 0",
                    "sheesh", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
 
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::YouAreGoingTo("complete"),
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(std::to_string(0)),
-      IostreamStrings::ProceedTo("complete"),
-      IostreamStrings::kOkayITreatItAsNo,
+      Strings::GetPrompt(""),
+      Strings::YouAreGoingTo("complete"),
+      Strings::ShowSolidTasks(task_storage),
+      Strings::ProceedTo("complete"),
+      Strings::kOkayITreatItAsNo,
 
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());
@@ -144,34 +143,31 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
 
   std::string default_date = ss.str();
   auto t1 = task_stringed_data_producer_.GetData();
-  auto edit_t1 = task_stringed_data_producer_.GetData();
 
   auto [task_storage, output] =
       RunScenario({"a", t1.title, t1.date, t1.priority, t1.state, "y", "d 0",
                    "sheesh", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
 
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::YouAreGoingTo("delete"),
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(std::to_string(0)),
-      IostreamStrings::ProceedTo("delete"),
-      IostreamStrings::kOkayITreatItAsNo,
+      Strings::GetPrompt(""),
+      Strings::YouAreGoingTo("delete"),
+      Strings::ShowSolidTasks(task_storage),
+      Strings::ProceedTo("delete"),
+      Strings::kOkayITreatItAsNo,
 
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());

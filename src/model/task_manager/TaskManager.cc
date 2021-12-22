@@ -2,56 +2,89 @@
 
 // TODO: return errors on failure
 
+void GetCompleteSubTree(TaskId id, const TaskManager::Parents& parents,
+                        std::vector<TaskId>& children) {
+  const auto it = parents.find(id);
+  const auto& to_traverse = it->second;
+  children.push_back(id);
+  for (size_t i{0}; i != to_traverse.size(); ++i) {
+    GetCompleteSubTree(to_traverse[i], parents, children);
+  }
+}
+
+using TMStatus = TaskManager::Status;
+
 TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer)
     : id_producer_(std::move(id_producer)) {}
 
-std::pair<std::optional<TaskId>, TaskManager::ActionResult> TaskManager::Add(
-    Task task) {
+TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer,
+                         TaskManager::Storage storage)
+    : id_producer_(std::move(id_producer)), storage_(std::move(storage)) {}
+
+OperationResult<TMStatus, TaskId> TaskManager::Add(Task task) {
   auto next_id = id_producer_->GetNextId();
-  storage_.Add(next_id, std::move(task));
-  return {next_id, ActionResult::ok()};
+  storage_.tasks.insert({next_id, std::move(task)});
+  storage_.roots.push_back(next_id);
+  storage_.parents[next_id];
+  return OperationResult<Status, TaskId>::Ok(next_id);
 }
 
-std::pair<std::optional<TaskId>, TaskManager::ActionResult> TaskManager::Add(
-    TaskId task_id, Task task) {
-  auto next_id = id_producer_->GetNextId();
-  auto add_to = storage_.Find(task_id);
-  if (add_to != storage_.end()) {
-    add_to->second.Add(next_id, std::move(task));
-    return {next_id, ActionResult::ok()};
+OperationResult<TMStatus, TaskId> TaskManager::Add(TaskId id, Task task) {
+  if (auto it = storage_.parents.find(id); it != storage_.parents.end()) {
+    auto next_id = id_producer_->GetNextId();
+    storage_.tasks.insert({next_id, std::move(task)});
+    it->second.push_back(next_id);
+    storage_.parents[next_id];
+    return OperationResult<Status, TaskId>::Ok(next_id);
   }
-  return {{}, ActionResult::error(ActionResult::Status::kNotPresentId)};
+  return OperationResult<Status, TaskId>::Error(Status::kNotPresentId);
 }
 
-TaskManager::ActionResult TaskManager::Edit(TaskId id, Task task) {
-  auto to_edit = storage_.Find(id);
-  if (to_edit != storage_.end()) {
-    to_edit->second.SetTask(task);
-    return ActionResult::ok();
+OperationResult<TMStatus> TaskManager::Edit(TaskId id, Task task) {
+  if (auto it = storage_.tasks.find(id); it != storage_.tasks.end()) {
+    it->second = std::move(task);
+    return OperationResult<Status>::Ok();
   }
-  return ActionResult::error(ActionResult::Status::kNotPresentId);
+  return OperationResult<Status>::Error(Status::kNotPresentId);
 }
 
-TaskManager::ActionResult TaskManager::Complete(TaskId id) {
-  auto to_complete = storage_.Find(id);
-  if (to_complete != storage_.end()) {
-    to_complete->second.Complete();
-    return ActionResult::ok();
+OperationResult<TMStatus> TaskManager::Complete(TaskId id) {
+  if (auto it = storage_.tasks.find(id); it != storage_.tasks.end()) {
+    std::vector<TaskId> to_complete;
+    GetCompleteSubTree(id, storage_.parents, to_complete);
+    for (const auto& i : to_complete) {
+      storage_.tasks.find(i)->second.set_progress(Task::kCompleted);
+    }
+    return OperationResult<Status>::Ok();
   }
-  return ActionResult::error(ActionResult::Status::kNotPresentId);
+  return OperationResult<Status>::Error(Status::kNotPresentId);
 }
 
-TaskManager::ActionResult TaskManager::Delete(TaskId id) {
-  auto parent_of = storage_.FindStorageContaining(id);
-  if (parent_of) {
-    parent_of->get().Delete(parent_of->get().Find(id));
-    return ActionResult::ok();
+OperationResult<TMStatus> TaskManager::Delete(TaskId id) {
+  if (auto it = storage_.tasks.find(id); it != storage_.tasks.end()) {
+    std::vector<TaskId> to_delete;
+    GetCompleteSubTree(id, storage_.parents, to_delete);
+    for (const auto& i : to_delete) {
+      storage_.tasks.erase(storage_.tasks.find(i));
+      storage_.parents.erase(storage_.parents.find(i));
+      if (auto root =
+              std::find(storage_.roots.begin(), storage_.roots.end(), i);
+          root != storage_.roots.end()) {
+        storage_.roots.erase(root);
+      } else {
+        for (auto& potential_parent : storage_.parents) {
+          if (auto parent = std::find(potential_parent.second.begin(),
+                                      potential_parent.second.end(), id);
+              parent != potential_parent.second.end()) {
+            potential_parent.second.erase(parent);
+            break;
+          }
+        }
+      }
+    }
+    return OperationResult<Status>::Ok();
   }
-  return ActionResult::error(ActionResult::Status::kNotPresentId);
+  return OperationResult<Status>::Error(Status::kNotPresentId);
 }
 
-TaskId TaskManager::GetLastGivenId() const {
-  return id_producer_->GetCurrentId();
-}
-
-TaskStorage TaskManager::Show() const { return storage_; }
+TaskManager::Storage TaskManager::Show() const { return storage_; }

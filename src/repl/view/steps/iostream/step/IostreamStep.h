@@ -54,11 +54,9 @@ class IostreamEditTaskStep final : public IEditTaskStep,
                                    public IostreamWithSmallStepStep,
                                    public IostreamWithValidatorStep {
  public:
-  using IEditTaskStep::TaskWrapperRef;
-
   IostreamEditTaskStep(const std::shared_ptr<IIoFacility>&,
                        const std::shared_ptr<ISmallStepFactory>&,
-                       const std::shared_ptr<IValidator>&, TaskWrapperRef);
+                       const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
@@ -67,10 +65,8 @@ class IostreamDeleteTaskStep final : public IDeleteTaskStep,
                                      public IostreamStep,
                                      public IostreamWithValidatorStep {
  public:
-  using IDeleteTaskStep::TaskWrappers;
-
   IostreamDeleteTaskStep(const std::shared_ptr<IIoFacility>&,
-                         const std::shared_ptr<IValidator>&, TaskWrappers);
+                         const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
@@ -79,38 +75,15 @@ class IostreamCompleteTaskStep final : public ICompleteTaskStep,
                                        public IostreamStep,
                                        public IostreamWithValidatorStep {
  public:
-  using ICompleteTaskStep::TaskWrappers;
-
   IostreamCompleteTaskStep(const std::shared_ptr<IIoFacility>&,
-                           const std::shared_ptr<IValidator>&, TaskWrappers);
+                           const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
 
-class IostreamShowAllTasksStep final : public IShowAllTasksStep,
-                                       public IostreamStep {
+class IostreamShowStep final : public IShowStep, public IostreamStep {
  public:
-  using IShowAllTasksStep::TaskStorageRef;
-
-  IostreamShowAllTasksStep(const std::shared_ptr<IIoFacility>&, TaskStorageRef);
-  StepResult Run() override;
-};
-
-class IostreamShowNTasksStep final : public IShowNTasksStep,
-                                     public IostreamStep {
- public:
-  using IShowNTasksStep::TaskWrappers;
-
-  IostreamShowNTasksStep(const std::shared_ptr<IIoFacility>&, TaskWrappers);
-  StepResult Run() override;
-};
-
-class IostreamShowSortedTasksStep final : public IShowSortedTasksStep,
-                                          public IostreamStep {
- public:
-  using IShowSortedTasksStep::Tasks;
-
-  IostreamShowSortedTasksStep(const std::shared_ptr<IIoFacility>&, Tasks);
+  explicit IostreamShowStep(const std::shared_ptr<IIoFacility>&);
   StepResult Run() override;
 };
 

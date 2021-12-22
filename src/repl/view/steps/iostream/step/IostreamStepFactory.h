@@ -14,36 +14,24 @@ class IostreamStepFactory final : public IStepFactory {
                       const std::shared_ptr<ISmallStepFactory> &state_factory);
 
   std::shared_ptr<IStep> GetAddTaskStep() override;
-  std::shared_ptr<IStep> GetAddTaskStep(Task) override;
+  std::shared_ptr<IStep> GetAddTaskStep(SolidTask) override;
 
-  std::shared_ptr<IStep> GetEditTaskStep(
-      IEditTaskStep::TaskWrapperRef) override;
-  std::shared_ptr<IStep> GetCompleteTaskStep(
-      ICompleteTaskStep::TaskWrappers) override;
-  std::shared_ptr<IStep> GetDeleteTaskStep(
-      IDeleteTaskStep::TaskWrappers) override;
+  std::shared_ptr<IStep> GetEditTaskStep(SolidTask) override;
+  std::shared_ptr<IStep> GetCompleteTaskStep(SolidTasks) override;
+  std::shared_ptr<IStep> GetDeleteTaskStep(SolidTasks) override;
 
-  std::shared_ptr<IStep> GetShowAllTasksStep(
-      IShowAllTasksStep::TaskStorageRef) override;
-  std::shared_ptr<IStep> GetShowNTasksStep(
-      IShowNTasksStep::TaskWrappers) override;
-  std::shared_ptr<IStep> GetShowSortedTasksStep(
-      IShowSortedTasksStep::Tasks) override;
+  std::shared_ptr<IStep> GetShowStep(SolidTasks) override;
 
   std::shared_ptr<IStep> GetShowHelpStep() override;
 
-  std::shared_ptr<IStep> GetReportMessageStep(MessageEnum) override;
-  std::shared_ptr<IStep> GetReportMessageStep(MessageEnum,
-                                              std::string) override;
+  std::shared_ptr<IStep> GetReportMessageStep(std::string) override;
 
  private:
   std::shared_ptr<IostreamAddTaskStep> iostream_add_task_step_;
   std::shared_ptr<IostreamEditTaskStep> iostream_edit_task_step_;
   std::shared_ptr<IostreamCompleteTaskStep> iostream_complete_task_step_;
   std::shared_ptr<IostreamDeleteTaskStep> iostream_delete_task_step_;
-  std::shared_ptr<IostreamShowAllTasksStep> iostream_show_all_tasks_step_;
-  std::shared_ptr<IostreamShowNTasksStep> iostream_show_n_tasks_step_;
-  std::shared_ptr<IostreamShowSortedTasksStep> iostream_show_sorted_tasks_step_;
+  std::shared_ptr<IostreamShowStep> iostream_show_step_;
   std::shared_ptr<IostreamShowHelpStep> iostream_show_help_step_;
   std::shared_ptr<IostreamReportMessageStep> iostream_report_message_step_;
 

@@ -11,82 +11,94 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   ss << std::put_time(std::localtime(&time), kDatePattern);
 
-  auto t1 = task_stringed_data_producer_.GetData();
-  auto sub_t1 = task_stringed_data_producer_.GetData();
-  auto sub_sub_t1 = task_stringed_data_producer_.GetData();
+  auto st0 = task_stringed_data_producer_.GetData();
+  auto sub_st0 = task_stringed_data_producer_.GetData();
+  auto sub_sub_st0 = task_stringed_data_producer_.GetData();
   auto [task_storage, output] = RunScenario({"a",
-                                             t1.title,
-                                             t1.date,
-                                             t1.priority,
-                                             t1.state,
+                                             st0.title,
+                                             st0.date,
+                                             st0.priority,
+                                             st0.state,
                                              "y",
                                              "a 0",
-                                             sub_t1.title,
-                                             sub_t1.date,
-                                             sub_t1.priority,
-                                             sub_t1.state,
+                                             sub_st0.title,
+                                             sub_st0.date,
+                                             sub_st0.priority,
+                                             sub_st0.state,
                                              "y",
                                              "a 1",
-                                             sub_sub_t1.title,
-                                             sub_sub_t1.date,
-                                             sub_sub_t1.priority,
-                                             sub_sub_t1.state,
+                                             sub_sub_st0.title,
+                                             sub_sub_st0.date,
+                                             sub_sub_st0.priority,
+                                             sub_sub_st0.state,
                                              "y",
                                              "c 0",
                                              "y",
                                              "q"});
+  auto storage_before_complete = task_storage;
+  for (size_t i{0}, sz{storage_before_complete.size()}; i != sz; ++i) {
+    auto new_task = storage_before_complete[i].task();
+    new_task.set_progress(static_cast<Task::Progress>(i % 2));
+    storage_before_complete[i].set_allocated_task(
+        new Task(std::move(new_task)));
+  }
+
+  task_manager::SolidTask t0 = *std::find_if(
+      storage_before_complete.cbegin(), storage_before_complete.cend(),
+      [](const auto& i) { return i.task_id().id() == 0; });
+
+  task_manager::SolidTask t1 = *std::find_if(
+      storage_before_complete.cbegin(), storage_before_complete.cend(),
+      [](const auto& i) { return i.task_id().id() == 1; });
   std::string default_date = ss.str();
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
 
-      IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(t1.date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(t1.priority),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(t1.state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(1)),
-      IostreamStrings::GetPrompt(""),
+      Strings::kAddSubtaskTo,
+      Strings::ShowSolidTask(t0),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(st0.date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(st0.priority),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(st0.state),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(1)),
+      Strings::GetPrompt(""),
 
-      IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(TaskDataToTask(sub_t1)),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(sub_t1.date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(sub_t1.priority),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(sub_t1.state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(2)),
+      Strings::kAddSubtaskTo,
+      Strings::ShowSolidTask(t1),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(sub_st0.date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(sub_st0.priority),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(sub_st0.state),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(2)),
 
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::YouAreGoingTo("complete"),
-      IostreamStrings::ShowTask(TaskDataToTask(t1)),
-      IostreamStrings::AndItsChildren(std::to_string(
-          task_storage.Find(CreateTaskId(0))->second.ShowStorage().size())),
-      IostreamStrings::ProceedTo("complete"),
+      Strings::GetPrompt(""),
+      Strings::YouAreGoingTo("complete"),
+      Strings::ShowSolidTasks(storage_before_complete),
+      Strings::ProceedTo("complete"),
 
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
   };
 
   ASSERT_EQ(output.size(), desired_output.size());

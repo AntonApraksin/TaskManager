@@ -13,8 +13,7 @@ TEST_F(CompleteActionTest, TaskShouldBeCompleted) {
 
   auto storage = RunScenario(
       {"add", title, date, priority, state, "y", "complete 0", "y", "q"});
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
-            Task::kCompleted);
+  EXPECT_EQ(FindSolidTask(storage, 0).task().progress(), Task::kCompleted);
 }
 
 TEST_F(CompleteActionTest, NestedTasksShouldBeCompleted) {
@@ -44,10 +43,10 @@ TEST_F(CompleteActionTest, NestedTasksShouldBeCompleted) {
                               "complete 0",
                               "y",
                               "q"});
-  auto task_wrapper = storage.Find(CreateTaskId(0))->second;
-  auto subtask_wrapper = task_wrapper.Find(CreateTaskId(1))->second;
-  auto subsubtask_wrapper = subtask_wrapper.Find(CreateTaskId(2))->second;
-  EXPECT_EQ(task_wrapper->progress(), Task::kCompleted);
-  EXPECT_EQ(subtask_wrapper->progress(), Task::kCompleted);
-  EXPECT_EQ(subsubtask_wrapper->progress(), Task::kCompleted);
+  auto top_task = FindSolidTask(storage, 0);
+  auto sub_top_task = FindSolidTask(storage, 1);
+  auto sub_sub_top_task = FindSolidTask(storage, 2);
+  EXPECT_EQ(top_task.task().progress(), Task::kCompleted);
+  EXPECT_EQ(sub_top_task.task().progress(), Task::kCompleted);
+  EXPECT_EQ(sub_sub_top_task.task().progress(), Task::kCompleted);
 }

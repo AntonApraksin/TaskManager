@@ -7,8 +7,6 @@
 
 #include "../common.h"
 #include "model/id/ITaskIdProducer.h"
-#include "model/id/TaskId.h"
-#include "model/task/Task.h"
 
 inline Date_t parse_date(std::string date) {
   tm timeinfo;

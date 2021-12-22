@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "ModelUtils.h"
+#include "../ModelUtils.h"
 #include "model/id/TaskIdProducer.h"
 
 class IdTest : public ::testing::Test {};

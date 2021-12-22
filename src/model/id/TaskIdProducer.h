@@ -8,7 +8,7 @@
 class TaskIdProducer final : public ITaskIdProducer {
  public:
   TaskIdProducer();
-  TaskIdProducer(TaskId);
+  explicit TaskIdProducer(TaskId);
 
   task_manager::TaskId GetNextId() override;
   task_manager::TaskId GetCurrentId() override;

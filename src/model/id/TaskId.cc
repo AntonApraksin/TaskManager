@@ -11,7 +11,24 @@ bool operator==(const TaskId& lhs, const TaskId& rhs) {
   return lhs.id() == rhs.id();
 }
 
+bool operator!=(const TaskId& lhs, const TaskId& rhs) {
+  return lhs.id() != rhs.id();
+}
+
 bool operator<(const TaskId& lhs, const TaskId& rhs) {
   return lhs.id() < rhs.id();
 }
+
+bool operator>(const TaskId& lhs, const TaskId& rhs) {
+  return lhs.id() > rhs.id();
+}
+
+bool operator>=(const TaskId& lhs, const TaskId& rhs) {
+  return lhs.id() >= rhs.id();
+}
+
+bool operator<=(const TaskId& lhs, const TaskId& rhs) {
+  return lhs.id() <= rhs.id();
+}
+
 }  // namespace task_manager

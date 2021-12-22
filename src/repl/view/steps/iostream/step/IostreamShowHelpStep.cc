@@ -1,4 +1,4 @@
-#include "repl/view/steps/iostream/IostreamStrings.h"
+#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/iostream/step/IostreamStep.h"
 
 IostreamShowHelpStep::IostreamShowHelpStep(
@@ -6,6 +6,6 @@ IostreamShowHelpStep::IostreamShowHelpStep(
     : IostreamStep(io_facility) {}
 
 StepResult IostreamShowHelpStep::Run() {
-  io_facility_->Print(IostreamStrings::kHelp);
+  io_facility_->Print(Strings::kHelp);
   return {{}, {}};
 }

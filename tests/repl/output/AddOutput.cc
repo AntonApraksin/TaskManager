@@ -16,19 +16,18 @@ TEST_F(AddOutputTest, AddOneTask) {
       RunScenario({"a", "title", date, "", "", "y", "q"});
 
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());
 
@@ -39,8 +38,8 @@ TEST_F(AddOutputTest, AddOneTask) {
 
 TEST_F(AddOutputTest, AddTaskAndSubTask) {
   std::string date = "10:38 17/09/2019";
-  std::string priority = IostreamStrings::to_string(Task::kMedium);
-  std::string state = IostreamStrings::to_string(Task::kUncompleted);
+  std::string priority = Strings::to_string(Task::kMedium);
+  std::string state = Strings::to_string(Task::kUncompleted);
   std::stringstream ss;
   auto time =
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -50,35 +49,38 @@ TEST_F(AddOutputTest, AddTaskAndSubTask) {
       RunScenario({"a", "title", date, priority, state, "y", "a 0", "subtitle",
                    "", "", "", "y", "q"});
 
+  task_manager::SolidTask t0 =
+      *std::find_if(task_storage.cbegin(), task_storage.cend(),
+                    [](const auto& i) { return i.task_id().id() == 0; });
+
   std::vector<std::string> desired_output{
-      IostreamStrings::GetPrompt(""),
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(default_date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(IostreamStrings::to_string(Task::kLow)),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(
-          IostreamStrings::to_string(Task::kUncompleted)),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(0)),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(0)),
+      Strings::GetPrompt(""),
 
-      IostreamStrings::kAddSubtaskTo,
-      IostreamStrings::ShowTask(*task_storage.Find(CreateTaskId(0))->second),
+      Strings::kAddSubtaskTo,
+      Strings::ShowSolidTask(t0),
 
-      IostreamStrings::GetPrompt("title"),
-      IostreamStrings::LeaveEmptyFor(date),
-      IostreamStrings::GetPrompt("due date", kDatePattern),
-      IostreamStrings::LeaveEmptyFor(priority),
-      IostreamStrings::GetPrompt("priority"),
-      IostreamStrings::kInvalidState,
-      IostreamStrings::LeaveEmptyFor(state),
-      IostreamStrings::GetPrompt("state"),
-      IostreamStrings::ProceedTo("add"),
-      IostreamStrings::ShowId(std::to_string(1)),
-      IostreamStrings::GetPrompt(""),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(priority),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(state),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("add"),
+      Strings::ShowId(std::to_string(1)),
+      Strings::GetPrompt(""),
   };
   ASSERT_EQ(output.size(), desired_output.size());
 

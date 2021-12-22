@@ -5,8 +5,6 @@
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/ISmallStep.h"
 
-class Context;
-
 class IostreamSmallStep : public ISmallStep {
  public:
   explicit IostreamSmallStep(const std::shared_ptr<IIoFacility>& io_facility,

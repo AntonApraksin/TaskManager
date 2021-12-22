@@ -16,7 +16,7 @@ TEST_F(AddActionTest, OneTaskShouldBeAdded) {
                                   *validator_->ParseTaskPriority(priority),
                                   *validator_->ParseTaskProgress(progress));
 
-  EXPECT_EQ(*storage.Find(CreateTaskId(0))->second, expected_task);
+  EXPECT_EQ(FindSolidTask(storage, 0).task(), expected_task);
 }
 
 TEST_F(AddActionTest, NTasksShouldBeAdded) {
@@ -41,8 +41,8 @@ TEST_F(AddActionTest, NTasksShouldBeAdded) {
   auto storage = RunScenario(std::move(commands));
 
   for (int i{0}; i != kNTasks; ++i) {
-    EXPECT_EQ(*storage.Find(CreateTaskId(i))->second,
-              TaskDataToTask(tasks_data.at(i)));
+    EXPECT_EQ(FindSolidTask(storage, i),
+              TaskDataToSolidTask(tasks_data.at(i), i));
   }
 }
 
@@ -57,14 +57,12 @@ TEST_F(AddActionTest, NestedTasksShouldBeAdded) {
                               subtask.date, subtask.priority, subtask.state,
                               "y", "add 1", subsubtask.title, subsubtask.date,
                               subsubtask.priority, subsubtask.state, "y", "q"});
-
-  auto task_wrapper = storage.Find(CreateTaskId(0))->second;
-  auto subtask_wrapper = task_wrapper.Find(CreateTaskId(1))->second;
-  auto subsubtask_wrapper = subtask_wrapper.Find(CreateTaskId(2))->second;
-
-  EXPECT_EQ(*task_wrapper, TaskDataToTask(task));
-  EXPECT_EQ(*subtask_wrapper, TaskDataToTask(subtask));
-  EXPECT_EQ(*subsubtask_wrapper, TaskDataToTask(subsubtask));
+  auto top_task = FindSolidTask(storage, 0);
+  auto sub_top_task = FindSolidTask(storage, 1);
+  auto sub_sub_top_task = FindSolidTask(storage, 2);
+  EXPECT_EQ(top_task, TaskDataToSolidTask(task, 0));
+  EXPECT_EQ(sub_top_task, TaskDataToSolidTask(subtask, 1, 0));
+  EXPECT_EQ(sub_sub_top_task, TaskDataToSolidTask(subsubtask, 2, 1));
 }
 
 TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
@@ -75,11 +73,10 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
 
   auto storage = RunScenario({"add", title, date, priority, state, "y", "add 0",
                               "subtitle", "", "", "", "y", "q"});
+  auto t1 = FindSolidTask(storage, 0);
+  auto t2 = FindSolidTask(storage, 1);
 
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->due_date(),
-            storage.Find(CreateTaskId(1))->second->due_date());
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->priority(),
-            storage.Find(CreateTaskId(1))->second->priority());
-  EXPECT_EQ(storage.Find(CreateTaskId(0))->second->progress(),
-            storage.Find(CreateTaskId(1))->second->progress());
+  EXPECT_EQ(t1.task().due_date(), t2.task().due_date());
+  EXPECT_EQ(t1.task().priority(), t2.task().priority());
+  EXPECT_EQ(t1.task().progress(), t2.task().progress());
 }

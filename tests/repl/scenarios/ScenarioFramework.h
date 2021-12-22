@@ -91,10 +91,4 @@ class ScenarioFramework {
   TaskStringedDataProducer task_stringed_data_producer_;
 };
 
-inline SolidTask FindSolidTask(const SolidTasks& solid_tasks,
-                               google::protobuf::int32 id) {
-  return *std::find_if(solid_tasks.cbegin(), solid_tasks.cend(),
-                       [id](const auto& i) { return i.task_id().id() == id; });
-}
-
 #endif  // TASKMANAGER_TESTS_REPL_SCENARIOS_SCENARIOFRAMEWORK_H_

@@ -12,9 +12,9 @@ std::unique_ptr<ITaskIdProducer> get_default_task_id_producer() {
   return std::make_unique<MockTaskIdProducer>();
 }
 
-class PlainTaskManagerTest : public ::testing::Test {};
+class TaskManagerTest : public ::testing::Test {};
 
-TEST_F(PlainTaskManagerTest, TaskAddedProperly) {
+TEST_F(TaskManagerTest, TaskAddedProperly) {
   auto id_producer = get_default_task_id_producer();
   TaskFactory tf;
   TaskManager tm{std::move(id_producer)};
@@ -27,7 +27,7 @@ TEST_F(PlainTaskManagerTest, TaskAddedProperly) {
   EXPECT_EQ(task, tm.Show().tasks[tm.Show().roots[0]]);
 }
 
-TEST_F(PlainTaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
+TEST_F(TaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
@@ -37,7 +37,7 @@ TEST_F(PlainTaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
   EXPECT_EQ(tm.Delete(tmp_id).GetStatus(), TaskManager::Status::kNotPresentId);
 }
 
-TEST_F(PlainTaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId) {
+TEST_F(TaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
@@ -48,7 +48,7 @@ TEST_F(PlainTaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId) {
             TaskManager::Status::kNotPresentId);
 }
 
-TEST_F(PlainTaskManagerTest, InvalidIdResultOnEditWithUnexistingId) {
+TEST_F(TaskManagerTest, InvalidIdResultOnEditWithUnexistingId) {
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
   auto task = tf.GetNextTask();
@@ -59,7 +59,7 @@ TEST_F(PlainTaskManagerTest, InvalidIdResultOnEditWithUnexistingId) {
             TaskManager::Status::kNotPresentId);
 }
 
-TEST_F(PlainTaskManagerTest, ProperDeletion) {
+TEST_F(TaskManagerTest, ProperDeletion) {
   constexpr int kElems = 512;
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
@@ -83,7 +83,7 @@ TEST_F(PlainTaskManagerTest, ProperDeletion) {
   ASSERT_EQ(storage.roots.size(), 0);
 }
 
-TEST_F(PlainTaskManagerTest, ProperCompletion) {
+TEST_F(TaskManagerTest, ProperCompletion) {
   constexpr int kElems = 512;
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;
@@ -104,7 +104,7 @@ TEST_F(PlainTaskManagerTest, ProperCompletion) {
   }
 }
 
-TEST_F(PlainTaskManagerTest, ProperEdition) {
+TEST_F(TaskManagerTest, ProperEdition) {
   constexpr int kElems = 256;
   TaskManager tm{get_default_task_id_producer()};
   TaskFactory tf;

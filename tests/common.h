@@ -3,6 +3,7 @@
 
 #include <google/protobuf/util/time_util.h>
 
+#include "model/SolidTask.h"
 #include "model/id/TaskId.h"
 #include "model/task/Task.h"
 
@@ -15,6 +16,16 @@ inline bool operator==(const Task& lhs, const Task& rhs) {
   return lhs.title() == rhs.title() && lhs.priority() == rhs.priority() &&
          lhs.progress() == rhs.progress() && lhs.due_date() == rhs.due_date();
 }
+
+inline bool operator==(const task_manager::SolidTask& lhs,
+                       const task_manager::SolidTask& rhs) {
+  if ((lhs.has_parent_id() && !rhs.has_parent_id()) or
+      (!lhs.has_parent_id() && rhs.has_parent_id())) {
+    return false;
+  }
+  return lhs.task() == rhs.task() && lhs.task_id() == rhs.task_id() &&
+         lhs.parent_id() == rhs.parent_id();
+}
 }  // namespace task_manager
 
 class TaskFactory final {
@@ -24,8 +35,8 @@ class TaskFactory final {
     ss << "Sample task #" << state_;
     Date_t due_date =
         google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
-    Task::Priority priority = static_cast<Task::Priority>(state_ % 4);
-    Task::Progress progress = static_cast<Task::Progress>(state_ % 3);
+    Task::Priority priority = static_cast<Task::Priority>(state_ % 3);
+    Task::Progress progress = static_cast<Task::Progress>(state_ % 2);
     ++state_;
     return *CreateTask(ss.str(), due_date, priority, progress);
   }
@@ -33,5 +44,27 @@ class TaskFactory final {
  private:
   int state_ = 0;
 };
+
+inline SolidTask FindSolidTask(const SolidTasks& solid_tasks,
+                               google::protobuf::int32 id) {
+  return *std::find_if(solid_tasks.cbegin(), solid_tasks.cend(),
+                       [id](const auto& i) { return i.task_id().id() == id; });
+}
+
+inline SolidTask TaskToSolidTask(const Task& task, google::protobuf::int32 id) {
+  auto task_id = CreateTaskId(id);
+  SolidTask solid_task;
+  solid_task.set_allocated_task(new Task(std::move(task)));
+  solid_task.set_allocated_task_id(new TaskId(task_id));
+  return solid_task;
+}
+
+inline SolidTask TaskToSolidTask(const Task& task, google::protobuf::int32 id,
+                                 google::protobuf::int32 parent_id) {
+  auto solid_task = TaskToSolidTask(task, id);
+  auto parent_task_id = CreateTaskId(parent_id);
+  solid_task.set_allocated_parent_id(new TaskId(parent_task_id));
+  return solid_task;
+}
 
 #endif  // TASKMANAGER_TESTS_COMMON_H_

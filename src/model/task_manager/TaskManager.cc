@@ -87,5 +87,7 @@ OperationResult<TMStatus> TaskManager::Delete(TaskId id) {
   return OperationResult<Status>::Error(Status::kNotPresentId);
 }
 
-TaskManager::Storage TaskManager::Show() const { return storage_; }
+OperationResult<TMStatus, TaskManager::Storage> TaskManager::Show() const {
+  return OperationResult<Status, Storage>::Ok(storage_);
+}
 }  // namespace task_manager

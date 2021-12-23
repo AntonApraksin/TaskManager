@@ -23,10 +23,11 @@ TEST_F(TaskManagerTest, TaskAddedProperly) {
   auto task = tf.GetNextTask();
   auto result = tm.Add(task);
   ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
-  ASSERT_EQ(tm.Show().tasks.size(), 1);
-  ASSERT_EQ(tm.Show().parents.size(), 1);
-  ASSERT_EQ(tm.Show().roots.size(), 1);
-  EXPECT_EQ(task, tm.Show().tasks[tm.Show().roots[0]]);
+  auto storage = tm.Show().AccessResult();
+  ASSERT_EQ(storage.tasks.size(), 1);
+  ASSERT_EQ(storage.parents.size(), 1);
+  ASSERT_EQ(storage.roots.size(), 1);
+  EXPECT_EQ(task, storage.tasks[storage.roots[0]]);
 }
 
 TEST_F(TaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
@@ -34,7 +35,8 @@ TEST_F(TaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId) {
   TaskFactory tf;
   auto task = tf.GetNextTask();
   auto _ = tm.Add(task);
-  auto tmp_id = tm.Show().roots[0];
+  auto storage = tm.Show().AccessResult();
+  auto tmp_id = storage.roots[0];
   tm.Delete(tmp_id);
   EXPECT_EQ(tm.Delete(tmp_id).GetStatus(), TaskManager::Status::kNotPresentId);
 }
@@ -44,7 +46,8 @@ TEST_F(TaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId) {
   TaskFactory tf;
   auto task = tf.GetNextTask();
   tm.Add(task);
-  auto tmp_id = tm.Show().roots[0];
+  auto storage = tm.Show().AccessResult();
+  auto tmp_id = storage.roots[0];
   tm.Delete(tmp_id);
   EXPECT_EQ(tm.Complete(tmp_id).GetStatus(),
             TaskManager::Status::kNotPresentId);
@@ -55,7 +58,8 @@ TEST_F(TaskManagerTest, InvalidIdResultOnEditWithUnexistingId) {
   TaskFactory tf;
   auto task = tf.GetNextTask();
   tm.Add(task);
-  auto tmp_id = tm.Show().roots[0];
+  auto storage = tm.Show().AccessResult();
+  auto tmp_id = storage.roots[0];
   tm.Delete(tmp_id);
   EXPECT_EQ(tm.Edit(tmp_id, task).GetStatus(),
             TaskManager::Status::kNotPresentId);
@@ -71,18 +75,18 @@ TEST_F(TaskManagerTest, ProperDeletion) {
     tm.Add(task);
   }
   auto storage = tm.Show();
-  ASSERT_EQ(storage.parents.size(), kElems);
-  ASSERT_EQ(storage.tasks.size(), kElems);
-  ASSERT_EQ(storage.roots.size(), kElems);
+  ASSERT_EQ(storage.AccessResult().parents.size(), kElems);
+  ASSERT_EQ(storage.AccessResult().tasks.size(), kElems);
+  ASSERT_EQ(storage.AccessResult().roots.size(), kElems);
 
-  for (const auto& i : storage.roots) {
+  for (const auto& i : storage.AccessResult().roots) {
     tm.Delete(i);
   }
   storage = tm.Show();
 
-  ASSERT_EQ(storage.parents.size(), 0);
-  ASSERT_EQ(storage.tasks.size(), 0);
-  ASSERT_EQ(storage.roots.size(), 0);
+  ASSERT_EQ(storage.AccessResult().parents.size(), 0);
+  ASSERT_EQ(storage.AccessResult().tasks.size(), 0);
+  ASSERT_EQ(storage.AccessResult().roots.size(), 0);
 }
 
 TEST_F(TaskManagerTest, ProperCompletion) {
@@ -94,13 +98,13 @@ TEST_F(TaskManagerTest, ProperCompletion) {
     auto task = tf.GetNextTask();
     tm.Add(task);
   }
-  auto storage = tm.Show();
+  auto storage = tm.Show().AccessResult();
 
   for (const auto& i : storage.roots) {
     tm.Complete(i);
   }
 
-  storage = tm.Show();
+  storage = tm.Show().AccessResult();
   for (const auto& i : storage.roots) {
     ASSERT_EQ(storage.tasks[i].progress(), Task::kCompleted);
   }
@@ -116,7 +120,7 @@ TEST_F(TaskManagerTest, ProperEdition) {
     auto task = tf.GetNextTask();
     auto new_task = tf.GetNextTask();
     tm.Add(task);
-    auto storage = tm.Show();
+    auto storage = tm.Show().AccessResult();
     auto res = std::find_if(storage.tasks.cbegin(), storage.tasks.cend(),
                             [task](const auto& t) { return t.second == task; });
     tm.Edit(res->first, new_task);
@@ -124,13 +128,13 @@ TEST_F(TaskManagerTest, ProperEdition) {
   }
 
   for (const auto& i : vec_tasks) {
-    auto storage = tm.Show();
+    auto storage = tm.Show().AccessResult();
     auto iter = std::find_if(storage.tasks.cbegin(), storage.tasks.cend(),
                              [i](const auto& t) { return t.second == i; });
     tm.Delete(iter->first);
   }
 
-  auto storage = tm.Show();
+  auto storage = tm.Show().AccessResult();
 
   ASSERT_EQ(storage.parents.size(), 0);
   ASSERT_EQ(storage.tasks.size(), 0);

@@ -112,12 +112,12 @@ SolidTasks GetSolidTasksSorted(TaskManager::Storage storage) {
 
 OperationResult<MCStatus, SolidTasks> ModelController::GetAllSolidTasks() {
   return OperationResult<Status, SolidTasks>::Ok(
-      GetSolidTasksSorted(task_manager_->Show()));
+      GetSolidTasksSorted(task_manager_->Show().AccessResult()));
 }
 
 OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
     std::vector<TaskId> ids) {
-  auto storage = task_manager_->Show();
+  auto storage = task_manager_->Show().AccessResult();
   for (const auto& i : ids) {
     if (storage.tasks.find(i) == storage.tasks.end()) {
       return OperationResult<Status, SolidTasks>::Error(Status::kNotPresentId);

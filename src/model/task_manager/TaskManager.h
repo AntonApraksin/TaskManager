@@ -38,7 +38,7 @@ class TaskManager final {
   OperationResult<Status> Complete(TaskId id);
   OperationResult<Status> Delete(TaskId id);
 
-  Storage Show() const;
+  OperationResult<Status, Storage> Show() const;
 
  private:
   Storage storage_;

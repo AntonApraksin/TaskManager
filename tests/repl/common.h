@@ -3,8 +3,9 @@
 
 #include <google/protobuf/util/time_util.h>
 
+#include <iomanip>
+
 #include "../common.h"
-#include "model/task/Task.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/view/steps/Strings.h"
 
@@ -20,7 +21,7 @@ class TaskStringedDataProducer final {
   TaskStringedData GetData() {
     std::stringstream ss;
     ss << "Sample task #" << state_;
-    Date_t due_date =
+    TaskDate_t due_date =
         google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
     auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(due_date);
     Task::Priority priority = static_cast<Task::Priority>(state_ % 3);

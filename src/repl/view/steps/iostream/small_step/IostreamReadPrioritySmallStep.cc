@@ -4,6 +4,7 @@
 
 // TODO: Prettify implementation
 
+namespace task_manager {
 void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().priority_) {
     io_facility_->Print(Strings::LeaveEmptyFor(
@@ -28,3 +29,4 @@ void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
   ctx.GetTaskBuilder().priority_ = validated_priority;
   ctx.PopState();
 }
+}  // namespace task_manager

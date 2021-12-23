@@ -6,7 +6,9 @@
 #include <sstream>
 
 #include "repl/validator/DateFormat.h"
+#include "utils/TaskIdUtils.h"
 
+namespace task_manager {
 const char* Strings::to_string(Task::Priority priority) {
   if (priority == Task::kLow) {
     return "low";
@@ -161,3 +163,4 @@ std::string Strings::FailureDuringLoading(const std::string& filename) {
   ss << "An error occurred while was loading from '" << filename << "'.\n";
   return ss.str();
 }
+}  // namespace task_manager

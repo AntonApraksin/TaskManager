@@ -1,5 +1,6 @@
-#include "model/task/Task.h"
+#include "TaskUtils.h"
 
+namespace task_manager {
 std::optional<Task> task_manager::CreateTask(
     std::string title, google::protobuf::Timestamp due_date,
     Task::Priority priority, Task::Progress progress) {
@@ -14,3 +15,4 @@ std::optional<Task> task_manager::CreateTask(
   task.set_progress(progress);
   return task;
 }
+}  // namespace task_manager

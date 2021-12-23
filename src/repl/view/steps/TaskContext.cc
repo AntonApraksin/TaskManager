@@ -1,5 +1,6 @@
 #include "TaskContext.h"
 
+namespace task_manager {
 void TaskContext::PushState(const std::shared_ptr<ISmallStep>& state) {
   states_.push_back(state);
 }
@@ -14,3 +15,4 @@ void TaskContext::Run() {
     to_run_on->Execute(*this);
   }
 }
+}  // namespace task_manager

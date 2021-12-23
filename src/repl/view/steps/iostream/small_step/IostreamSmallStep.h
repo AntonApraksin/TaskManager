@@ -5,6 +5,7 @@
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/ISmallStep.h"
 
+namespace task_manager {
 class IostreamSmallStep : public ISmallStep {
  public:
   explicit IostreamSmallStep(const std::shared_ptr<IIoFacility>& io_facility,
@@ -39,5 +40,6 @@ class IostreamReadStateSmallStep : public IostreamSmallStep {
   using IostreamSmallStep::IostreamSmallStep;
   void Execute(TaskContext&) override;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_IREPLSUBSTATE_H_

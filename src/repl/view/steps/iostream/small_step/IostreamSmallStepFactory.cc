@@ -6,6 +6,7 @@
   }                                                  \
   return name;
 
+namespace task_manager {
 IostreamSmallStepFactory::IostreamSmallStepFactory(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<IValidator>& validator)
@@ -49,3 +50,4 @@ std::shared_ptr<IostreamReadPrioritySmallStep> IostreamSmallStepFactory::
                               iostream_read_priority_small_step_,
                               (io_facility_, validator_))
 }
+}  // namespace task_manager

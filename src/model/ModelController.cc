@@ -2,7 +2,9 @@
 
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
+#include "utils/TaskIdUtils.h"
 
+namespace task_manager {
 using MCStatus = ModelController::Status;
 
 MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
@@ -171,3 +173,4 @@ OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
   }
   return OperationResult<Status>::Ok();
 }
+}  // namespace task_manager

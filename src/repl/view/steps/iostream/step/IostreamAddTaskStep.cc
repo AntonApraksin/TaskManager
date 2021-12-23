@@ -6,6 +6,7 @@
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 
+namespace task_manager {
 IostreamAddTaskStep::IostreamAddTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<ISmallStepFactory>& small_step_factory,
@@ -56,3 +57,4 @@ StepResult IostreamAddTaskStep::Run() {
   }
   return {*confirm, sub_context.GetTaskBuilder().GetTask()};
 }
+}  // namespace task_manager

@@ -4,7 +4,9 @@
 #include <fstream>
 
 #include "repl/view/steps/Strings.h"
+#include "utils/TaskIdUtils.h"
 
+namespace task_manager {
 UIController::UIController(std::unique_ptr<View> view,
                            std::shared_ptr<ModelController> model_controller,
                            std::shared_ptr<IValidator> validator,
@@ -361,3 +363,4 @@ void UIController::HandleLoad(std::string arg) {
     }
   }
 }
+}  // namespace task_manager

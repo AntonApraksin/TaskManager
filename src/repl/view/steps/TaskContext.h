@@ -3,10 +3,11 @@
 
 #include <deque>
 
-#include "ISmallStep.h"
-#include "model/id/TaskId.h"
-#include "repl/TaskBuilder.h"
+#include "TaskId.pb.h"
+#include "repl/view/steps/ISmallStep.h"
+#include "utils/TaskBuilder.h"
 
+namespace task_manager {
 class TaskContext {
  public:
   void PushState(const std::shared_ptr<ISmallStep>&);
@@ -21,5 +22,6 @@ class TaskContext {
 
   TaskBuilder task_builder_;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_SUBSTATE_TASKCONTEXT_H_

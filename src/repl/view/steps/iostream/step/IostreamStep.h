@@ -5,7 +5,7 @@
 #include "repl/view/steps/IStep.h"
 
 // TODO: Give better names
-
+namespace task_manager {
 class ISmallStepFactory;
 
 class IostreamStep {
@@ -99,5 +99,6 @@ class IostreamReportMessageStep final : public IReportMessageStep,
   explicit IostreamReportMessageStep(const std::shared_ptr<IIoFacility>&);
   StepResult Run() override;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMSTEP_H_

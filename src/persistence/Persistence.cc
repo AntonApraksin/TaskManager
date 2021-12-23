@@ -4,6 +4,7 @@
 
 #include "model/SolidTask.h"
 
+namespace task_manager {
 template <typename T>
 OperationResult<Persistence::Status, T> ConsumeOneMessageFromIstream(
     std::istream& is) {
@@ -73,3 +74,4 @@ OperationResult<Persistence::Status> Persistence::Save(
   }
   return OperationResult<Persistence::Status>::Ok();
 }
+}  // namespace task_manager

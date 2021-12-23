@@ -7,6 +7,7 @@
 #include "OperationResult.h"
 #include "model/SolidTask.h"
 
+namespace task_manager {
 class TaskManager;
 
 class ModelController {
@@ -38,5 +39,6 @@ class ModelController {
  private:
   std::unique_ptr<TaskManager> task_manager_;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_MODELCONTROLLER_H_

@@ -4,6 +4,7 @@
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 
+namespace task_manager {
 class IostreamSmallStepFactory : public ISmallStepFactory {
  public:
   explicit IostreamSmallStepFactory(
@@ -31,5 +32,6 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
   std::shared_ptr<IValidator> validator_;
   std::shared_ptr<IIoFacility> io_facility_;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_STATE_FACTORY_DEFAULTSTATEFACTORY_H_

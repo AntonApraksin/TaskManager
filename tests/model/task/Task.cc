@@ -1,5 +1,3 @@
-#include "model/task/Task.h"
-
 #include <gtest/gtest.h>
 
 #include "../ModelUtils.h"
@@ -8,7 +6,7 @@ class TaskTest : public ::testing::Test {};
 
 TEST_F(TaskTest, FieldsAreConsistent) {
   std::string task_title = "Test task title";
-  Date_t task_due_date = parse_date("03/11/2020");
+  TaskDate_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::kMedium;
   Task::Progress task_progress = Task::kUncompleted;
 
@@ -23,7 +21,7 @@ TEST_F(TaskTest, FieldsAreConsistent) {
 
 TEST_F(TaskTest, EmptyOptionalOnEmptyTitle) {
   std::string task_title = "";
-  Date_t task_due_date = parse_date("03/11/2020");
+  TaskDate_t task_due_date = parse_date("03/11/2020");
   Task::Priority task_priority = Task::kMedium;
   Task::Progress task_progress = Task::kCompleted;
 

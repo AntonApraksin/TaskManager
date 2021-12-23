@@ -4,6 +4,7 @@
 
 // TODO: Prettify implementation
 
+namespace task_manager {
 void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().progress_) {
     io_facility_->Print(Strings::kStateShouldBe);
@@ -29,3 +30,4 @@ void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
   ctx.GetTaskBuilder().progress_ = validated_state;
   ctx.PopState();
 }
+}  // namespace task_manager

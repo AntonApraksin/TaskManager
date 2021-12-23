@@ -1,5 +1,5 @@
-#ifndef TASKMANAGER_SRC_MODEL_ID_TASKID_H_
-#define TASKMANAGER_SRC_MODEL_ID_TASKID_H_
+#ifndef TASKMANAGER_SRC_UTILS_TASKIDUTILS_H_
+#define TASKMANAGER_SRC_UTILS_TASKIDUTILS_H_
 
 #include "TaskId.pb.h"
 
@@ -23,7 +23,4 @@ struct hash<task_manager::TaskId> {
 };
 }  // namespace std
 
-using task_manager::CreateTaskId;
-using task_manager::TaskId;
-
-#endif  // TASKMANAGER_SRC_MODEL_ID_TASKID_H_
+#endif  // TASKMANAGER_SRC_UTILS_TASKIDUTILS_H_

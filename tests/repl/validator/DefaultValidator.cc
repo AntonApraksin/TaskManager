@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include "../common.h"
+
 class DefaultValidatorTest : public ::testing::Test {
  protected:
   DefaultValidator validator_;

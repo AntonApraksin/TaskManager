@@ -1,7 +1,7 @@
 #include "TaskManager.h"
-
 // TODO: return errors on failure
 
+namespace task_manager {
 void GetCompleteSubTree(TaskId id, const TaskManager::Parents& parents,
                         std::vector<TaskId>& children) {
   const auto it = parents.find(id);
@@ -88,3 +88,4 @@ OperationResult<TMStatus> TaskManager::Delete(TaskId id) {
 }
 
 TaskManager::Storage TaskManager::Show() const { return storage_; }
+}  // namespace task_manager

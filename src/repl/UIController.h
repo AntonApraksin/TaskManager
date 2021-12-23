@@ -5,6 +5,7 @@
 #include "repl/view/View.h"
 #include "repl/view/steps/IStepFactory.h"
 
+namespace task_manager {
 class UIController {
  public:
   UIController(std::unique_ptr<View>, std::shared_ptr<ModelController>,
@@ -49,5 +50,6 @@ class UIController {
 
   std::unique_ptr<IStepFactory> step_factory_;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_UICONTROLLER_H_

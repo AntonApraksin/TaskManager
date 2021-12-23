@@ -7,6 +7,7 @@
 #include "repl/view/steps/iostream/step/IostreamStepFactory.h"
 
 int main() {
+  using namespace task_manager;
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
 

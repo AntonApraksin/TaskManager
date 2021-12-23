@@ -9,6 +9,7 @@
 
 // TODO: Prettify implementation
 
+namespace task_manager {
 void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().date_) {
     auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(
@@ -38,3 +39,4 @@ void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
   ctx.GetTaskBuilder().date_ = validated_date;
   ctx.PopState();
 }
+}  // namespace task_manager

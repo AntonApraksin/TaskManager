@@ -8,7 +8,7 @@
 #include "../common.h"
 #include "model/id/ITaskIdProducer.h"
 
-inline Date_t parse_date(std::string date) {
+inline TaskDate_t parse_date(std::string date) {
   tm timeinfo;
   std::string pattern{"%d/%m/%y"};
   strptime(date.c_str(), pattern.c_str(), &timeinfo);

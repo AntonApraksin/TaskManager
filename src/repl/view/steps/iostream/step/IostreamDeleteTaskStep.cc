@@ -1,6 +1,7 @@
 #include "IostreamStep.h"
 #include "repl/view/steps/Strings.h"
 
+namespace task_manager {
 IostreamDeleteTaskStep::IostreamDeleteTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<IValidator>& validator)
@@ -19,3 +20,4 @@ StepResult IostreamDeleteTaskStep::Run() {
   }
   return {*confirm, {}};
 }
+}  // namespace task_manager

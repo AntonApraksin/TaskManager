@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "StepResult.h"
 #include "model/SolidTask.h"
-#include "repl/view/steps/MessageEnum.h"
+#include "repl/view/steps/StepResult.h"
 
+namespace task_manager {
 class IStep {
  public:
   virtual StepResult Run() = 0;
@@ -61,4 +61,5 @@ class IReportMessageStep : public IStep {
  protected:
   std::string message_;
 };
+}  // namespace task_manager
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEP_H_

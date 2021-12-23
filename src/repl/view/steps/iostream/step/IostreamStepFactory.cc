@@ -5,6 +5,7 @@
     name = std::make_shared<cls> args;               \
   }
 
+namespace task_manager {
 IostreamStepFactory::IostreamStepFactory(
     const std::shared_ptr<IIoFacility> &io_facility,
     const std::shared_ptr<IValidator> &validator,
@@ -69,3 +70,4 @@ std::shared_ptr<IStep> IostreamStepFactory::GetReportMessageStep(
   iostream_report_message_step_->SetMessage(std::move(arg));
   return iostream_report_message_step_;
 }
+}  // namespace task_manager

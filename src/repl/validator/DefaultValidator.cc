@@ -10,6 +10,7 @@
 
 #include "repl/validator/DateFormat.h"
 
+namespace task_manager {
 void lower_string(std::string &str) {
   std::transform(str.cbegin(), str.cend(), str.begin(),
                  [](auto c) { return std::tolower(c); });
@@ -82,7 +83,8 @@ std::optional<Task::Progress> DefaultValidator::ParseTaskProgress(
   return std::nullopt;
 }
 
-std::optional<Date_t> DefaultValidator::ParseTaskDate(const std::string &str) {
+std::optional<TaskDate_t> DefaultValidator::ParseTaskDate(
+    const std::string &str) {
   std::tm tm{};
   std::regex pattern_regex(kDateRegex);
   if (!std::regex_match(str, pattern_regex)) {
@@ -145,3 +147,4 @@ std::optional<int> DefaultValidator::ParseInt(const std::string &str) {
     return {};
   }
 }
+}  // namespace task_manager

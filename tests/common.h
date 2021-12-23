@@ -3,9 +3,15 @@
 
 #include <google/protobuf/util/time_util.h>
 
+#include <sstream>
+
+#include "Task.pb.h"
+#include "TaskId.pb.h"
 #include "model/SolidTask.h"
-#include "model/id/TaskId.h"
-#include "model/task/Task.h"
+#include "utils/TaskIdUtils.h"
+#include "utils/TaskUtils.h"
+
+using namespace task_manager;  // NOLINT: Testing purpose
 
 namespace task_manager {
 inline bool operator!=(const TaskId& lhs, const TaskId& rhs) {
@@ -33,7 +39,7 @@ class TaskFactory final {
   Task GetNextTask() {
     std::stringstream ss;
     ss << "Sample task #" << state_;
-    Date_t due_date =
+    TaskDate_t due_date =
         google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
     Task::Priority priority = static_cast<Task::Priority>(state_ % 3);
     Task::Progress progress = static_cast<Task::Progress>(state_ % 2);

@@ -1,9 +1,9 @@
 #ifndef TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEPFACTORY_H_
 #define TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEPFACTORY_H_
 
-#include "IStep.h"
-#include "repl/view/steps/MessageEnum.h"
+#include "repl/view/steps/IStep.h"
 
+namespace task_manager {
 class IStepFactory {
  public:
   virtual std::shared_ptr<IStep> GetAddTaskStep() = 0;
@@ -19,5 +19,6 @@ class IStepFactory {
 
   virtual ~IStepFactory() {}
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_ISTEPFACTORY_H_

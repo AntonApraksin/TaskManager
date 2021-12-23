@@ -5,9 +5,11 @@
 #include <memory>
 
 #include "OperationResult.h"
+#include "Task.pb.h"
 #include "model/id/TaskIdProducer.h"
-#include "model/task/Task.h"
+#include "utils/TaskIdUtils.h"
 
+namespace task_manager {
 class TaskManager final {
  public:
   using Tasks = std::unordered_map<TaskId, Task>;
@@ -45,5 +47,6 @@ class TaskManager final {
 
 void GetCompleteSubTree(TaskId id, const TaskManager::Parents&,
                         std::vector<TaskId>&);
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_TASKMANAGER_TASKMANAGER_H_

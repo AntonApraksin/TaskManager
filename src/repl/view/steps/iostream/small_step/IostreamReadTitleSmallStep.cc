@@ -4,6 +4,7 @@
 
 // TODO: Prettify implementation
 
+namespace task_manager {
 void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
   std::string prompt = Strings::GetPrompt("title");
   if (ctx.GetTaskBuilder().title_) {
@@ -23,3 +24,4 @@ void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
   ctx.GetTaskBuilder().title_ = std::move(title);
   ctx.PopState();
 }
+}  // namespace task_manager

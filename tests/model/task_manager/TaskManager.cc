@@ -5,6 +5,8 @@
 
 #include "../ModelUtils.h"
 
+using namespace task_manager;  // NOLINT: Testing purpose
+
 using ::testing::AtLeast;
 using ::testing::Return;
 

@@ -8,6 +8,7 @@
 #include "OperationResult.h"
 #include "model/SolidTask.h"
 
+namespace task_manager {
 class Persistence {
  public:
   enum class Status {
@@ -19,5 +20,6 @@ class Persistence {
   OperationResult<Status> Save(std::ostream&, SolidTasks) const;
   OperationResult<Status, SolidTasks> Load(std::istream&) const;
 };
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_PERSISTENCE_PERSISTENCE_H_

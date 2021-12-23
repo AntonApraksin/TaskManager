@@ -6,6 +6,7 @@
 #include "model/SolidTask.h"
 #include "repl/io_facility/IIoFacility.h"
 
+namespace task_manager {
 struct Strings {
   using ccp = const char*;
 
@@ -73,5 +74,6 @@ struct Strings {
 };
 
 std::string PrintAndGet(IIoFacility&, const std::string&);
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_REPL_VIEW_STEP_IOSTREAM_STEP_IOSTREAMGENERALFUNCTIONAL_H_

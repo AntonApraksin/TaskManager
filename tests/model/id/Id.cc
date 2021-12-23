@@ -3,6 +3,8 @@
 #include "../ModelUtils.h"
 #include "model/id/TaskIdProducer.h"
 
+using namespace task_manager;  // NOLINT: Testing purpose
+
 class IdTest : public ::testing::Test {};
 
 TEST_F(IdTest, TwoDifferentIds) {

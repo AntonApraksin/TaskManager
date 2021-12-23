@@ -4,11 +4,10 @@
 #include <optional>
 #include <string>
 
-#include "model/id/TaskId.h"
-#include "model/task/Task.h"
-#include "model/task/TaskDate.h"
 #include "repl/view/steps/CommandEnum.h"
+#include "utils/TaskUtils.h"
 
+namespace task_manager {
 enum class ConfirmationResult {
   kYes,
   kNo,
@@ -26,7 +25,7 @@ class IValidator {
   virtual std::optional<Task::Progress> ParseTaskProgress(
       const std::string& str) = 0;
 
-  virtual std::optional<Date_t> ParseTaskDate(const std::string& str) = 0;
+  virtual std::optional<TaskDate_t> ParseTaskDate(const std::string& str) = 0;
   virtual std::optional<ConfirmationResult> ParseConfirmation(
       const std::string& str) = 0;
 
@@ -36,5 +35,5 @@ class IValidator {
 
   virtual ~IValidator() {}
 };
-
+}  // namespace task_manager
 #endif  // TASKMANAGER_SRC_REPL_PRINT_IVALIDATOR_H_

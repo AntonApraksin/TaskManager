@@ -3,13 +3,14 @@
 
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/iostream/small_step/IostreamSmallStep.h"
-#include "repl/view/steps/iostream/small_step/IostreamSmallStepEnum.h"
 
 namespace task_manager {
 class ISmallStepFactory {
  public:
-  virtual std::shared_ptr<IostreamSmallStep> GetREPLState(
-      IostreamSmallStepEnum se) = 0;
+  virtual std::shared_ptr<ISmallStep> GetReadTitleSmallStep() = 0;
+  virtual std::shared_ptr<ISmallStep> GetReadDateSmallStep() = 0;
+  virtual std::shared_ptr<ISmallStep> GetReadPrioritySmallStep() = 0;
+  virtual std::shared_ptr<ISmallStep> GetReadStateSmallStep() = 0;
 
   virtual ~ISmallStepFactory() {}
 };

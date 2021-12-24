@@ -11,8 +11,10 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
       const std::shared_ptr<IIoFacility>& io_facility,
       const std::shared_ptr<IValidator>& validator);
 
-  std::shared_ptr<IostreamSmallStep> GetREPLState(
-      IostreamSmallStepEnum sse) override;
+  std::shared_ptr<ISmallStep> GetReadTitleSmallStep() override;
+  std::shared_ptr<ISmallStep> GetReadDateSmallStep() override;
+  std::shared_ptr<ISmallStep> GetReadPrioritySmallStep() override;
+  std::shared_ptr<ISmallStep> GetReadStateSmallStep() override;
 
  private:
   std::shared_ptr<IostreamReadTitleSmallStep> GetIostreamReadTitleSmallStep();

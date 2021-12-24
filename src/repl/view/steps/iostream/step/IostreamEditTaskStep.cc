@@ -23,14 +23,10 @@ StepResult IostreamEditTaskStep::Run() {
                   /*.date_ =*/solid_task_.task().due_date(),
                   /*.priority =*/solid_task_.task().priority(),
                   /*.progress =*/solid_task_.task().progress()}));
-  sub_context.PushState(
-      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadTitle));
-  sub_context.PushState(
-      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadDate));
-  sub_context.PushState(
-      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadPriority));
-  sub_context.PushState(
-      small_step_factory_->GetREPLState(IostreamSmallStepEnum::kReadState));
+  sub_context.PushState(small_step_factory_->GetReadTitleSmallStep());
+  sub_context.PushState(small_step_factory_->GetReadDateSmallStep());
+  sub_context.PushState(small_step_factory_->GetReadPrioritySmallStep());
+  sub_context.PushState(small_step_factory_->GetReadStateSmallStep());
   sub_context.Run();
 
   io_facility_->Print(Strings::ProceedTo("edit"));

@@ -1,19 +1,19 @@
-#include "IostreamStep.h"
+#include "DefaultStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 
 namespace task_manager {
-IostreamEditTaskStep::IostreamEditTaskStep(
+DefaultEditTaskStep::DefaultEditTaskStep(
     const std::shared_ptr<IIoFacility> &io_facility,
     const std::shared_ptr<ISmallStepFactory> &state_factory,
     const std::shared_ptr<IValidator> &validator)
-    : IostreamStep(io_facility),
-      IostreamWithSmallStepStep(state_factory),
-      IostreamWithValidatorStep(validator) {}
+    : DefaultStep(io_facility),
+      DefaultWithSmallStepStep(state_factory),
+      DefaultWithValidatorStep(validator) {}
 
-StepResult IostreamEditTaskStep::Run() {
+StepResult DefaultEditTaskStep::Run() {
   std::stringstream ss;
   io_facility_->Print(Strings::kYouAreGoingToEdit);
   io_facility_->Print(Strings::ShowSolidTask(solid_task_));

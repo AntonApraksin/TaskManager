@@ -4,6 +4,7 @@
 
 #include "../ModelUtils.h"
 #include "model/task_manager/TaskManager.h"
+#include "persistence/Persistence.h"
 
 using namespace task_manager;
 
@@ -12,7 +13,8 @@ class ModelControllerTest : public ::testing::Test {
   void SetUp() override {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
-    model_controller_ = std::make_unique<ModelController>(std::move(tm));
+    auto persistence = std::make_unique<Persistence>();
+    model_controller_ = std::make_unique<ModelController>(std::move(tm), std::move(persistence));
   }
   std::unique_ptr<ModelController> model_controller_;
   TaskFactory task_factory_;

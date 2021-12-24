@@ -1,13 +1,13 @@
-#include "IostreamStep.h"
+#include "DefaultStep.h"
 #include "repl/view/steps/Strings.h"
 
 namespace task_manager {
-IostreamDeleteTaskStep::IostreamDeleteTaskStep(
+DefaultDeleteTaskStep::DefaultDeleteTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<IValidator>& validator)
-    : IostreamStep(io_facility), IostreamWithValidatorStep(validator) {}
+    : DefaultStep(io_facility), DefaultWithValidatorStep(validator) {}
 
-StepResult IostreamDeleteTaskStep::Run() {
+StepResult DefaultDeleteTaskStep::Run() {
   io_facility_->Print(Strings::YouAreGoingTo("delete"));
   io_facility_->Print(Strings::ShowSolidTasks(solid_tasks_));
 

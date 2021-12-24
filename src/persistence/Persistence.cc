@@ -34,7 +34,7 @@ OperationResult<Persistence::Status, T> ConsumeOneMessageFromIstream(
 OperationResult<Persistence::Status> ProduceOneMessageToOstream(
     std::ostream& os, const google::protobuf::MessageLite& message) {
   google::protobuf::int64 nbytes =
-      message.ByteSizeLong();  // NOLINT: Narrowing conversion?
+      message.ByteSizeLong(); // NOLINT: Narrowing conversion?
   os << nbytes;
   if (os.fail()) {
     return OperationResult<Persistence::Status>::Error(

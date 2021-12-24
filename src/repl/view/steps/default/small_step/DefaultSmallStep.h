@@ -6,9 +6,9 @@
 #include "repl/view/steps/ISmallStep.h"
 
 namespace task_manager {
-class IostreamSmallStep : public ISmallStep {
+class DefaultSmallStep : public ISmallStep {
  public:
-  explicit IostreamSmallStep(const std::shared_ptr<IIoFacility>& io_facility,
+  explicit DefaultSmallStep(const std::shared_ptr<IIoFacility>& io_facility,
                              const std::shared_ptr<IValidator>& validator)
       : validator_(validator), io_facility_(io_facility) {}
 
@@ -17,27 +17,27 @@ class IostreamSmallStep : public ISmallStep {
   std::shared_ptr<IIoFacility> io_facility_;
 };
 
-class IostreamReadTitleSmallStep : public IostreamSmallStep {
+class DefaultReadTitleSmallStep : public DefaultSmallStep {
  public:
-  using IostreamSmallStep::IostreamSmallStep;
+  using DefaultSmallStep::DefaultSmallStep;
   void Execute(TaskContext&) override;
 };
 
-class IostreamReadDateSmallStep : public IostreamSmallStep {
+class DefaultReadDateSmallStep : public DefaultSmallStep {
  public:
-  using IostreamSmallStep::IostreamSmallStep;
+  using DefaultSmallStep::DefaultSmallStep;
   void Execute(TaskContext&) override;
 };
 
-class IostreamReadPrioritySmallStep : public IostreamSmallStep {
+class DefaultReadPrioritySmallStep : public DefaultSmallStep {
  public:
-  using IostreamSmallStep::IostreamSmallStep;
+  using DefaultSmallStep::DefaultSmallStep;
   void Execute(TaskContext&) override;
 };
 
-class IostreamReadStateSmallStep : public IostreamSmallStep {
+class DefaultReadStateSmallStep : public DefaultSmallStep {
  public:
-  using IostreamSmallStep::IostreamSmallStep;
+  using DefaultSmallStep::DefaultSmallStep;
   void Execute(TaskContext&) override;
 };
 }  // namespace task_manager

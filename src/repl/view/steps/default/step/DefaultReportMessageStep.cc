@@ -1,12 +1,12 @@
-#include "IostreamStep.h"
+#include "DefaultStep.h"
 #include "repl/view/steps/Strings.h"
 
 namespace task_manager {
-IostreamReportMessageStep::IostreamReportMessageStep(
+DefaultReportMessageStep::DefaultReportMessageStep(
     const std::shared_ptr<IIoFacility>& io_facility)
-    : IostreamStep(io_facility) {}
+    : DefaultStep(io_facility) {}
 
-StepResult IostreamReportMessageStep::Run() {
+StepResult DefaultReportMessageStep::Run() {
   io_facility_->Print(message_);
   return {{}, {}};
 }

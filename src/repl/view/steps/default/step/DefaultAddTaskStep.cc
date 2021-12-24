@@ -1,21 +1,21 @@
 #include <google/protobuf/util/time_util.h>
 
-#include "IostreamStep.h"
+#include "DefaultStep.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 
 namespace task_manager {
-IostreamAddTaskStep::IostreamAddTaskStep(
+DefaultAddTaskStep::DefaultAddTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<ISmallStepFactory>& small_step_factory,
     const std::shared_ptr<IValidator>& validator)
-    : IostreamStep(io_facility),
-      IostreamWithSmallStepStep(small_step_factory),
-      IostreamWithValidatorStep(validator) {}
+    : DefaultStep(io_facility),
+      DefaultWithSmallStepStep(small_step_factory),
+      DefaultWithValidatorStep(validator) {}
 
-StepResult IostreamAddTaskStep::Run() {
+StepResult DefaultAddTaskStep::Run() {
   TaskContext sub_context;
   if (solid_task_) {
     io_facility_->Print(Strings::kAddSubtaskTo);
@@ -31,8 +31,7 @@ StepResult IostreamAddTaskStep::Run() {
         TaskBuilder{/*.title =*/std::nullopt,
                     /*.date_ =*/
                     google::protobuf::util::TimeUtil::TimeTToTimestamp(
-                        std::time(nullptr)),  // TODO: give other
-                                              // default value
+                        std::time(nullptr)),
                     /*.priority =*/Task::kLow,
                     /*.progress =*/Task::kUncompleted}));
   }

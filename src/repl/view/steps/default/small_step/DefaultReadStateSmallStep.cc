@@ -1,11 +1,9 @@
-#include "IostreamSmallStep.h"
+#include "DefaultSmallStep.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 
-// TODO: Prettify implementation
-
 namespace task_manager {
-void IostreamReadStateSmallStep::Execute(TaskContext &ctx) {
+void DefaultReadStateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().progress_) {
     io_facility_->Print(Strings::kStateShouldBe);
     io_facility_->Print(Strings::LeaveEmptyFor(

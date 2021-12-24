@@ -17,8 +17,9 @@ MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
   }
 }
 
-ModelController::ModelController(std::unique_ptr<TaskManager> task_manager)
-    : task_manager_(std::move(task_manager)) {}
+ModelController::ModelController(std::unique_ptr<TaskManager> task_manager,
+                                 std::unique_ptr<Persistence> persistence)
+    : task_manager_(std::move(task_manager)), persistence_(std::move(persistence)) {}
 
 OperationResult<MCStatus, TaskId> ModelController::Add(Task task) {
   auto result = task_manager_->Add(std::move(task));
@@ -130,8 +131,7 @@ OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
 }
 
 OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
-  Persistence persistence;
-  auto result = persistence.Load(is);
+  auto result = persistence_->Load(is);
   if (!result) {
     return OperationResult<Status>::Error(Status::kLoadFailure);
   }
@@ -166,8 +166,7 @@ OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
 
 OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
   auto solid_tasks = GetAllSolidTasks();
-  Persistence persistence;
-  auto result = persistence.Save(os, std::move(solid_tasks.AccessResult()));
+  auto result = persistence_->Save(os, std::move(solid_tasks.AccessResult()));
   if (!result) {
     return OperationResult<MCStatus>::Error(Status::kSaveFailure);
   }

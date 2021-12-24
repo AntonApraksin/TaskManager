@@ -1,5 +1,4 @@
 #include "TaskManager.h"
-// TODO: return errors on failure
 
 namespace task_manager {
 void GetCompleteSubTree(TaskId id, const TaskManager::Parents& parents,

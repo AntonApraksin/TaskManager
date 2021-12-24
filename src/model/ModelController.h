@@ -9,6 +9,7 @@
 
 namespace task_manager {
 class TaskManager;
+class Persistence;
 
 class ModelController {
  public:
@@ -20,7 +21,8 @@ class ModelController {
   };
 
  public:
-  explicit ModelController(std::unique_ptr<TaskManager> task_manager);
+  ModelController(std::unique_ptr<TaskManager> task_manager,
+                  std::unique_ptr<Persistence> persistence);
 
   OperationResult<Status, TaskId> Add(Task task);
   OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
@@ -38,6 +40,7 @@ class ModelController {
 
  private:
   std::unique_ptr<TaskManager> task_manager_;
+  std::unique_ptr<Persistence> persistence_;
 };
 }  // namespace task_manager
 

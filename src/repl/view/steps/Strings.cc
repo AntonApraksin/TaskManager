@@ -20,7 +20,7 @@ const char* Strings::to_string(Task::Priority priority) {
     return "high";
   }
 
-  std::terminate();  // TODO: Handle buggy behavior
+  std::terminate(); // Must be unreachable
 }
 
 const char* Strings::to_string(Task::Progress state) {
@@ -31,7 +31,7 @@ const char* Strings::to_string(Task::Progress state) {
     return "-";
   }
 
-  std::terminate();  // TODO: Handle buggy behavior
+  std::terminate(); // Must be unreachable
 }
 
 std::string Strings::NotPresentId(const std::string& id) {
@@ -115,7 +115,7 @@ std::string Strings::ShowSolidTasks(SolidTasks solid_tasks) {
   for (const auto& i : solid_tasks) {
     if (id_stack.empty()) {
       if (i.has_parent_id()) {
-        std::terminate();  // TODO: Ensure vector is sorted
+        std::terminate();  // Ensure vector is sorted
       }
       id_stack.push_back(i.task_id());
       ss << ' ' << ShowSolidTask(i);

@@ -3,11 +3,12 @@
 
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/view/steps/ISmallStepFactory.h"
+#include "repl/view/steps/default/small_step/DefaultSmallStep.h"
 
 namespace task_manager {
-class IostreamSmallStepFactory : public ISmallStepFactory {
+class DefaultSmallStepFactory : public ISmallStepFactory {
  public:
-  explicit IostreamSmallStepFactory(
+  explicit DefaultSmallStepFactory(
       const std::shared_ptr<IIoFacility>& io_facility,
       const std::shared_ptr<IValidator>& validator);
 
@@ -17,19 +18,19 @@ class IostreamSmallStepFactory : public ISmallStepFactory {
   std::shared_ptr<ISmallStep> GetReadStateSmallStep() override;
 
  private:
-  std::shared_ptr<IostreamReadTitleSmallStep> GetIostreamReadTitleSmallStep();
-  std::shared_ptr<IostreamReadDateSmallStep> GetIostreamReadDateSmallStep();
-  std::shared_ptr<IostreamReadPrioritySmallStep>
-  GetIostreamReadPrioritySmallStep();
+  std::shared_ptr<DefaultReadTitleSmallStep> GetDefaultReadTitleSmallStep();
+  std::shared_ptr<DefaultReadDateSmallStep> GetDefaultReadDateSmallStep();
+  std::shared_ptr<DefaultReadPrioritySmallStep>
+  GetDefaultReadPrioritySmallStep();
 
-  std::shared_ptr<IostreamReadStateSmallStep> GetIostreamReadStateSmallStep();
+  std::shared_ptr<DefaultReadStateSmallStep> GetDefaultReadStateSmallStep();
 
  private:
-  std::shared_ptr<IostreamReadTitleSmallStep> iostream_read_title_small_step_;
-  std::shared_ptr<IostreamReadDateSmallStep> iostream_read_date_small_step_;
-  std::shared_ptr<IostreamReadPrioritySmallStep>
-      iostream_read_priority_small_step_;
-  std::shared_ptr<IostreamReadStateSmallStep> iostream_read_state_small_step_;
+  std::shared_ptr<DefaultReadTitleSmallStep> default_read_title_small_step_;
+  std::shared_ptr<DefaultReadDateSmallStep> default_read_date_small_step_;
+  std::shared_ptr<DefaultReadPrioritySmallStep>
+      default_read_priority_small_step_;
+  std::shared_ptr<DefaultReadStateSmallStep> default_read_state_small_step_;
 
   std::shared_ptr<IValidator> validator_;
   std::shared_ptr<IIoFacility> io_facility_;

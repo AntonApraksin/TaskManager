@@ -1,13 +1,13 @@
-#include "IostreamStep.h"
+#include "DefaultStep.h"
 #include "repl/view/steps/Strings.h"
 
 namespace task_manager {
-IostreamCompleteTaskStep::IostreamCompleteTaskStep(
+DefaultCompleteTaskStep::DefaultCompleteTaskStep(
     const std::shared_ptr<IIoFacility>& io_facility,
     const std::shared_ptr<IValidator>& validator)
-    : IostreamStep(io_facility), IostreamWithValidatorStep(validator) {}
+    : DefaultStep(io_facility), DefaultWithValidatorStep(validator) {}
 
-StepResult IostreamCompleteTaskStep::Run() {
+StepResult DefaultCompleteTaskStep::Run() {
   io_facility_->Print(Strings::YouAreGoingTo("complete"));
 
   io_facility_->Print(Strings::ShowSolidTasks(solid_tasks_));

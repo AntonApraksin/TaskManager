@@ -54,9 +54,9 @@ void UIController::PerformAction(CommandEnum se, std::string args) {
       return HandleLoad(std::move(args));
 
     case CommandEnum::kMain:
-      std::terminate();  // TODO: Log?
+      std::terminate();  // Must be unreachable
     case CommandEnum::kQuit:
-      std::terminate();  // TODO: Log?
+      std::terminate();  // Must be unreachable
   }
 }
 
@@ -102,7 +102,7 @@ void UIController::HandleAdd() {
   view_->SetState(step_factory_->GetAddTaskStep());
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    auto result = model_controller_->Add(*task);  // TODO: handle possible error
+    auto result = model_controller_->Add(*task);
     ReportMessage(Strings::ShowId(std::to_string(result.AccessResult().id())));
   }
 }
@@ -137,7 +137,7 @@ void UIController::HandleEdit(TaskId task_id) {
   }
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    auto _ = model_controller_->Edit(task_id, *task);  // TODO: handle error
+    auto _ = model_controller_->Edit(task_id, *task);
   }
 }
 
@@ -191,7 +191,7 @@ void UIController::HandleComplete(std::vector<TaskId> ids) {
   auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
   if (!solid_tasks) {
     ReportMessage(
-        Strings::NotPresentId(""));  // TODO: determine which one is missing
+        Strings::NotPresentId(""));
     return;
   }
   auto has_parent_child_relationship =
@@ -208,7 +208,7 @@ void UIController::HandleComplete(std::vector<TaskId> ids) {
   if (*status == ConfirmationResult::kYes) {
     std::for_each(ids.cbegin(), ids.cend(), [this](auto id) {
       auto _ = model_controller_->Complete(id);
-    });  // TODO: Handle
+    });
   }
 }
 
@@ -230,7 +230,6 @@ void UIController::HandleDelete(std::string args) {
     return HandleDelete(std::move(ids));
   }
 }
-// TODO: Prettify implementation
 void UIController::HandleDelete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
     ReportMessage(Strings::kRepeatedId);
@@ -254,7 +253,7 @@ void UIController::HandleDelete(std::vector<TaskId> ids) {
   if (*status == ConfirmationResult::kYes) {
     std::for_each(ids.cbegin(), ids.cend(), [this](auto id) {
       auto _ = model_controller_->Delete(id);
-    });  // TODO: handle
+    });
   }
 }
 

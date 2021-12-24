@@ -1,11 +1,9 @@
-#include "IostreamSmallStep.h"
+#include "DefaultSmallStep.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 
-// TODO: Prettify implementation
-
 namespace task_manager {
-void IostreamReadTitleSmallStep::Execute(TaskContext &ctx) {
+void DefaultReadTitleSmallStep::Execute(TaskContext &ctx) {
   std::string prompt = Strings::GetPrompt("title");
   if (ctx.GetTaskBuilder().title_) {
     io_facility_->Print(Strings::LeaveEmptyFor(*ctx.GetTaskBuilder().title_));

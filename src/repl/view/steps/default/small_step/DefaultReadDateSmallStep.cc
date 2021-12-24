@@ -2,15 +2,13 @@
 
 #include <iomanip>
 
-#include "IostreamSmallStep.h"
+#include "DefaultSmallStep.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 
-// TODO: Prettify implementation
-
 namespace task_manager {
-void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
+void DefaultReadDateSmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().date_) {
     auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(
         *ctx.GetTaskBuilder().date_);
@@ -19,7 +17,6 @@ void IostreamReadDateSmallStep::Execute(TaskContext &ctx) {
     std::string leave_empty_for = Strings::LeaveEmptyFor(ss.str());
     io_facility_->Print(leave_empty_for);
   }
-  // TODO: Rewrite to PrintAndGet
   std::string prompt = Strings::GetPrompt("due date", kDatePattern);
   std::string date_string = PrintAndGet(*io_facility_, prompt);
   if (date_string.empty()) {

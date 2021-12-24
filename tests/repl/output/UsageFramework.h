@@ -10,8 +10,9 @@
 #include "repl/UIController.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/iostream/small_step/IostreamSmallStepFactory.h"
-#include "repl/view/steps/iostream/step/IostreamStepFactory.h"
+#include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
+#include "repl/view/steps/default/step/DefaultStepFactory.h"
+#include "persistence/Persistence.h"
 
 class UsageMockIoFacility : public IIoFacility {
  public:
@@ -38,14 +39,15 @@ class UsageFramework {
     io_facility_ = std::make_shared<UsageMockIoFacility>();
     auto id_producer = std::make_unique<TaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
+    auto persistence = std::make_unique<Persistence>();
     model_controller_ =
-        std::make_shared<ModelController>(std::move(task_manager));
+        std::make_shared<ModelController>(std::move(task_manager), std::move(persistence));
 
     validator_ = std::make_shared<DefaultValidator>();
 
     auto small_step_factory =
-        std::make_shared<IostreamSmallStepFactory>(io_facility_, validator_);
-    auto step_factory = std::make_unique<IostreamStepFactory>(
+        std::make_shared<DefaultSmallStepFactory>(io_facility_, validator_);
+    auto step_factory = std::make_unique<DefaultStepFactory>(
         io_facility_, validator_, small_step_factory);
 
     auto view = std::make_unique<View>(io_facility_, validator_);

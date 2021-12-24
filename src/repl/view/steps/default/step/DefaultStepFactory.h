@@ -5,12 +5,12 @@
 #include "repl/validator/IValidator.h"
 #include "repl/view/steps/ISmallStepFactory.h"
 #include "repl/view/steps/IStepFactory.h"
-#include "repl/view/steps/iostream/step/IostreamStep.h"
+#include "repl/view/steps/default/step/DefaultStep.h"
 
 namespace task_manager {
-class IostreamStepFactory final : public IStepFactory {
+class DefaultStepFactory final : public IStepFactory {
  public:
-  IostreamStepFactory(const std::shared_ptr<IIoFacility> &io_facility,
+  DefaultStepFactory(const std::shared_ptr<IIoFacility> &io_facility,
                       const std::shared_ptr<IValidator> &validator,
                       const std::shared_ptr<ISmallStepFactory> &state_factory);
 
@@ -28,13 +28,13 @@ class IostreamStepFactory final : public IStepFactory {
   std::shared_ptr<IStep> GetReportMessageStep(std::string) override;
 
  private:
-  std::shared_ptr<IostreamAddTaskStep> iostream_add_task_step_;
-  std::shared_ptr<IostreamEditTaskStep> iostream_edit_task_step_;
-  std::shared_ptr<IostreamCompleteTaskStep> iostream_complete_task_step_;
-  std::shared_ptr<IostreamDeleteTaskStep> iostream_delete_task_step_;
-  std::shared_ptr<IostreamShowStep> iostream_show_step_;
-  std::shared_ptr<IostreamShowHelpStep> iostream_show_help_step_;
-  std::shared_ptr<IostreamReportMessageStep> iostream_report_message_step_;
+  std::shared_ptr<DefaultAddTaskStep> default_add_task_step_;
+  std::shared_ptr<DefaultEditTaskStep> default_edit_task_step_;
+  std::shared_ptr<DefaultCompleteTaskStep> default_complete_task_step_;
+  std::shared_ptr<DefaultDeleteTaskStep> default_delete_task_step_;
+  std::shared_ptr<DefaultShowStep> default_show_step_;
+  std::shared_ptr<DefaultShowHelpStep> default_show_help_step_;
+  std::shared_ptr<DefaultReportMessageStep> default_report_message_step_;
 
   std::shared_ptr<ISmallStepFactory> state_factory_;
   std::shared_ptr<IValidator> validator_;

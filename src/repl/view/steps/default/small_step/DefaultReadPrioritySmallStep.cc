@@ -1,11 +1,9 @@
-#include "IostreamSmallStep.h"
+#include "DefaultSmallStep.h"
 #include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 
-// TODO: Prettify implementation
-
 namespace task_manager {
-void IostreamReadPrioritySmallStep::Execute(TaskContext &ctx) {
+void DefaultReadPrioritySmallStep::Execute(TaskContext &ctx) {
   if (ctx.GetTaskBuilder().priority_) {
     io_facility_->Print(Strings::LeaveEmptyFor(
         Strings::to_string(*ctx.GetTaskBuilder().priority_)));

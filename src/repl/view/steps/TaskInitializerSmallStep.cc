@@ -1,4 +1,5 @@
 #include "TaskInitializerSmallStep.h"
+
 #include "repl/view/steps/TaskContext.h"
 
 namespace task_manager {

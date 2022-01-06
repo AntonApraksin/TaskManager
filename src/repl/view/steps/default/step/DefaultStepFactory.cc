@@ -43,14 +43,12 @@ std::shared_ptr<IStep> DefaultStepFactory::GetCompleteTaskStep(
 }
 std::shared_ptr<IStep> DefaultStepFactory::GetDeleteTaskStep(
     SolidTasks solid_tasks) {
-  GENERATE_GETTER_FOR_POINTER(DefaultDeleteTaskStep,
-                              default_delete_task_step_,
+  GENERATE_GETTER_FOR_POINTER(DefaultDeleteTaskStep, default_delete_task_step_,
                               (io_facility_, validator_))
   default_delete_task_step_->SetSolidTasks(std::move(solid_tasks));
   return default_delete_task_step_;
 }
-std::shared_ptr<IStep> DefaultStepFactory::GetShowStep(
-    SolidTasks solid_tasks) {
+std::shared_ptr<IStep> DefaultStepFactory::GetShowStep(SolidTasks solid_tasks) {
   GENERATE_GETTER_FOR_POINTER(DefaultShowStep, default_show_step_,
                               (io_facility_))
   default_show_step_->SetSolidTasks(std::move(solid_tasks));

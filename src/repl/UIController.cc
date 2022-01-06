@@ -53,8 +53,6 @@ void UIController::PerformAction(CommandEnum se, std::string args) {
     case CommandEnum::kLoad:
       return HandleLoad(std::move(args));
 
-    case CommandEnum::kMain:
-      std::terminate();  // Must be unreachable
     case CommandEnum::kQuit:
       std::terminate();  // Must be unreachable
   }
@@ -63,18 +61,17 @@ void UIController::PerformAction(CommandEnum se, std::string args) {
 void UIController::HandleAdd(std::string args) {
   if (args.empty()) {
     return HandleAdd();
-  } else {
-    auto token = validator_->ConsumeOneTokenFrom(args);
-    auto add_to = validator_->ParseInt(token);
-    if (args.empty()) {
-      if (add_to) {
-        return HandleAdd(CreateTaskId(*add_to));
-      } else {
-        return ReportMessage(Strings::InvalidId(token));
-      }
-    }
-    return ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
   }
+  auto token = validator_->ConsumeOneTokenFrom(args);
+  auto add_to = validator_->ParseInt(token);
+  if (args.empty()) {
+    if (add_to) {
+      return HandleAdd(CreateTaskId(*add_to));
+    } else {
+      return ReportMessage(Strings::InvalidId(token));
+    }
+  }
+  return ReportMessage(Strings::kMultipleArgumentDoesNotSupported);
 }
 
 void UIController::HandleAdd(TaskId task_id) {
@@ -160,29 +157,6 @@ void UIController::HandleComplete(std::string args) {
   }
 }
 
-std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
-    const SolidTasks& tasks, const std::vector<TaskId>& ids) {
-  std::unordered_map<TaskId, std::vector<TaskId>> visited;
-  TaskId current_root_id;
-  for (const auto& i : tasks) {
-    if (i.has_parent_id()) {
-      visited[current_root_id].push_back(i.task_id());
-    } else {
-      current_root_id = i.task_id();
-    }
-  }
-  for (const auto& i : ids) {
-    auto it = std::find_if(visited.begin(), visited.end(), [&i](auto it) {
-      return std::find(it.second.begin(), it.second.end(), i) !=
-             it.second.end();
-    });
-    if (it != visited.end()) {
-      return std::make_pair(it->first, i);
-    }
-  }
-  return {};
-}
-
 void UIController::HandleComplete(std::vector<TaskId> ids) {
   if (ids.size() > std::set<TaskId>(ids.begin(), ids.end()).size()) {
     ReportMessage(Strings::kRepeatedId);
@@ -190,8 +164,7 @@ void UIController::HandleComplete(std::vector<TaskId> ids) {
   }
   auto solid_tasks = model_controller_->GetSpecificSolidTasks(ids);
   if (!solid_tasks) {
-    ReportMessage(
-        Strings::NotPresentId(""));
+    ReportMessage(Strings::NotPresentId(""));
     return;
   }
   auto has_parent_child_relationship =
@@ -251,9 +224,8 @@ void UIController::HandleDelete(std::vector<TaskId> ids) {
   view_->SetState(step_factory_->GetDeleteTaskStep(solid_tasks.AccessResult()));
   auto [status, task] = view_->Run();
   if (*status == ConfirmationResult::kYes) {
-    std::for_each(ids.cbegin(), ids.cend(), [this](auto id) {
-      auto _ = model_controller_->Delete(id);
-    });
+    std::for_each(ids.cbegin(), ids.cend(),
+                  [this](auto id) { auto _ = model_controller_->Delete(id); });
   }
 }
 

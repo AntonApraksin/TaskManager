@@ -9,7 +9,7 @@ namespace task_manager {
 class DefaultSmallStep : public ISmallStep {
  public:
   explicit DefaultSmallStep(const std::shared_ptr<IIoFacility>& io_facility,
-                             const std::shared_ptr<IValidator>& validator)
+                            const std::shared_ptr<IValidator>& validator)
       : validator_(validator), io_facility_(io_facility) {}
 
  protected:

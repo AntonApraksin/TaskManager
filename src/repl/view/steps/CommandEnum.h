@@ -3,7 +3,7 @@
 
 namespace task_manager {
 enum class CommandEnum {
-  kMain,
+  kQuit,
   kAdd,
   kEdit,
   kComplete,
@@ -13,7 +13,6 @@ enum class CommandEnum {
   kUnknown,
   kSave,
   kLoad,
-  kQuit,
 };
 }
 

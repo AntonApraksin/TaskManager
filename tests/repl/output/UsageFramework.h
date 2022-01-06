@@ -7,12 +7,12 @@
 #include "../common.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
+#include "persistence/Persistence.h"
 #include "repl/UIController.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/validator/DefaultValidator.h"
 #include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
 #include "repl/view/steps/default/step/DefaultStepFactory.h"
-#include "persistence/Persistence.h"
 
 class UsageMockIoFacility : public IIoFacility {
  public:
@@ -40,8 +40,8 @@ class UsageFramework {
     auto id_producer = std::make_unique<TaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
     auto persistence = std::make_unique<Persistence>();
-    model_controller_ =
-        std::make_shared<ModelController>(std::move(task_manager), std::move(persistence));
+    model_controller_ = std::make_shared<ModelController>(
+        std::move(task_manager), std::move(persistence));
 
     validator_ = std::make_shared<DefaultValidator>();
 

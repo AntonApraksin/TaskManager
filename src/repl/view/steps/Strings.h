@@ -24,6 +24,7 @@ constexpr ccp kMultipleArgumentDoesNotSupported =
     "Multiple arguments does not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
 constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
+constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"
     "  add(a) [id]\n"

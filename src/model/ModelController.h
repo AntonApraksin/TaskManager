@@ -42,6 +42,9 @@ class ModelController {
   std::unique_ptr<TaskManager> task_manager_;
   std::unique_ptr<Persistence> persistence_;
 };
+
+std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
+    const SolidTasks& tasks, const std::vector<TaskId>& ids);
 }  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_MODELCONTROLLER_H_

@@ -37,45 +37,45 @@ class DefaultWithValidatorStep {
 };
 
 class DefaultAddTaskStep final : public IAddTaskStep,
+                                 public DefaultStep,
+                                 public DefaultWithSmallStepStep,
+                                 public DefaultWithValidatorStep {
+ public:
+  DefaultAddTaskStep(const std::shared_ptr<IIoFacility>&,
+                     const std::shared_ptr<ISmallStepFactory>&,
+                     const std::shared_ptr<IValidator>&);
+
+  StepResult Run() override;
+};
+
+class DefaultEditTaskStep final : public IEditTaskStep,
                                   public DefaultStep,
                                   public DefaultWithSmallStepStep,
                                   public DefaultWithValidatorStep {
  public:
-  DefaultAddTaskStep(const std::shared_ptr<IIoFacility>&,
+  DefaultEditTaskStep(const std::shared_ptr<IIoFacility>&,
                       const std::shared_ptr<ISmallStepFactory>&,
                       const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
 
-class DefaultEditTaskStep final : public IEditTaskStep,
-                                   public DefaultStep,
-                                   public DefaultWithSmallStepStep,
-                                   public DefaultWithValidatorStep {
- public:
-  DefaultEditTaskStep(const std::shared_ptr<IIoFacility>&,
-                       const std::shared_ptr<ISmallStepFactory>&,
-                       const std::shared_ptr<IValidator>&);
-
-  StepResult Run() override;
-};
-
 class DefaultDeleteTaskStep final : public IDeleteTaskStep,
-                                     public DefaultStep,
-                                     public DefaultWithValidatorStep {
+                                    public DefaultStep,
+                                    public DefaultWithValidatorStep {
  public:
   DefaultDeleteTaskStep(const std::shared_ptr<IIoFacility>&,
-                         const std::shared_ptr<IValidator>&);
+                        const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
 
 class DefaultCompleteTaskStep final : public ICompleteTaskStep,
-                                       public DefaultStep,
-                                       public DefaultWithValidatorStep {
+                                      public DefaultStep,
+                                      public DefaultWithValidatorStep {
  public:
   DefaultCompleteTaskStep(const std::shared_ptr<IIoFacility>&,
-                           const std::shared_ptr<IValidator>&);
+                          const std::shared_ptr<IValidator>&);
 
   StepResult Run() override;
 };
@@ -93,7 +93,7 @@ class DefaultShowHelpStep final : public IShowHelpStep, public DefaultStep {
 };
 
 class DefaultReportMessageStep final : public IReportMessageStep,
-                                        public DefaultStep {
+                                       public DefaultStep {
  public:
   explicit DefaultReportMessageStep(const std::shared_ptr<IIoFacility>&);
   StepResult Run() override;

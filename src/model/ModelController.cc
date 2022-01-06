@@ -19,7 +19,8 @@ MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
 
 ModelController::ModelController(std::unique_ptr<TaskManager> task_manager,
                                  std::unique_ptr<Persistence> persistence)
-    : task_manager_(std::move(task_manager)), persistence_(std::move(persistence)) {}
+    : task_manager_(std::move(task_manager)),
+      persistence_(std::move(persistence)) {}
 
 OperationResult<MCStatus, TaskId> ModelController::Add(Task task) {
   auto result = task_manager_->Add(std::move(task));
@@ -171,5 +172,28 @@ OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
     return OperationResult<MCStatus>::Error(Status::kSaveFailure);
   }
   return OperationResult<Status>::Ok();
+}
+
+std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
+    const SolidTasks& tasks, const std::vector<TaskId>& ids) {
+  std::unordered_map<TaskId, std::vector<TaskId>> visited;
+  TaskId current_root_id;
+  for (const auto& i : tasks) {
+    if (i.has_parent_id()) {
+      visited[current_root_id].push_back(i.task_id());
+    } else {
+      current_root_id = i.task_id();
+    }
+  }
+  for (const auto& i : ids) {
+    auto it = std::find_if(visited.begin(), visited.end(), [&i](auto it) {
+      return std::find(it.second.begin(), it.second.end(), i) !=
+             it.second.end();
+    });
+    if (it != visited.end()) {
+      return std::make_pair(it->first, i);
+    }
+  }
+  return {};
 }
 }  // namespace task_manager

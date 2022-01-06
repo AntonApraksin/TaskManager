@@ -14,7 +14,6 @@ DefaultEditTaskStep::DefaultEditTaskStep(
       DefaultWithValidatorStep(validator) {}
 
 StepResult DefaultEditTaskStep::Run() {
-  std::stringstream ss;
   io_facility_->Print(Strings::kYouAreGoingToEdit);
   io_facility_->Print(Strings::ShowSolidTask(solid_task_));
   TaskContext sub_context;

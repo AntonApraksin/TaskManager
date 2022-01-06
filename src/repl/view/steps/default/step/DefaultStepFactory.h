@@ -11,8 +11,8 @@ namespace task_manager {
 class DefaultStepFactory final : public IStepFactory {
  public:
   DefaultStepFactory(const std::shared_ptr<IIoFacility> &io_facility,
-                      const std::shared_ptr<IValidator> &validator,
-                      const std::shared_ptr<ISmallStepFactory> &state_factory);
+                     const std::shared_ptr<IValidator> &validator,
+                     const std::shared_ptr<ISmallStepFactory> &state_factory);
 
   std::shared_ptr<IStep> GetAddTaskStep() override;
   std::shared_ptr<IStep> GetAddTaskStep(SolidTask) override;

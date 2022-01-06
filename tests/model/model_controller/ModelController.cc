@@ -14,7 +14,8 @@ class ModelControllerTest : public ::testing::Test {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
     auto persistence = std::make_unique<Persistence>();
-    model_controller_ = std::make_unique<ModelController>(std::move(tm), std::move(persistence));
+    model_controller_ = std::make_unique<ModelController>(
+        std::move(tm), std::move(persistence));
   }
   std::unique_ptr<ModelController> model_controller_;
   TaskFactory task_factory_;

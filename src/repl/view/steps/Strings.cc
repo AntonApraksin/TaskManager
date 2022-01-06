@@ -20,7 +20,7 @@ const char* Strings::to_string(Task::Priority priority) {
     return "high";
   }
 
-  std::terminate(); // Must be unreachable
+  std::terminate();  // Must be unreachable
 }
 
 const char* Strings::to_string(Task::Progress state) {
@@ -31,7 +31,7 @@ const char* Strings::to_string(Task::Progress state) {
     return "-";
   }
 
-  std::terminate(); // Must be unreachable
+  std::terminate();  // Must be unreachable
 }
 
 std::string Strings::NotPresentId(const std::string& id) {

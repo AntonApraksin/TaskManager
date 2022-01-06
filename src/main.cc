@@ -3,6 +3,7 @@
 #include "persistence/Persistence.h"
 #include "repl/UIController.h"
 #include "repl/io_facility/iostream/IostreamIoFacility.h"
+#include "repl/state_machine/StateMachineController.h"
 #include "repl/validator/DefaultValidator.h"
 #include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
 #include "repl/view/steps/default/step/DefaultStepFactory.h"
@@ -14,19 +15,26 @@ int main() {
 
   auto validator = std::make_shared<DefaultValidator>();
   auto io_facility = std::make_shared<IostreamIoFacility>();
-
   auto small_step_factory =
       std::make_shared<DefaultSmallStepFactory>(io_facility, validator);
+
   auto step_factory = std::make_unique<DefaultStepFactory>(
       io_facility, validator, small_step_factory);
 
   auto persistence = std::make_unique<Persistence>();
 
   auto view = std::make_unique<View>(io_facility, validator);
-  auto model_controller =
-      std::make_shared<ModelController>(std::move(task_manager), std::move(persistence));
+  auto model_controller = std::make_shared<ModelController>(
+      std::move(task_manager), std::move(persistence));
+
+  auto state_machine = std::make_unique<StateMachine>(validator, io_facility,
+                                                      small_step_factory);
+#if 1
+  StateMachineController ctrl{model_controller, std::move(state_machine)};
+#else
   UIController ctrl{std::move(view), model_controller, validator,
                     std::move(step_factory)};
+#endif  // ifdef STATE_MACHINE
   ctrl.Run();
 
   return 0;

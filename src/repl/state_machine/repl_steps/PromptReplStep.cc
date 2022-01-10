@@ -1,12 +1,22 @@
+#include "repl/state_machine/repl_steps/PromptReplStep.h"
+
 #include "repl/io_facility/Strings.h"
-#include "repl/state_machine/repl_steps/ReplSteps.h"
+#include "repl/state_machine/repl_steps/AddReplStep.h"
+#include "repl/state_machine/repl_steps/CompleteReplStep.h"
+#include "repl/state_machine/repl_steps/DeleteReplStep.h"
+#include "repl/state_machine/repl_steps/EditReplStep.h"
+#include "repl/state_machine/repl_steps/HelpReplStep.h"
+#include "repl/state_machine/repl_steps/LoadReplStep.h"
+#include "repl/state_machine/repl_steps/SaveReplStep.h"
+#include "repl/state_machine/repl_steps/ShowReplStep.h"
+#include "repl/state_machine/repl_steps/UnknownReplStep.h"
 
 namespace task_manager {
 std::unique_ptr<Command> PromptReplStep::execute(Context) {
   return std::make_unique<VoidCommand>();
 }
 
-void PromptReplStep::ChangeStep(std::shared_ptr<ReplSteps>& active_step) {
+void PromptReplStep::ChangeStep(std::shared_ptr<ReplStep>& active_step) {
   std::string input = PrintAndGet(*io_facility_, Strings::GetPrompt(""));
   auto [command, arg] = validator_->MakeRequest(input);
   switch (command) {

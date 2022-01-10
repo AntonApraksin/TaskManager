@@ -3,8 +3,8 @@
 
 #include <deque>
 
+#include "ISmallStep.h"
 #include "TaskId.pb.h"
-#include "repl/view/steps/ISmallStep.h"
 #include "utils/TaskBuilder.h"
 
 namespace task_manager {

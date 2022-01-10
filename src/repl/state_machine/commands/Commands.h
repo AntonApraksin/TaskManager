@@ -17,7 +17,7 @@ class Command {
 
 class AddTaskCommand : public Command {
  public:
-  AddTaskCommand(Task);
+  explicit AddTaskCommand(Task);
   Context execute(ModelController&) override;
 
  private:
@@ -47,7 +47,7 @@ class EditTaskCommand : public Command {
 
 class CompleteTasksCommand : public Command {
  public:
-  CompleteTasksCommand(std::vector<TaskId>);
+  explicit CompleteTasksCommand(std::vector<TaskId>);
 
   Context execute(ModelController&) override;
 
@@ -57,7 +57,7 @@ class CompleteTasksCommand : public Command {
 
 class DeleteTasksCommand : public Command {
  public:
-  DeleteTasksCommand(std::vector<TaskId>);
+  explicit DeleteTasksCommand(std::vector<TaskId>);
 
   Context execute(ModelController&) override;
 
@@ -67,7 +67,7 @@ class DeleteTasksCommand : public Command {
 
 class GetSpecifiedTasksCommand : public Command {
  public:
-  GetSpecifiedTasksCommand(std::vector<TaskId>);
+  explicit GetSpecifiedTasksCommand(std::vector<TaskId>);
 
   Context execute(ModelController&) override;
 
@@ -82,7 +82,7 @@ class GetAllTasksCommand : public Command {
 
 class LoadTasksCommand : public Command {
  public:
-  LoadTasksCommand(std::unique_ptr<std::istream>);
+  explicit LoadTasksCommand(std::unique_ptr<std::istream>);
   Context execute(ModelController&) override;
 
  private:
@@ -91,7 +91,7 @@ class LoadTasksCommand : public Command {
 
 class SaveTasksCommand : public Command {
  public:
-  SaveTasksCommand(std::unique_ptr<std::ostream>);
+  explicit SaveTasksCommand(std::unique_ptr<std::ostream>);
   Context execute(ModelController&) override;
 
  private:

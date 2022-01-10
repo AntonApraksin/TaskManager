@@ -1,5 +1,7 @@
+#include "repl/state_machine/repl_steps/DeleteReplStep.h"
+
 #include "repl/io_facility/Strings.h"
-#include "repl/state_machine/repl_steps/ReplSteps.h"
+#include "repl/state_machine/repl_steps/PromptReplStep.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
@@ -14,7 +16,7 @@ std::unique_ptr<Command> DeleteReplStep::execute(Context ctx) {
   std::terminate();
 }
 
-void DeleteReplStep::ChangeStep(std::shared_ptr<ReplSteps> &active_step) {
+void DeleteReplStep::ChangeStep(std::shared_ptr<ReplStep> &active_step) {
   if (stage_ == 0) {
     active_step = std::make_shared<PromptReplStep>(validator_, io_facility_,
                                                    small_step_factory_);

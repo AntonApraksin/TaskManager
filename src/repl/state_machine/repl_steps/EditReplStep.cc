@@ -1,8 +1,10 @@
+#include "repl/state_machine/repl_steps/EditReplStep.h"
+
 #include "repl/io_facility/Strings.h"
-#include "repl/state_machine/repl_steps/ReplSteps.h"
-#include "repl/view/steps/ISmallStepFactory.h"
-#include "repl/view/steps/TaskContext.h"
-#include "repl/view/steps/TaskInitializerSmallStep.h"
+#include "repl/state_machine/repl_steps/PromptReplStep.h"
+#include "repl/task_steps/ISmallStepFactory.h"
+#include "repl/task_steps/TaskContext.h"
+#include "repl/task_steps/TaskInitializerSmallStep.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
@@ -75,7 +77,7 @@ std::unique_ptr<Command> EditReplStep::ReportError(std::string str) {
   return std::make_unique<VoidCommand>();
 }
 
-void EditReplStep::ChangeStep(std::shared_ptr<ReplSteps> &active_step) {
+void EditReplStep::ChangeStep(std::shared_ptr<ReplStep> &active_step) {
   if (stage_ == 0) {
     active_step = std::make_shared<PromptReplStep>(validator_, io_facility_,
                                                    small_step_factory_);

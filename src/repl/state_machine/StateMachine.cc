@@ -1,5 +1,7 @@
 #include "StateMachine.h"
 
+#include "repl/state_machine/repl_steps/PromptReplStep.h"
+
 namespace task_manager {
 StateMachine::StateMachine(
     std::shared_ptr<IValidator> validator,

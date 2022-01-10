@@ -8,10 +8,10 @@
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
-#include "repl/state_machine/StateMachineController.h"
 #include "repl/io_facility/IIoFacility.h"
+#include "repl/state_machine/StateMachineController.h"
+#include "repl/task_steps/default/small_step/DefaultSmallStepFactory.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
 
 class UsageMockIoFacility : public IIoFacility {
  public:
@@ -47,11 +47,10 @@ class UsageFramework {
     auto small_step_factory =
         std::make_shared<DefaultSmallStepFactory>(io_facility_, validator_);
 
-    auto state_machine = std::make_unique<StateMachine>(validator_, io_facility_,
-                                                        small_step_factory);
-    controller_ =
-        std::make_unique<StateMachineController>(model_controller_,
-                                       std::move(state_machine));
+    auto state_machine = std::make_unique<StateMachine>(
+        validator_, io_facility_, small_step_factory);
+    controller_ = std::make_unique<StateMachineController>(
+        model_controller_, std::move(state_machine));
   }
 
   std::pair<SolidTasks, std::vector<std::string>> RunScenario(

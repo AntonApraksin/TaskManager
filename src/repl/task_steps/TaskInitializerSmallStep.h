@@ -1,7 +1,7 @@
 #ifndef TASKMANAGER_SRC_REPL_VIEW_SMALL_STEP_TASK_INITIALIZER_SMALL_STEP_TASKINITIALIZERSMALLSTEP_H_
 #define TASKMANAGER_SRC_REPL_VIEW_SMALL_STEP_TASK_INITIALIZER_SMALL_STEP_TASKINITIALIZERSMALLSTEP_H_
 
-#include "repl/view/steps/ISmallStep.h"
+#include "ISmallStep.h"
 #include "utils/TaskBuilder.h"
 
 namespace task_manager {

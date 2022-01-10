@@ -3,7 +3,7 @@
 
 #include "repl/state_machine/Context.h"
 #include "repl/state_machine/commands/Commands.h"
-#include "repl/state_machine/repl_steps/ReplSteps.h"
+#include "repl/state_machine/repl_steps/ReplStep.h"
 
 namespace task_manager {
 class StateMachine {
@@ -16,7 +16,7 @@ class StateMachine {
   std::shared_ptr<IValidator> validator_;
   std::shared_ptr<IIoFacility> io_facility_;
   std::shared_ptr<ISmallStepFactory> small_step_factory_;
-  std::shared_ptr<ReplSteps> active_step_;
+  std::shared_ptr<ReplStep> active_step_;
 };
 }  // namespace task_manager
 

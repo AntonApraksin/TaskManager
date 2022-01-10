@@ -1,6 +1,6 @@
 #include "DefaultSmallStep.h"
 #include "repl/io_facility/Strings.h"
-#include "repl/view/steps/TaskContext.h"
+#include "repl/task_steps/TaskContext.h"
 
 namespace task_manager {
 void DefaultReadTitleSmallStep::Execute(TaskContext &ctx) {

@@ -1,7 +1,9 @@
+#include "repl/state_machine/repl_steps/SaveReplStep.h"
+
 #include <fstream>
 
 #include "repl/io_facility/Strings.h"
-#include "repl/state_machine/repl_steps/ReplSteps.h"
+#include "repl/state_machine/repl_steps/PromptReplStep.h"
 
 namespace task_manager {
 std::unique_ptr<Command> SaveReplStep::execute(Context ctx) {
@@ -15,7 +17,7 @@ std::unique_ptr<Command> SaveReplStep::execute(Context ctx) {
   std::terminate();
 }
 
-void SaveReplStep::ChangeStep(std::shared_ptr<ReplSteps> &active_step) {
+void SaveReplStep::ChangeStep(std::shared_ptr<ReplStep> &active_step) {
   if (stage_ == 0) {
     active_step = std::make_shared<PromptReplStep>(validator_, io_facility_,
                                                    small_step_factory_);

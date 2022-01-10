@@ -2,8 +2,8 @@
 #define TASKMANAGER_SRC_REPL_STATE_IREPLSUBSTATE_H_
 
 #include "repl/io_facility/IIoFacility.h"
+#include "repl/task_steps/ISmallStep.h"
 #include "repl/validator/IValidator.h"
-#include "repl/view/steps/ISmallStep.h"
 
 namespace task_manager {
 class DefaultSmallStep : public ISmallStep {

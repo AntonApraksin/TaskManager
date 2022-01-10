@@ -1,9 +1,9 @@
 #ifndef TASKMANAGER_SRC_REPL_STATE_FACTORY_DEFAULTSTATEFACTORY_H_
 #define TASKMANAGER_SRC_REPL_STATE_FACTORY_DEFAULTSTATEFACTORY_H_
 
+#include "DefaultSmallStep.h"
 #include "repl/io_facility/IIoFacility.h"
-#include "repl/view/steps/ISmallStepFactory.h"
-#include "repl/view/steps/default/small_step/DefaultSmallStep.h"
+#include "repl/task_steps/ISmallStepFactory.h"
 
 namespace task_manager {
 class DefaultSmallStepFactory : public ISmallStepFactory {

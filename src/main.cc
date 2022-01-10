@@ -3,8 +3,8 @@
 #include "persistence/Persistence.h"
 #include "repl/io_facility/iostream/IostreamIoFacility.h"
 #include "repl/state_machine/StateMachineController.h"
+#include "repl/task_steps/default/small_step/DefaultSmallStepFactory.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
 
 int main() {
   using namespace task_manager;

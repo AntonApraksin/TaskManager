@@ -42,7 +42,7 @@ class TaskFactory final {
     TaskDate_t due_date =
         google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
     Task::Priority priority = static_cast<Task::Priority>(state_ % 3);
-    Task::Progress progress = static_cast<Task::Progress>(state_ % 2);
+    Task::Progress progress = Task::kUncompleted;
     ++state_;
     return *CreateTask(ss.str(), due_date, priority, progress);
   }

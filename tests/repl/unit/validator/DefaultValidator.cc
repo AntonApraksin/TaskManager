@@ -3,9 +3,8 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
-#include <sstream>
 
-#include "../common.h"
+#include "common.h"
 
 class DefaultValidatorTest : public ::testing::Test {
  protected:

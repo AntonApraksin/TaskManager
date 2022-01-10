@@ -25,7 +25,7 @@ class TaskStringedDataProducer final {
         google::protobuf::util::TimeUtil::TimeTToTimestamp(std::time(nullptr));
     auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(due_date);
     Task::Priority priority = static_cast<Task::Priority>(state_ % 3);
-    Task::Progress progress = static_cast<Task::Progress>(state_ % 2);
+    Task::Progress progress = Task::kUncompleted;
     ++state_;
     std::stringstream ss_date;
     ss_date << std::put_time(std::localtime(&time), kDatePattern);

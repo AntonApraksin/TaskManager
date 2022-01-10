@@ -16,38 +16,31 @@ class ReplStep {
   virtual ~ReplStep() {}
 };
 
-class ValidatorAndIoFacilityMixin {
+class DependenciesMixin {
  public:
-  ValidatorAndIoFacilityMixin(std::shared_ptr<IValidator> validator,
-                              std::shared_ptr<IIoFacility> io_facility)
+  DependenciesMixin(std::shared_ptr<IValidator> validator,
+                    std::shared_ptr<IIoFacility> io_facility,
+                    std::shared_ptr<ISmallStepFactory> small_step_factory)
       : validator_(std::move(validator)),
-        io_facility_(std::move(io_facility)) {}
+        io_facility_(std::move(io_facility)),
+        small_step_factory_(std::move(small_step_factory)) {}
 
  protected:
-  ~ValidatorAndIoFacilityMixin() {}
+  ~DependenciesMixin() {}
 
   std::shared_ptr<IValidator> validator_;
   std::shared_ptr<IIoFacility> io_facility_;
-};
-
-class SmallStepMixin {
- public:
-  explicit SmallStepMixin(
-      const std::shared_ptr<ISmallStepFactory>& small_step_factory)
-      : small_step_factory_(small_step_factory) {}
-
- protected:
-  ~SmallStepMixin() {}
-
   std::shared_ptr<ISmallStepFactory> small_step_factory_;
 };
 
-class ArgumentMixin : public ValidatorAndIoFacilityMixin {
+class ArgumentMixin : public DependenciesMixin {
  public:
   ArgumentMixin(std::shared_ptr<IValidator> validator,
-                std::shared_ptr<IIoFacility> io_facility, std::string arg)
-      : ValidatorAndIoFacilityMixin(std::move(validator),
-                                    std::move(io_facility)),
+                std::shared_ptr<IIoFacility> io_facility,
+                std::shared_ptr<ISmallStepFactory> small_step_factory,
+                std::string arg)
+      : DependenciesMixin(std::move(validator), std::move(io_facility),
+                          std::move(small_step_factory)),
         arg_(std::move(arg)) {}
 
  protected:

@@ -70,10 +70,4 @@ void PromptReplStep::ChangeStep(std::shared_ptr<ReplStep>& active_step) {
       return;
   }
 }
-PromptReplStep::PromptReplStep(
-    std::shared_ptr<IValidator> validator,
-    std::shared_ptr<IIoFacility> io_facility,
-    std::shared_ptr<ISmallStepFactory> small_step_factory)
-    : ValidatorAndIoFacilityMixin(std::move(validator), std::move(io_facility)),
-      SmallStepMixin(std::move(small_step_factory)) {}
 }  // namespace task_manager

@@ -4,17 +4,9 @@
 #include "repl/state_machine/repl_steps/ReplStep.h"
 
 namespace task_manager {
-class LoadReplStep : public ReplStep,
-                     public ArgumentMixin,
-                     public SmallStepMixin {
+class LoadReplStep : public ReplStep, public ArgumentMixin {
  public:
-  LoadReplStep(std::shared_ptr<IValidator> validator,
-               std::shared_ptr<IIoFacility> io_facility,
-               std::shared_ptr<ISmallStepFactory> small_step_factory,
-               std::string arg)
-      : ArgumentMixin(std::move(validator), std::move(io_facility),
-                      std::move(arg)),
-        SmallStepMixin(std::move(small_step_factory)) {}
+  using ArgumentMixin::ArgumentMixin;
 
   std::unique_ptr<Command> execute(Context ctx) override;
   void ChangeStep(std::shared_ptr<ReplStep>&) override;

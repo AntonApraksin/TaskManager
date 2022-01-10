@@ -2,7 +2,7 @@
 #define TASKMANAGER_SRC_REPL_STATE_IREPLSUBSTATE_H_
 
 #include "repl/io_facility/IIoFacility.h"
-#include "repl/task_steps/ISmallStep.h"
+#include "repl/small_steps/ISmallStep.h"
 #include "repl/validator/IValidator.h"
 
 namespace task_manager {

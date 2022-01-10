@@ -11,8 +11,8 @@
 #include "persistence/Persistence.h"
 #include "repl/io_facility/IIoFacility.h"
 #include "repl/io_facility/Strings.h"
+#include "repl/small_steps/default/DefaultSmallStepFactory.h"
 #include "repl/state_machine/StateMachineController.h"
-#include "repl/task_steps/default/small_step/DefaultSmallStepFactory.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
 

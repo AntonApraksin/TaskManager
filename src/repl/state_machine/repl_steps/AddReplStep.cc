@@ -3,10 +3,10 @@
 #include <google/protobuf/util/time_util.h>
 
 #include "repl/io_facility/Strings.h"
+#include "repl/small_steps/ISmallStepFactory.h"
+#include "repl/small_steps/TaskContext.h"
+#include "repl/small_steps/TaskInitializerSmallStep.h"
 #include "repl/state_machine/repl_steps/PromptReplStep.h"
-#include "repl/task_steps/ISmallStepFactory.h"
-#include "repl/task_steps/TaskContext.h"
-#include "repl/task_steps/TaskInitializerSmallStep.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {

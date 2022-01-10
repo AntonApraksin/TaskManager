@@ -3,7 +3,7 @@
 
 #include "DefaultSmallStep.h"
 #include "repl/io_facility/IIoFacility.h"
-#include "repl/task_steps/ISmallStepFactory.h"
+#include "repl/small_steps/ISmallStepFactory.h"
 
 namespace task_manager {
 class DefaultSmallStepFactory : public ISmallStepFactory {

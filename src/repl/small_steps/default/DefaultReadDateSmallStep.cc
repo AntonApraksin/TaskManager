@@ -4,7 +4,7 @@
 
 #include "DefaultSmallStep.h"
 #include "repl/io_facility/Strings.h"
-#include "repl/task_steps/TaskContext.h"
+#include "repl/small_steps/TaskContext.h"
 #include "repl/validator/DateFormat.h"
 
 namespace task_manager {

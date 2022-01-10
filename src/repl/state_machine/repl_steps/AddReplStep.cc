@@ -1,8 +1,8 @@
 #include <google/protobuf/util/time_util.h>
 
+#include "repl/io_facility/Strings.h"
 #include "repl/state_machine/repl_steps/ReplSteps.h"
 #include "repl/view/steps/ISmallStepFactory.h"
-#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 #include "utils/TaskIdUtils.h"
@@ -58,7 +58,7 @@ std::unique_ptr<Command> AddReplStep::HandleStage<0>(Context& ctx) {
   return std::make_unique<VoidCommand>();
 }
 
-std::unique_ptr<Command> AddReplStep::HandleAddTask(Context& ctx) {
+std::unique_ptr<Command> AddReplStep::HandleAddTask(Context&) {
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
       TaskBuilder{std::nullopt,

@@ -1,8 +1,8 @@
+#include "repl/io_facility/Strings.h"
 #include "repl/state_machine/repl_steps/ReplSteps.h"
-#include "repl/view/steps/Strings.h"
 
 namespace task_manager {
-std::unique_ptr<Command> UnknownReplStep::execute(Context ctx) {
+std::unique_ptr<Command> UnknownReplStep::execute(Context) {
   io_facility_->Print(Strings::kUnknownCommand);
   return std::make_unique<VoidCommand>();
 }

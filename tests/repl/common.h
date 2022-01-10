@@ -6,8 +6,8 @@
 #include <iomanip>
 
 #include "../common.h"
+#include "repl/io_facility/Strings.h"
 #include "repl/validator/DateFormat.h"
-#include "repl/view/steps/Strings.h"
 
 struct TaskStringedData {
   std::string title;

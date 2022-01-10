@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-language-extension-token)
+
 find_package(Protobuf REQUIRED)
 find_program(PROTOBUF_EXECUTABLE protoc)
 
@@ -34,7 +36,7 @@ file(GLOB_RECURSE Proto_SRCS CONFIGURE_DEPENDS
     "protobuf/*.proto"
 )
 
-set_source_files_properties(${Proto_SRCS} PROPERTIES COMPILE_FLAGS -Wall -Wextra -Wpedantic -Werror -Wno-unused-variable)
+set_source_files_properties(${Proto_SRCS} PROPERTIES COMPILE_OPTIONS "-Wno-unused-variable")
 
 foreach(proto_file ${Proto_SRCS})
   compile_proto_file(${proto_file})
@@ -49,7 +51,6 @@ file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
     "src/*.h"
     "src/*.cc"
 )
-set_source_files_properties(TaskManager_SRCS PROPERTIES COMPILE_FLAGS -Wall -Wextra -Wpedantic -Werror -Wno-language-extension-token)
 
 add_library(TaskManager
   STATIC ${TaskManager_SRCS} ${PROTOBUF_GENERATED_SRCS}

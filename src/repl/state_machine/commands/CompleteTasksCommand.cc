@@ -10,7 +10,7 @@ Context CompleteTasksCommand::execute(ModelController& model_controller) {
   Context ctx;
   std::for_each(
       task_ids_.cbegin(), task_ids_.cend(),
-      [&model_controller](auto id) { auto _ = model_controller.Complete(id); });
+      [&model_controller](auto id) { model_controller.Complete(id); });
   ctx.status = ModelController::Status::kOk;
   return ctx;
 }

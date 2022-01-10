@@ -4,7 +4,7 @@
 #include <optional>
 #include <string>
 
-#include "repl/view/steps/CommandEnum.h"
+#include "repl/state_machine/repl_steps/CommandEnum.h"
 #include "utils/TaskUtils.h"
 
 namespace task_manager {

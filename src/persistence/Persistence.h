@@ -19,6 +19,8 @@ class Persistence {
  public:
   virtual OperationResult<Status> Save(std::ostream&, SolidTasks) const;
   virtual OperationResult<Status, SolidTasks> Load(std::istream&) const;
+
+  virtual ~Persistence(){}
 };
 }  // namespace task_manager
 

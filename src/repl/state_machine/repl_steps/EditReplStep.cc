@@ -1,6 +1,6 @@
+#include "repl/io_facility/Strings.h"
 #include "repl/state_machine/repl_steps/ReplSteps.h"
 #include "repl/view/steps/ISmallStepFactory.h"
-#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 #include "repl/view/steps/TaskInitializerSmallStep.h"
 #include "utils/TaskIdUtils.h"
@@ -26,8 +26,9 @@ std::unique_ptr<Command> EditReplStep::HandleStage<1>(Context &) {
   auto to_edit = validator_->ParseInt(token);
   if (arg_.empty()) {
     if (to_edit) {
+      task_id_.set_id(*to_edit);
       return std::make_unique<GetSpecifiedTasksCommand>(
-          std::vector<TaskId>{CreateTaskId(*to_edit)});
+          std::vector<TaskId>{task_id_});
     } else {
       return ReportError(Strings::InvalidId(token));
     }

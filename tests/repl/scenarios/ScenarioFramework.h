@@ -9,13 +9,12 @@
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
-#include "repl/UIController.h"
+#include "repl/state_machine/StateMachineController.h"
 #include "repl/io_facility/IIoFacility.h"
+#include "repl/io_facility/Strings.h"
 #include "repl/validator/DateFormat.h"
 #include "repl/validator/DefaultValidator.h"
-#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/default/small_step/DefaultSmallStepFactory.h"
-#include "repl/view/steps/default/step/DefaultStepFactory.h"
 
 class ScenarioMockIoFacility : public IIoFacility {
  public:
@@ -37,14 +36,12 @@ class ScenarioFramework {
 
     auto small_step_factory =
         std::make_shared<DefaultSmallStepFactory>(io_facility_, validator_);
-    auto step_factory = std::make_unique<DefaultStepFactory>(
-        io_facility_, validator_, small_step_factory);
 
-    auto view = std::make_unique<View>(io_facility_, validator_);
-
+    auto state_machine = std::make_unique<StateMachine>(validator_, io_facility_,
+                                                        small_step_factory);
     controller_ =
-        std::make_unique<UIController>(std::move(view), model_controller_,
-                                       validator_, std::move(step_factory));
+        std::make_unique<StateMachineController>(model_controller_,
+                                                 std::move(state_machine));
 
     EXPECT_CALL(*io_facility_, Print).Times(testing::AtLeast(1));
   }
@@ -86,7 +83,7 @@ class ScenarioFramework {
     return solid_task;
   }
 
-  std::unique_ptr<UIController> controller_;
+  std::unique_ptr<StateMachineController> controller_;
   std::shared_ptr<ScenarioMockIoFacility> io_facility_;
   std::shared_ptr<ModelController> model_controller_;
   std::shared_ptr<IValidator> validator_;

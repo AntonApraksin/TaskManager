@@ -3,8 +3,8 @@
 #include <iomanip>
 
 #include "DefaultSmallStep.h"
+#include "repl/io_facility/Strings.h"
 #include "repl/validator/DateFormat.h"
-#include "repl/view/steps/Strings.h"
 #include "repl/view/steps/TaskContext.h"
 
 namespace task_manager {

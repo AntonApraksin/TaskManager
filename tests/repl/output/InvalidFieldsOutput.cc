@@ -1,7 +1,9 @@
-#include "UsageFramework.h"
+#include <gtest/gtest.h>
+
+#include "test_utils/ScenarioFramework.h"
 
 class InvalidFieldsOutputTest : public ::testing::Test,
-                                protected UsageFramework {
+                                protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
 };

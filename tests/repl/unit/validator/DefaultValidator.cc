@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-#include "common.h"
+#include "test_utils/common.h"
 
 class DefaultValidatorTest : public ::testing::Test {
  protected:

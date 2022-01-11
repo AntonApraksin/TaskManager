@@ -1,6 +1,8 @@
-#include "UsageFramework.h"
+#include <gtest/gtest.h>
 
-class AddOutputTest : public ::testing::Test, protected UsageFramework {
+#include "test_utils/ScenarioFramework.h"
+
+class AddOutputTest : public ::testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
 };

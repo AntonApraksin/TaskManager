@@ -4,17 +4,19 @@
 
 #include <sstream>
 
-#include "../common.h"
+#include "test_utils/TaskFactory.h"
+#include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 class PersistenceTest : public ::testing::Test {};
 
 TEST_F(PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {
   TaskFactory tf;
-  auto _0 = tf.GetNextTask();
-  auto __1 = tf.GetNextTask();
-  auto _2 = tf.GetNextTask();
-  auto __3 = tf.GetNextTask();
-  auto ___4 = tf.GetNextTask();
+  auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation
+  auto __1 = tf.GetNextTask();   // NOLINT: beautiful tree representation
+  auto _2 = tf.GetNextTask();    // NOLINT: beautiful tree representation
+  auto __3 = tf.GetNextTask();   // NOLINT: beautiful tree representation
+  auto ___4 = tf.GetNextTask();  // NOLINT: beautiful tree representation
   SolidTasks solid_tasks{
       TaskToSolidTask(_0, 0),     TaskToSolidTask(_2, 2),
       TaskToSolidTask(__3, 3, 2), TaskToSolidTask(___4, 4, 3),
@@ -32,16 +34,17 @@ TEST_F(PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {
 }
 
 /*
-TEST_F(PersistenceTest, SaveMustFail){} // TODO: find a way to check this
+TEST_F(PersistenceTest, SaveMustFail){} // TODO: find a way to check this.
+Modify the std::stringstream so it will randomly fail.
 */
 
 TEST_F(PersistenceTest, LoadOnCorruptedDataMustFail) {
   TaskFactory tf;
-  auto _0 = tf.GetNextTask();
-  auto __1 = tf.GetNextTask();
-  auto _2 = tf.GetNextTask();
-  auto __3 = tf.GetNextTask();
-  auto ___4 = tf.GetNextTask();
+  auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation
+  auto __1 = tf.GetNextTask();   // NOLINT: beautiful tree representation
+  auto _2 = tf.GetNextTask();    // NOLINT: beautiful tree representation
+  auto __3 = tf.GetNextTask();   // NOLINT: beautiful tree representation
+  auto ___4 = tf.GetNextTask();  // NOLINT: beautiful tree representation
   SolidTasks solid_tasks{
       TaskToSolidTask(_0, 0),     TaskToSolidTask(_2, 2),
       TaskToSolidTask(__3, 3, 2), TaskToSolidTask(___4, 4, 3),

@@ -2,9 +2,12 @@
 
 #include <gtest/gtest.h>
 
-#include "../ModelUtils.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
+#include "test_utils/MockTaskIdProducer.h"
+#include "test_utils/TaskFactory.h"
+#include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 using namespace task_manager;
 

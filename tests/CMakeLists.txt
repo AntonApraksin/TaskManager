@@ -9,8 +9,7 @@ file(GLOB_RECURSE Tests_SRCS CONFIGURE_DEPENDS
   )
 
 add_executable(ModelTest
-  ${Tests_SRCS}
-    common.h)
+  ${Tests_SRCS})
 
 target_include_directories(ModelTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 

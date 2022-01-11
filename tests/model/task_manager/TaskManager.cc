@@ -3,7 +3,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "../ModelUtils.h"
+#include "test_utils/MockTaskIdProducer.h"
+#include "test_utils/TaskFactory.h"
+#include "test_utils/operators.h"
 
 using namespace task_manager;  // NOLINT: Testing purpose
 

@@ -1,5 +1,6 @@
 #include "repl/state_machine/commands/Commands.h"
 #include "repl/unit/state_machine/commands/CommandTest.h"
+#include "test_utils/operators.h"
 
 class AddSubtaskCommandTest : public CommandTest {};
 

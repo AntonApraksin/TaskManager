@@ -1,13 +1,13 @@
-#ifndef TASKMANAGER_TESTS_REPL_COMMON_H_
-#define TASKMANAGER_TESTS_REPL_COMMON_H_
+#ifndef TASKMANAGER_TESTS_TEST_UTILS_TASKSTRINGEDDATA_H_
+#define TASKMANAGER_TESTS_TEST_UTILS_TASKSTRINGEDDATA_H_
 
 #include <google/protobuf/util/time_util.h>
 
 #include <iomanip>
 
-#include "../common.h"
 #include "repl/io_facility/Strings.h"
 #include "repl/validator/DateFormat.h"
+#include "test_utils/common.h"
 
 struct TaskStringedData {
   std::string title;
@@ -37,4 +37,4 @@ class TaskStringedDataProducer final {
   int state_ = 0;
 };
 
-#endif  // TASKMANAGER_TESTS_REPL_COMMON_H_
+#endif  // TASKMANAGER_TESTS_TEST_UTILS_TASKSTRINGEDDATA_H_

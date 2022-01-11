@@ -1,4 +1,4 @@
-#include "model/ModelController.h"
+#include "model/DefaultModelController.h"
 
 #include <gtest/gtest.h>
 
@@ -11,20 +11,20 @@
 
 using namespace task_manager;
 
-class ModelControllerTest : public ::testing::Test {
+class DefaultModelControllerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
     auto persistence = std::make_unique<Persistence>();
-    model_controller_ = std::make_unique<ModelController>(
+    model_controller_ = std::make_unique<DefaultModelController>(
         std::move(tm), std::move(persistence));
   }
-  std::unique_ptr<ModelController> model_controller_;
+  std::unique_ptr<DefaultModelController> model_controller_;
   TaskFactory task_factory_;
 };
 
-TEST_F(ModelControllerTest, AddMustBePerformed) {
+TEST_F(DefaultModelControllerTest, AddMustBePerformed) {
   auto to_add = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
             ModelController::Status::kOk);
@@ -34,7 +34,7 @@ TEST_F(ModelControllerTest, AddMustBePerformed) {
   EXPECT_EQ(solid_tasks.AccessResult()[0], TaskToSolidTask(to_add, 0));
 }
 
-TEST_F(ModelControllerTest, EditMustBePerformed) {
+TEST_F(DefaultModelControllerTest, EditMustBePerformed) {
   auto to_add = task_factory_.GetNextTask();
   auto edited = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
@@ -47,7 +47,7 @@ TEST_F(ModelControllerTest, EditMustBePerformed) {
   EXPECT_EQ(solid_tasks.AccessResult()[0], TaskToSolidTask(edited, 0));
 }
 
-TEST_F(ModelControllerTest, CompleteMustBePerformed) {
+TEST_F(DefaultModelControllerTest, CompleteMustBePerformed) {
   auto to_add = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
             ModelController::Status::kOk);
@@ -59,7 +59,7 @@ TEST_F(ModelControllerTest, CompleteMustBePerformed) {
   EXPECT_EQ(solid_tasks.AccessResult()[0].task().progress(), Task::kCompleted);
 }
 
-TEST_F(ModelControllerTest, DeleteMustBePerformed) {
+TEST_F(DefaultModelControllerTest, DeleteMustBePerformed) {
   auto to_add = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
             ModelController::Status::kOk);
@@ -70,7 +70,7 @@ TEST_F(ModelControllerTest, DeleteMustBePerformed) {
   EXPECT_EQ(solid_tasks.AccessResult().size(), 0);
 }
 
-TEST_F(ModelControllerTest, AddSubtaskMustBePerformed) {
+TEST_F(DefaultModelControllerTest, AddSubtaskMustBePerformed) {
   auto to_add = task_factory_.GetNextTask();
   auto to_sub_add = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
@@ -85,33 +85,36 @@ TEST_F(ModelControllerTest, AddSubtaskMustBePerformed) {
   EXPECT_EQ(solid_tasks.AccessResult()[1], TaskToSolidTask(to_sub_add, 1, 0));
 }
 
-TEST_F(ModelControllerTest, EditOnUnexistingIdMustResultInNotPresentId) {
+TEST_F(DefaultModelControllerTest, EditOnUnexistingIdMustResultInNotPresentId) {
   auto to_edit = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Edit(CreateTaskId(0), to_edit).GetStatus(),
             ModelController::Status::kNotPresentId);
   ASSERT_EQ(model_controller_->GetAllSolidTasks().AccessResult().size(), 0);
 }
 
-TEST_F(ModelControllerTest, CompleteOnUnexistingIdMustResultInNotPresentId) {
+TEST_F(DefaultModelControllerTest,
+       CompleteOnUnexistingIdMustResultInNotPresentId) {
   ASSERT_EQ(model_controller_->Complete(CreateTaskId(0)).GetStatus(),
             ModelController::Status::kNotPresentId);
   ASSERT_EQ(model_controller_->GetAllSolidTasks().AccessResult().size(), 0);
 }
 
-TEST_F(ModelControllerTest, DeleteOnUnexistingIdMustResultInNotPresentId) {
+TEST_F(DefaultModelControllerTest,
+       DeleteOnUnexistingIdMustResultInNotPresentId) {
   ASSERT_EQ(model_controller_->Delete(CreateTaskId(0)).GetStatus(),
             ModelController::Status::kNotPresentId);
   ASSERT_EQ(model_controller_->GetAllSolidTasks().AccessResult().size(), 0);
 }
 
-TEST_F(ModelControllerTest, NestedAddOnUnexistingIdMustResultInNotPresentId) {
+TEST_F(DefaultModelControllerTest,
+       NestedAddOnUnexistingIdMustResultInNotPresentId) {
   auto to_add = task_factory_.GetNextTask();
   ASSERT_EQ(model_controller_->Add(CreateTaskId(0), to_add).GetStatus(),
             ModelController::Status::kNotPresentId);
   ASSERT_EQ(model_controller_->GetAllSolidTasks().AccessResult().size(), 0);
 }
 
-TEST_F(ModelControllerTest, CompleteMustCompleteNestedTasks) {
+TEST_F(DefaultModelControllerTest, CompleteMustCompleteNestedTasks) {
   auto _0 = task_factory_.GetNextTask();     // NOLINT
   auto __1 = task_factory_.GetNextTask();    // NOLINT
   auto ___3 = task_factory_.GetNextTask();   // NOLINT
@@ -140,7 +143,7 @@ TEST_F(ModelControllerTest, CompleteMustCompleteNestedTasks) {
   }
 }
 
-TEST_F(ModelControllerTest, DeleteMustDeleteNestedTasks) {
+TEST_F(DefaultModelControllerTest, DeleteMustDeleteNestedTasks) {
   auto _0 = task_factory_.GetNextTask();     // NOLINT
   auto __1 = task_factory_.GetNextTask();    // NOLINT
   auto ___3 = task_factory_.GetNextTask();   // NOLINT
@@ -170,7 +173,8 @@ TEST_F(ModelControllerTest, DeleteMustDeleteNestedTasks) {
   EXPECT_EQ(result.AccessResult()[0], TaskToSolidTask(_6, 6));
 }
 
-TEST_F(ModelControllerTest, GetAllSolidTasksMustReturnAllSolidTasksSorted) {
+TEST_F(DefaultModelControllerTest,
+       GetAllSolidTasksMustReturnAllSolidTasksSorted) {
   auto _0 = task_factory_.GetNextTask();     // NOLINT
   auto __1 = task_factory_.GetNextTask();    // NOLINT
   auto ___3 = task_factory_.GetNextTask();   // NOLINT
@@ -214,7 +218,7 @@ TEST_F(ModelControllerTest, GetAllSolidTasksMustReturnAllSolidTasksSorted) {
   }
 }
 
-TEST_F(ModelControllerTest, GetSpecificSolidTasks) {
+TEST_F(DefaultModelControllerTest, GetSpecificSolidTasks) {
   auto _0 = task_factory_.GetNextTask();     // NOLINT
   auto __1 = task_factory_.GetNextTask();    // NOLINT
   auto ___3 = task_factory_.GetNextTask();   // NOLINT

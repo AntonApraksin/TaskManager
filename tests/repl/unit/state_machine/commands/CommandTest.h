@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 
+#include "model/DefaultModelController.h"
 #include "model/ModelController.h"
 #include "model/id/TaskIdProducer.h"
 #include "model/task_manager/TaskManager.h"
@@ -19,7 +20,7 @@ class CommandTest : public ::testing::Test {
 
     auto persistence = std::make_unique<Persistence>();
 
-    model_controller_ = std::make_unique<ModelController>(
+    model_controller_ = std::make_unique<DefaultModelController>(
         std::move(task_manager), std::move(persistence));
   }
 

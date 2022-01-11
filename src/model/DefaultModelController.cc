@@ -1,4 +1,4 @@
-#include "ModelController.h"
+#include "DefaultModelController.h"
 
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
@@ -17,12 +17,13 @@ MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
   }
 }
 
-ModelController::ModelController(std::unique_ptr<TaskManager> task_manager,
-                                 std::unique_ptr<Persistence> persistence)
+DefaultModelController::DefaultModelController(
+    std::unique_ptr<TaskManager> task_manager,
+    std::unique_ptr<Persistence> persistence)
     : task_manager_(std::move(task_manager)),
       persistence_(std::move(persistence)) {}
 
-OperationResult<MCStatus, TaskId> ModelController::Add(Task task) {
+OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task) {
   auto result = task_manager_->Add(std::move(task));
   if (result) {
     return OperationResult<Status, TaskId>::Ok(result.AccessResult());
@@ -31,7 +32,8 @@ OperationResult<MCStatus, TaskId> ModelController::Add(Task task) {
       TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus, TaskId> ModelController::Add(TaskId id, Task task) {
+OperationResult<MCStatus, TaskId> DefaultModelController::Add(TaskId id,
+                                                              Task task) {
   auto result = task_manager_->Add(std::move(id), std::move(task));
   if (result) {
     return OperationResult<Status, TaskId>::Ok(result.AccessResult());
@@ -40,7 +42,7 @@ OperationResult<MCStatus, TaskId> ModelController::Add(TaskId id, Task task) {
       TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus> ModelController::Edit(TaskId id, Task task) {
+OperationResult<MCStatus> DefaultModelController::Edit(TaskId id, Task task) {
   auto result = task_manager_->Edit(std::move(id), std::move(task));
   if (result) {
     return OperationResult<Status>::Ok();
@@ -48,7 +50,7 @@ OperationResult<MCStatus> ModelController::Edit(TaskId id, Task task) {
   return OperationResult<Status>::Error(TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus> ModelController::Complete(TaskId id) {
+OperationResult<MCStatus> DefaultModelController::Complete(TaskId id) {
   auto result = task_manager_->Complete(std::move(id));
   if (result) {
     return OperationResult<Status>::Ok();
@@ -56,7 +58,7 @@ OperationResult<MCStatus> ModelController::Complete(TaskId id) {
   return OperationResult<Status>::Error(TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus> ModelController::Delete(TaskId id) {
+OperationResult<MCStatus> DefaultModelController::Delete(TaskId id) {
   auto result = task_manager_->Delete(std::move(id));
   if (result) {
     return OperationResult<Status>::Ok();
@@ -112,13 +114,14 @@ SolidTasks GetSolidTasksSorted(TaskManager::Storage storage) {
   return result;
 }
 
-OperationResult<MCStatus, SolidTasks> ModelController::GetAllSolidTasks() {
+OperationResult<MCStatus, SolidTasks>
+DefaultModelController::GetAllSolidTasks() {
   return OperationResult<Status, SolidTasks>::Ok(
       GetSolidTasksSorted(task_manager_->Show().AccessResult()));
 }
 
-OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
-    std::vector<TaskId> ids) {
+OperationResult<MCStatus, SolidTasks>
+DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids) {
   auto storage = task_manager_->Show().AccessResult();
   for (const auto& i : ids) {
     if (storage.tasks.find(i) == storage.tasks.end()) {
@@ -131,7 +134,7 @@ OperationResult<MCStatus, SolidTasks> ModelController::GetSpecificSolidTasks(
       GetSolidTasksSorted(std::move(storage)));
 }
 
-OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
+OperationResult<MCStatus> DefaultModelController::LoadFrom(std::istream& is) {
   auto result = persistence_->Load(is);
   if (!result) {
     return OperationResult<Status>::Error(Status::kLoadFailure);
@@ -165,7 +168,7 @@ OperationResult<MCStatus> ModelController::LoadFrom(std::istream& is) {
   return OperationResult<Status>::Ok();
 }
 
-OperationResult<MCStatus> ModelController::SaveTo(std::ostream& os) {
+OperationResult<MCStatus> DefaultModelController::SaveTo(std::ostream& os) {
   auto solid_tasks = GetAllSolidTasks();
   auto result = persistence_->Save(os, std::move(solid_tasks.AccessResult()));
   if (!result) {

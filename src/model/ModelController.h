@@ -21,26 +21,18 @@ class ModelController {
   };
 
  public:
-  ModelController(std::unique_ptr<TaskManager> task_manager,
-                  std::unique_ptr<Persistence> persistence);
+  virtual OperationResult<Status, TaskId> Add(Task task) = 0;
+  virtual OperationResult<Status, TaskId> Add(TaskId task_id, Task task) = 0;
+  virtual OperationResult<Status> Edit(TaskId id, Task task) = 0;
+  virtual OperationResult<Status> Complete(TaskId id) = 0;
+  virtual OperationResult<Status> Delete(TaskId id) = 0;
+  virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
+  virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
+      std::vector<TaskId>) = 0;
+  virtual OperationResult<Status> LoadFrom(std::istream&) = 0;
+  virtual OperationResult<Status> SaveTo(std::ostream&) = 0;
 
-  OperationResult<Status, TaskId> Add(Task task);
-  OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
-
-  OperationResult<Status> Edit(TaskId id, Task task);
-  OperationResult<Status> Complete(TaskId id);
-  OperationResult<Status> Delete(TaskId id);
-
-  OperationResult<Status, SolidTasks> GetAllSolidTasks();
-  OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
-      std::vector<TaskId>);
-
-  OperationResult<Status> LoadFrom(std::istream&);
-  OperationResult<Status> SaveTo(std::ostream&);
-
- private:
-  std::unique_ptr<TaskManager> task_manager_;
-  std::unique_ptr<Persistence> persistence_;
+  virtual ~ModelController() {}
 };
 
 std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(

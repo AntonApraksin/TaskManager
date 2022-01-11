@@ -7,8 +7,8 @@ TEST_F(LoadTasksCommandTest, MustLoad) {
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
   auto persistence = std::make_unique<Persistence>();
-  ModelController new_model_controller(std::move(task_manager),
-                                       std::move(persistence));
+  DefaultModelController new_model_controller(std::move(task_manager),
+                                              std::move(persistence));
 
   auto _0 = task_factory_.GetNextTask();
   auto __1 = task_factory_.GetNextTask();
@@ -49,8 +49,8 @@ TEST_F(LoadTasksCommandTest, MustReturnLoadFailureOnCorruptedData) {
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
   auto persistence = std::make_unique<Persistence>();
-  ModelController new_model_controller(std::move(task_manager),
-                                       std::move(persistence));
+  DefaultModelController new_model_controller(std::move(task_manager),
+                                              std::move(persistence));
 
   auto _0 = task_factory_.GetNextTask();
   auto __1 = task_factory_.GetNextTask();

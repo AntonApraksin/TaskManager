@@ -1,6 +1,7 @@
 #ifndef TASKMANAGER_TESTS_TEST_UTILS_SCENARIOFRAMEWORK_H_
 #define TASKMANAGER_TESTS_TEST_UTILS_SCENARIOFRAMEWORK_H_
 
+#include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
 #include "repl/io_facility/Strings.h"
@@ -18,7 +19,7 @@ class ScenarioFramework {
     auto id_producer = std::make_unique<MockTaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
     auto persistence = std::make_unique<Persistence>();
-    model_controller_ = std::make_shared<ModelController>(
+    model_controller_ = std::make_shared<DefaultModelController>(
         std::move(task_manager), std::move(persistence));
 
     validator_ = std::make_shared<DefaultValidator>();

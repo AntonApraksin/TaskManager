@@ -1,4 +1,4 @@
-#include "model/ModelController.h"
+#include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
 #include "repl/io_facility/iostream/IostreamIoFacility.h"
@@ -18,7 +18,7 @@ int main() {
 
   auto persistence = std::make_unique<Persistence>();
 
-  auto model_controller = std::make_shared<ModelController>(
+  auto model_controller = std::make_shared<DefaultModelController>(
       std::move(task_manager), std::move(persistence));
 
   auto state_machine = std::make_unique<StateMachine>(validator, io_facility,

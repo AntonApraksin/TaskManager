@@ -51,7 +51,9 @@ std::unique_ptr<Command> ShowReplStep::HandleStage<0>(Context &ctx) {
       ctx.status == ModelController::Status::kNotPresentId) {
     return ReportError(Strings::kNotPresentId);
   }
-  io_facility_->Print(Strings::ShowSolidTasks(*ctx.solid_tasks));
+  if (ctx.solid_tasks) {
+    io_facility_->Print(Strings::ShowSolidTasks(*ctx.solid_tasks));
+  }
   return std::make_unique<VoidCommand>();
 }
 

@@ -44,9 +44,15 @@ std::unique_ptr<Command> EditReplStep::HandleStage<0>(Context &ctx) {
       ctx.status == ModelController::Status::kNotPresentId) {
     return ReportError(Strings::NotPresentId(std::to_string(task_id_.id())));
   }
+  auto found =
+      std::find_if(ctx.solid_tasks->cbegin(), ctx.solid_tasks->cend(),
+                   [this](const auto &i) { return i.task_id() == task_id_; });
+  if (found == ctx.solid_tasks->cend()) {
+    return ReportError(Strings::NotPresentId(std::to_string(task_id_.id())));
+  }
   io_facility_->Print(Strings::kYouAreGoingToEdit);
-  auto &task = ctx.solid_tasks->at(0).task();
-  io_facility_->Print(Strings::ShowSolidTask(ctx.solid_tasks->at(0)));
+  auto task = found->task();
+  io_facility_->Print(Strings::ShowSolidTask(*found));
   TaskContext sub_context;
   sub_context.PushState(
       std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{

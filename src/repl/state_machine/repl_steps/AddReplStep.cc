@@ -100,8 +100,8 @@ std::unique_ptr<Command> AddReplStep::HandleAddSubTask(Context& ctx) {
     return ReportError(Strings::NotPresentId(std::to_string(task_id_->id())));
   }
   io_facility_->Print(Strings::kAddSubtaskTo);
-  auto& task = ctx.solid_tasks->at(0).task();
-  io_facility_->Print(Strings::ShowSolidTask(ctx.solid_tasks->at(0)));
+  auto& task = found->task();
+  io_facility_->Print(Strings::ShowSolidTask(*found));
   TaskContext sub_context;
   sub_context.PushState(
       std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{

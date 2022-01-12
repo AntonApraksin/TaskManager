@@ -1,5 +1,6 @@
-#include "ReplStepTest.h"
 #include "repl/state_machine/repl_steps/AddReplStep.h"
+
+#include "ReplStepTest.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/utils.h"
 

@@ -14,9 +14,9 @@ inline SolidTask FindSolidTask(const SolidTasks& solid_tasks,
                        [id](const auto& i) { return i.task_id().id() == id; });
 }
 
-inline SolidTask TaskToSolidTask(const Task& task, google::protobuf::int32 id) {
+inline SolidTask TaskToSolidTask(Task task, google::protobuf::int32 id) {
   SolidTask solid_task;
-  solid_task.set_allocated_task(new Task(task));
+  solid_task.set_allocated_task(new Task(std::move(task)));
   solid_task.set_allocated_task_id(new TaskId(CreateTaskId(id)));
   return solid_task;
 }

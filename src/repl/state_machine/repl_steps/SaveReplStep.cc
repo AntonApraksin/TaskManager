@@ -26,15 +26,14 @@ void SaveReplStep::ChangeStep(std::shared_ptr<ReplStep> &active_step) {
 
 template <>
 std::unique_ptr<Command> SaveReplStep::HandleStage<1>(Context &) {
+  if (arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
   filename_ = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
-    ReportError(Strings::kMultipleArgumentDoesNotSupported);
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  auto file{std::make_unique<std::ofstream>(filename_)};
-  if (!file->is_open()) {
-    return ReportError(Strings::ErrorDuringOpeningFile(filename_));
-  }
-  return std::make_unique<SaveTasksCommand>(std::move(file));
+  return std::make_unique<SaveTasksToFileCommand>(filename_);
 }
 
 template <>

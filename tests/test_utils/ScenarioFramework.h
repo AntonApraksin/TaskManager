@@ -18,9 +18,8 @@ class ScenarioFramework {
     io_facility_ = std::make_shared<MockIoFacility>();
     auto id_producer = std::make_unique<MockTaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
-    auto persistence = std::make_unique<Persistence>();
-    model_controller_ = std::make_shared<DefaultModelController>(
-        std::move(task_manager), std::move(persistence));
+    model_controller_ =
+        std::make_shared<DefaultModelController>(std::move(task_manager));
 
     validator_ = std::make_shared<DefaultValidator>();
 

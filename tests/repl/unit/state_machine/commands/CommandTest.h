@@ -18,10 +18,8 @@ class CommandTest : public ::testing::Test {
     auto id_producer = std::make_unique<MockTaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
 
-    auto persistence = std::make_unique<Persistence>();
-
-    model_controller_ = std::make_unique<DefaultModelController>(
-        std::move(task_manager), std::move(persistence));
+    model_controller_ =
+        std::make_unique<DefaultModelController>(std::move(task_manager));
   }
 
  protected:

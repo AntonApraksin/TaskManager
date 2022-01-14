@@ -16,10 +16,8 @@ int main() {
   auto small_step_factory =
       std::make_shared<DefaultSmallStepFactory>(io_facility, validator);
 
-  auto persistence = std::make_unique<Persistence>();
-
-  auto model_controller = std::make_shared<DefaultModelController>(
-      std::move(task_manager), std::move(persistence));
+  auto model_controller =
+      std::make_shared<DefaultModelController>(std::move(task_manager));
 
   auto state_machine = std::make_unique<StateMachine>(validator, io_facility,
                                                       small_step_factory);

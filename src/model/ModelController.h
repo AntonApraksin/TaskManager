@@ -6,10 +6,11 @@
 
 #include "OperationResult.h"
 #include "model/SolidTask.h"
+#include "persistence/Persistence.h"
 
 namespace task_manager {
 class TaskManager;
-class Persistence;
+class FilePersistence;
 
 class ModelController {
  public:
@@ -29,8 +30,8 @@ class ModelController {
   virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
   virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
       std::vector<TaskId>) = 0;
-  virtual OperationResult<Status> LoadFrom(std::istream&) = 0;
-  virtual OperationResult<Status> SaveTo(std::ostream&) = 0;
+  virtual OperationResult<Status> LoadFrom(Persistence&) = 0;
+  virtual OperationResult<Status> SaveTo(Persistence&) = 0;
 
   virtual ~ModelController() {}
 };

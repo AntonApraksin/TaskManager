@@ -5,6 +5,7 @@
 #include <memory>
 #include <ostream>
 
+#include "persistence/FilePersistence.h"
 #include "repl/state_machine/Context.h"
 
 namespace task_manager {
@@ -80,22 +81,22 @@ class GetAllTasksCommand : public Command {
   Context execute(ModelController&) override;
 };
 
-class LoadTasksCommand : public Command {
+class LoadTasksFromFileCommand : public Command {
  public:
-  explicit LoadTasksCommand(std::unique_ptr<std::istream>);
+  explicit LoadTasksFromFileCommand(std::string);
   Context execute(ModelController&) override;
 
  private:
-  std::unique_ptr<std::istream> istream_;
+  FilePersistence persistence_;
 };
 
-class SaveTasksCommand : public Command {
+class SaveTasksToFileCommand : public Command {
  public:
-  explicit SaveTasksCommand(std::unique_ptr<std::ostream>);
+  explicit SaveTasksToFileCommand(std::string);
   Context execute(ModelController&) override;
 
  private:
-  std::unique_ptr<std::ostream> ostream_;
+  FilePersistence persistence_;
 };
 
 class VoidCommand : public Command {

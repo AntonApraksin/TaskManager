@@ -1,9 +1,8 @@
-#include "persistence/Persistence.h"
-
 #include <gtest/gtest.h>
 
-#include <sstream>
+#include <fstream>
 
+#include "persistence/FilePersistence.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/operators.h"
 #include "test_utils/utils.h"
@@ -22,11 +21,10 @@ TEST_F(PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {
       TaskToSolidTask(__3, 3, 2), TaskToSolidTask(___4, 4, 3),
       TaskToSolidTask(__1, 1, 0),
   };
-  Persistence persistence;
-  std::stringstream ss;
-  persistence.Save(ss, solid_tasks);
-  auto loaded_solid_tasks = persistence.Load(ss);
-  ASSERT_EQ(loaded_solid_tasks.GetStatus(), Persistence::Status::kOk);
+  FilePersistence persistence(__FILE__ ".txt");
+  persistence.Save(solid_tasks);
+  auto loaded_solid_tasks = persistence.Load();
+  ASSERT_EQ(loaded_solid_tasks.GetStatus(), FilePersistence::Status::kOk);
   ASSERT_EQ(loaded_solid_tasks.AccessResult().size(), solid_tasks.size());
   for (size_t i{0}, sz{solid_tasks.size()}; i != sz; ++i) {
     EXPECT_EQ(loaded_solid_tasks.AccessResult()[i], solid_tasks[i]);
@@ -50,11 +48,11 @@ TEST_F(PersistenceTest, LoadOnCorruptedDataMustFail) {
       TaskToSolidTask(__3, 3, 2), TaskToSolidTask(___4, 4, 3),
       TaskToSolidTask(__1, 1, 0),
   };
-  Persistence persistence;
-  std::stringstream ss;
-  persistence.Save(ss, solid_tasks);
-  auto str = ss.str();
-  str.erase(str.size() - 6, str.size());  // Corrupt
-  ss.str(str);
-  ASSERT_EQ(persistence.Load(ss).GetStatus(), Persistence::Status::kFailure);
+  FilePersistence persistence(__FILE__ ".txt");
+  persistence.Save(solid_tasks);
+  std::ofstream to_corrupt(__FILE__ ".txt");
+  to_corrupt.write("ffffff", 6);
+  to_corrupt.close();
+  ASSERT_EQ(persistence.Load().GetStatus(),
+            Persistence::Status::kFailureReading);
 }

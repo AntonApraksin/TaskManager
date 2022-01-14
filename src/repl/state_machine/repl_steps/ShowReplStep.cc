@@ -29,14 +29,14 @@ std::unique_ptr<Command> ShowReplStep::HandleStage<1>(Context &) {
     return std::make_unique<GetAllTasksCommand>();
   }
   std::string token;
-  std::optional<int> to_complete;
+  std::optional<int> to_show;
   for (; !arg_.empty();) {
     token = validator_->ConsumeOneTokenFrom(arg_);
-    to_complete = validator_->ParseInt(token);
-    if (!to_complete) {
+    to_show = validator_->ParseInt(token);
+    if (!to_show) {
       return ReportError(Strings::InvalidId(token));
     }
-    task_ids_.push_back(CreateTaskId(*to_complete));
+    task_ids_.push_back(CreateTaskId(*to_show));
   }
   if (task_ids_.size() >
       std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {

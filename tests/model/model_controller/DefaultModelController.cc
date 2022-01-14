@@ -16,9 +16,7 @@ class DefaultModelControllerTest : public ::testing::Test {
   void SetUp() override {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
-    auto persistence = std::make_unique<Persistence>();
-    model_controller_ = std::make_unique<DefaultModelController>(
-        std::move(tm), std::move(persistence));
+    model_controller_ = std::make_unique<DefaultModelController>(std::move(tm));
   }
   std::unique_ptr<DefaultModelController> model_controller_;
   TaskFactory task_factory_;

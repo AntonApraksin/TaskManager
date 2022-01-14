@@ -1,14 +1,18 @@
+#include <fstream>
+
 #include "repl/state_machine/commands/Commands.h"
 #include "repl/unit/state_machine/commands/CommandTest.h"
 
 class LoadTasksCommandTest : public CommandTest {};
 
 TEST_F(LoadTasksCommandTest, MustLoad) {
+  std::stringstream ss;
+  ss << __FILE__ << __LINE__ << ".txt.test";
+  auto filename = ss.str();
+
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
-  auto persistence = std::make_unique<Persistence>();
-  DefaultModelController new_model_controller(std::move(task_manager),
-                                              std::move(persistence));
+  DefaultModelController new_model_controller(std::move(task_manager));
 
   auto _0 = task_factory_.GetNextTask();
   auto __1 = task_factory_.GetNextTask();
@@ -24,10 +28,11 @@ TEST_F(LoadTasksCommandTest, MustLoad) {
   new_model_controller.Add(CreateTaskId(2), ___4);
   new_model_controller.Add(CreateTaskId(2), ___5);
   new_model_controller.Add(CreateTaskId(5), ____6);
-  auto file = std::make_unique<std::stringstream>();
-  new_model_controller.SaveTo(*file);
 
-  LoadTasksCommand command(std::move(file));
+  FilePersistence persistence{filename};
+  new_model_controller.SaveTo(persistence);
+
+  LoadTasksFromFileCommand command(filename);
   auto ctx = command.execute(*model_controller_);
   ASSERT_EQ(ctx.status, ModelController::Status::kOk);
 
@@ -46,11 +51,12 @@ TEST_F(LoadTasksCommandTest, MustLoad) {
 }
 
 TEST_F(LoadTasksCommandTest, MustReturnLoadFailureOnCorruptedData) {
+  std::stringstream ss;
+  ss << __FILE__ << __LINE__ << ".txt.test";
+  auto filename = ss.str();
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
-  auto persistence = std::make_unique<Persistence>();
-  DefaultModelController new_model_controller(std::move(task_manager),
-                                              std::move(persistence));
+  DefaultModelController new_model_controller(std::move(task_manager));
 
   auto _0 = task_factory_.GetNextTask();
   auto __1 = task_factory_.GetNextTask();
@@ -66,12 +72,14 @@ TEST_F(LoadTasksCommandTest, MustReturnLoadFailureOnCorruptedData) {
   new_model_controller.Add(CreateTaskId(2), ___4);
   new_model_controller.Add(CreateTaskId(2), ___5);
   new_model_controller.Add(CreateTaskId(5), ____6);
-  auto file = std::make_unique<std::stringstream>();
-  new_model_controller.SaveTo(*file);
-  char ary[12];
-  file->read(ary, 12);
 
-  LoadTasksCommand command(std::move(file));
+  FilePersistence persistence{filename};
+  new_model_controller.SaveTo(persistence);
+  std::ofstream to_corrupt(filename, std::ios::app);
+  to_corrupt.write("ffffff", 6);
+  to_corrupt.close();
+
+  LoadTasksFromFileCommand command(filename);
   auto ctx = command.execute(*model_controller_);
   ASSERT_EQ(ctx.status, ModelController::Status::kLoadFailure);
 }

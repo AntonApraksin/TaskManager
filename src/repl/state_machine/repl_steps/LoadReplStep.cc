@@ -27,18 +27,14 @@ void LoadReplStep::ChangeStep(std::shared_ptr<ReplStep> &active_step) {
 
 template <>
 std::unique_ptr<Command> LoadReplStep::HandleStage<1>(Context &) {
+  if (arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
   filename_ = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  if (!std::filesystem::exists(filename_)) {
-    return ReportError(Strings::FilenameDoesNotExist(filename_));
-  }
-  auto file{std::make_unique<std::ifstream>(filename_)};
-  if (!file->is_open()) {
-    return ReportError(Strings::ErrorDuringOpeningFile(filename_));
-  }
-  return std::make_unique<LoadTasksCommand>(std::move(file));
+  return std::make_unique<LoadTasksFromFileCommand>(filename_);
 }
 
 template <>

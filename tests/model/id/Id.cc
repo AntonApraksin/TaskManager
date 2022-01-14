@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "../ModelUtils.h"
 #include "model/id/TaskIdProducer.h"
-
-using namespace task_manager;  // NOLINT: Testing purpose
+#include "test_utils/common.h"
+#include "utils/TaskIdUtils.h"
 
 class IdTest : public ::testing::Test {};
 

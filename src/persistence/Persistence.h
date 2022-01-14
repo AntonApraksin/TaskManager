@@ -13,12 +13,16 @@ class Persistence {
  public:
   enum class Status {
     kOk,
-    kFailure,
+    kFailureReading,
+    kFailureWriting,
+    kFailureDuringEstablishing,
   };
 
  public:
-  virtual OperationResult<Status> Save(std::ostream&, SolidTasks) const;
-  virtual OperationResult<Status, SolidTasks> Load(std::istream&) const;
+  virtual OperationResult<Status> Save(SolidTasks to_save) const = 0;
+  virtual OperationResult<Status, SolidTasks> Load() const = 0;
+
+  virtual ~Persistence() {}
 };
 }  // namespace task_manager
 

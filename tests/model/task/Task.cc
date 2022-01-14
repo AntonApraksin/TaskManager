@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../ModelUtils.h"
+#include "Task.pb.h"
+#include "test_utils/utils.h"
 
 class TaskTest : public ::testing::Test {};
 

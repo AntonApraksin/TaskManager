@@ -1,9 +1,10 @@
 #include "TaskUtils.h"
 
 namespace task_manager {
-std::optional<Task> task_manager::CreateTask(
-    std::string title, google::protobuf::Timestamp due_date,
-    Task::Priority priority, Task::Progress progress) {
+std::optional<Task> CreateTask(std::string title,
+                               google::protobuf::Timestamp due_date,
+                               Task::Priority priority,
+                               Task::Progress progress) {
   if (title.empty()) {
     return {};
   }

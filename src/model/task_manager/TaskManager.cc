@@ -18,7 +18,7 @@ TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer)
 
 TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer,
                          TaskManager::Storage storage)
-    : id_producer_(std::move(id_producer)), storage_(std::move(storage)) {}
+    : storage_(std::move(storage)), id_producer_(std::move(id_producer)) {}
 
 OperationResult<TMStatus, TaskId> TaskManager::Add(Task task) {
   auto next_id = id_producer_->GetNextId();

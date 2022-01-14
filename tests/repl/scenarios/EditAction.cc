@@ -1,4 +1,8 @@
-#include "ScenarioFramework.h"
+#include <gtest/gtest.h>
+
+#include "test_utils/ScenarioFramework.h"
+#include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 class EditActionTest : public testing::Test, protected ScenarioFramework {
  protected:
@@ -9,7 +13,7 @@ TEST_F(EditActionTest, OneTaskShouldBeEdited) {
   auto initial = task_stringed_data_producer_.GetData();
   auto edited = task_stringed_data_producer_.GetData();
 
-  auto storage =
+  auto [storage, _] =
       RunScenario({"add", initial.title, initial.date, initial.priority,
                    initial.state, "y", "edit 0", edited.title, edited.date,
                    edited.priority, edited.state, "y", "q"});
@@ -21,8 +25,8 @@ TEST_F(EditActionTest, OneTaskShouldBeEdited) {
 TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
   auto t = task_stringed_data_producer_.GetData();
 
-  auto storage = RunScenario({"add", t.title, t.date, t.priority, t.state, "y",
-                              "edit 0", "", "", "", "", "y", "q"});
+  auto [storage, _] = RunScenario({"add", t.title, t.date, t.priority, t.state,
+                                   "y", "edit 0", "", "", "", "", "y", "q"});
 
   auto expected_task = TaskDataToSolidTask(t, 0);
 

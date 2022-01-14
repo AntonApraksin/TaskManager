@@ -1,6 +1,8 @@
-#include "UsageFramework.h"
+#include <gtest/gtest.h>
 
-class CompleteOutputTest : public ::testing::Test, protected UsageFramework {
+#include "test_utils/ScenarioFramework.h"
+
+class CompleteOutputTest : public ::testing::Test, protected ScenarioFramework {
  protected:
   void SetUp() override { return SetUpImpl(); }
 };
@@ -38,7 +40,7 @@ TEST_F(CompleteOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
   auto storage_before_complete = task_storage;
   for (size_t i{0}, sz{storage_before_complete.size()}; i != sz; ++i) {
     auto new_task = storage_before_complete[i].task();
-    new_task.set_progress(static_cast<Task::Progress>(i % 2));
+    new_task.set_progress(Task::kUncompleted);
     storage_before_complete[i].set_allocated_task(
         new Task(std::move(new_task)));
   }

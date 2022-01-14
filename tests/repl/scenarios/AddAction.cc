@@ -1,4 +1,8 @@
-#include "ScenarioFramework.h"
+#include <gtest/gtest.h>
+
+#include "test_utils/ScenarioFramework.h"
+#include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 class AddActionTest : public testing::Test, protected ScenarioFramework {
  protected:
@@ -9,7 +13,7 @@ TEST_F(AddActionTest, OneTaskShouldBeAdded) {
   auto [title, date, priority, progress] =
       task_stringed_data_producer_.GetData();
 
-  auto storage =
+  auto [storage, _] =
       RunScenario({"add", title, date, priority, progress, "y", "q"});
 
   auto expected_task = CreateTask(title, *validator_->ParseTaskDate(date),
@@ -38,7 +42,7 @@ TEST_F(AddActionTest, NTasksShouldBeAdded) {
                 });
   commands.push_back("q");
 
-  auto storage = RunScenario(std::move(commands));
+  auto [storage, _] = RunScenario(std::move(commands));
 
   for (int i{0}; i != kNTasks; ++i) {
     EXPECT_EQ(FindSolidTask(storage, i),
@@ -51,12 +55,11 @@ TEST_F(AddActionTest, NestedTasksShouldBeAdded) {
   auto subtask = task_stringed_data_producer_.GetData();
   auto subsubtask = task_stringed_data_producer_.GetData();
 
-  std::vector<std::string> commands;
-  auto storage = RunScenario({"add", task.title, task.date, task.priority,
-                              task.state, "y", "add 0", subtask.title,
-                              subtask.date, subtask.priority, subtask.state,
-                              "y", "add 1", subsubtask.title, subsubtask.date,
-                              subsubtask.priority, subsubtask.state, "y", "q"});
+  auto [storage, _] = RunScenario(
+      {"add", task.title, task.date, task.priority, task.state, "y", "add 0",
+       subtask.title, subtask.date, subtask.priority, subtask.state, "y",
+       "add 1", subsubtask.title, subsubtask.date, subsubtask.priority,
+       subsubtask.state, "y", "q"});
   auto top_task = FindSolidTask(storage, 0);
   auto sub_top_task = FindSolidTask(storage, 1);
   auto sub_sub_top_task = FindSolidTask(storage, 2);
@@ -71,8 +74,8 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
   std::string priority = "medium";
   std::string state = "+";
 
-  auto storage = RunScenario({"add", title, date, priority, state, "y", "add 0",
-                              "subtitle", "", "", "", "y", "q"});
+  auto [storage, _] = RunScenario({"add", title, date, priority, state, "y",
+                                   "add 0", "subtitle", "", "", "", "y", "q"});
   auto t1 = FindSolidTask(storage, 0);
   auto t2 = FindSolidTask(storage, 1);
 

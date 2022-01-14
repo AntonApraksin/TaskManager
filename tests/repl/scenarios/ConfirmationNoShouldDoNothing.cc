@@ -1,4 +1,8 @@
-#include "ScenarioFramework.h"
+#include <gtest/gtest.h>
+
+#include "test_utils/ScenarioFramework.h"
+#include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 class ConfirmationNoTest : public testing::Test, protected ScenarioFramework {
  protected:
@@ -8,7 +12,7 @@ class ConfirmationNoTest : public testing::Test, protected ScenarioFramework {
 TEST_F(ConfirmationNoTest, AddShouldNotBePerformed) {
   std::string title_1 = "938ugphurgskhk";
 
-  auto storage = RunScenario({"add", title_1, "", "", "", "n", "q"});
+  auto [storage, _] = RunScenario({"add", title_1, "", "", "", "n", "q"});
 
   EXPECT_EQ(storage.size(), 0);
 }
@@ -19,7 +23,7 @@ TEST_F(ConfirmationNoTest, EditShouldNotBePerformed) {
   std::string priority = "medium";
   std::string progress = "+";
 
-  auto storage =
+  auto [storage, _] =
       RunScenario({"add", title, date, priority, progress, "y", "edit 0", "f",
                    "15:23 18/09/2077", "low", "-", "n", "q"});
 
@@ -33,14 +37,14 @@ TEST_F(ConfirmationNoTest, EditShouldNotBePerformed) {
 TEST_F(ConfirmationNoTest, CompleteShouldNotBePerformed) {
   std::string state = "-";
 
-  auto storage =
+  auto [storage, _] =
       RunScenario({"add", "gdfgd", "", "", state, "y", "complete 0", "n", "q"});
 
   EXPECT_EQ(FindSolidTask(storage, 0).task().progress(), Task::kUncompleted);
 }
 
 TEST_F(ConfirmationNoTest, DeleteShouldNotBePerformed) {
-  auto storage =
+  auto [storage, _] =
       RunScenario({"add", "gdfgd", "", "", "", "y", "delete 0", "n", "q"});
 
   ASSERT_EQ(storage.size(), 1);

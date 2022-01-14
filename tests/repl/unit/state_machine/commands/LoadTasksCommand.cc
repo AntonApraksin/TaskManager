@@ -3,6 +3,8 @@
 #include "repl/state_machine/commands/Commands.h"
 #include "repl/unit/state_machine/commands/CommandTest.h"
 
+#define LoadTasksCommandTest DISABLE_TESTS_WITH_FILES(LoadTasksCommandTest)
+
 class LoadTasksCommandTest : public CommandTest {};
 
 TEST_F(LoadTasksCommandTest, MustLoad) {

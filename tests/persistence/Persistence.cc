@@ -7,6 +7,8 @@
 #include "test_utils/operators.h"
 #include "test_utils/utils.h"
 
+#define PersistenceTest DISABLE_TESTS_WITH_FILES(PersistenceTest)
+
 class PersistenceTest : public ::testing::Test {};
 
 TEST_F(PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {

@@ -5,8 +5,8 @@
 
 #include <iomanip>
 
-#include "repl/io_facility/Strings.h"
-#include "repl/validator/DateFormat.h"
+#include "interactor/io_facility/Strings.h"
+#include "interactor/validator/DateFormat.h"
 #include "test_utils/common.h"
 
 struct TaskStringedData {

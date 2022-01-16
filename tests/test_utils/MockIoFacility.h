@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "repl/io_facility/IIoFacility.h"
+#include "interactor/io_facility/IIoFacility.h"
 #include "test_utils/common.h"
 
 class MockIoFacility : public IIoFacility {

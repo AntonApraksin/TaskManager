@@ -1,10 +1,10 @@
+#include "interactor/io_facility/iostream/IostreamIoFacility.h"
+#include "interactor/small_steps/default/DefaultSmallStepFactory.h"
+#include "interactor/state_machine/StateMachineController.h"
+#include "interactor/validator/DefaultValidator.h"
 #include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
-#include "repl/io_facility/iostream/IostreamIoFacility.h"
-#include "repl/small_steps/default/DefaultSmallStepFactory.h"
-#include "repl/state_machine/StateMachineController.h"
-#include "repl/validator/DefaultValidator.h"
 
 int main() {
   using namespace task_manager;

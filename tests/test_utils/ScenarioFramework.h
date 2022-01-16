@@ -1,13 +1,13 @@
 #ifndef TASKMANAGER_TESTS_TEST_UTILS_SCENARIOFRAMEWORK_H_
 #define TASKMANAGER_TESTS_TEST_UTILS_SCENARIOFRAMEWORK_H_
 
+#include "interactor/io_facility/Strings.h"
+#include "interactor/small_steps/default/DefaultSmallStepFactory.h"
+#include "interactor/state_machine/StateMachineController.h"
+#include "interactor/validator/DefaultValidator.h"
 #include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
-#include "repl/io_facility/Strings.h"
-#include "repl/small_steps/default/DefaultSmallStepFactory.h"
-#include "repl/state_machine/StateMachineController.h"
-#include "repl/validator/DefaultValidator.h"
 #include "test_utils/MockIoFacility.h"
 #include "test_utils/MockTaskIdProducer.h"
 #include "test_utils/TaskStringedData.h"

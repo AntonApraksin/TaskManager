@@ -1,9 +1,9 @@
 #include "interactor/state_machine/commands/Commands.h"
 
 namespace task_manager {
-Context VoidCommand::execute(ModelController &) {
-  Context ctx;
-  ctx.status = ModelController::Status::kOk;
-  return ctx;
+CommandResult VoidCommand::execute(ModelController &) {
+  CommandResult command_result;
+  command_result.status = ModelController::Status::kOk;
+  return command_result;
 }
 }  // namespace task_manager

@@ -4,16 +4,16 @@ namespace task_manager {
 DeleteTasksCommand::DeleteTasksCommand(std::vector<TaskId> task_ids)
     : task_ids_(std::move(task_ids)) {}
 
-Context DeleteTasksCommand::execute(ModelController& model_controller) {
-  Context ctx;
-  ctx.status = ModelController::Status::kOk;
+CommandResult DeleteTasksCommand::execute(ModelController& model_controller) {
+  CommandResult command_result;
+  command_result.status = ModelController::Status::kOk;
   std::for_each(task_ids_.cbegin(), task_ids_.cend(),
-                [&model_controller, &ctx](auto id) {
+                [&model_controller, &command_result](auto id) {
                   auto status = model_controller.Delete(id).GetStatus();
                   if (status != ModelController::Status::kOk) {
-                    ctx.status = status;
+                    command_result.status = status;
                   }
                 });
-  return ctx;
+  return command_result;
 }
 }  // namespace task_manager

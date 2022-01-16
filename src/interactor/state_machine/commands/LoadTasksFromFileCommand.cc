@@ -4,10 +4,11 @@ namespace task_manager {
 LoadTasksFromFileCommand::LoadTasksFromFileCommand(std::string filename)
     : persistence_(std::move(filename)) {}
 
-Context LoadTasksFromFileCommand::execute(ModelController& model_controller) {
-  Context ctx;
+CommandResult LoadTasksFromFileCommand::execute(
+    ModelController& model_controller) {
+  CommandResult command_result;
   auto result = model_controller.LoadFrom(persistence_);
-  ctx.status = result.GetStatus();
-  return ctx;
+  command_result.status = result.GetStatus();
+  return command_result;
 }
 }  // namespace task_manager

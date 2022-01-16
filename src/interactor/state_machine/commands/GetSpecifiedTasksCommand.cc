@@ -4,13 +4,14 @@ namespace task_manager {
 GetSpecifiedTasksCommand::GetSpecifiedTasksCommand(std::vector<TaskId> task_ids)
     : task_ids_(std::move(task_ids)) {}
 
-Context GetSpecifiedTasksCommand::execute(ModelController &model_controller) {
-  Context ctx;
+CommandResult GetSpecifiedTasksCommand::execute(
+    ModelController &model_controller) {
+  CommandResult command_result;
   auto result = model_controller.GetSpecificSolidTasks(std::move(task_ids_));
   if (result) {
-    ctx.solid_tasks = result.AccessResult();
+    command_result.solid_tasks = result.AccessResult();
   }
-  ctx.status = result.GetStatus();
-  return ctx;
+  command_result.status = result.GetStatus();
+  return command_result;
 }
 }  // namespace task_manager

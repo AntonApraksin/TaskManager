@@ -4,10 +4,11 @@ namespace task_manager {
 SaveTasksToFileCommand::SaveTasksToFileCommand(std::string filename)
     : persistence_(std::move(filename)) {}
 
-Context SaveTasksToFileCommand::execute(ModelController& model_controller) {
-  Context ctx;
+CommandResult SaveTasksToFileCommand::execute(
+    ModelController& model_controller) {
+  CommandResult command_result;
   auto result = model_controller.SaveTo(persistence_);
-  ctx.status = result.GetStatus();
-  return ctx;
+  command_result.status = result.GetStatus();
+  return command_result;
 }
 }  // namespace task_manager

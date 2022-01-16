@@ -2,6 +2,7 @@
 #define TASKMANAGER_SRC_REPL_STATE_MACHINE_REPL_STEPS_REPLSTEP_H_
 
 #include "interactor/io_facility/IIoFacility.h"
+#include "interactor/state_machine/Context.h"
 #include "interactor/state_machine/commands/Commands.h"
 #include "interactor/validator/IValidator.h"
 

@@ -27,3 +27,12 @@ TEST_F(UnknownStepTest, WithArgumentMustReturnVoidCommmand) {
   auto command{step_->execute({})};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
+
+TEST_F(UnknownStepTest, MustChangeStepAfterFirstExecute) {
+  SetArg("");
+  step_->execute({});
+  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
+  const auto old_addr = to_change.get();
+  step_->ChangeStep(to_change);
+  EXPECT_NE(to_change.get(), old_addr);
+}

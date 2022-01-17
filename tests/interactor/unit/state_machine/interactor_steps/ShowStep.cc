@@ -72,3 +72,25 @@ TEST_F(ShowStepTest, SecondCallWithEverythingOkReturnVoidCommand) {
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
   EXPECT_DEATH(step_->execute({}), "");
 }
+
+TEST_F(ShowStepTest, MustNotChangeStepAfterFirstExecute) {
+  SetArg("12 34");
+  step_->execute({});
+  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
+  const auto old_addr = to_change.get();
+  step_->ChangeStep(to_change);
+  EXPECT_EQ(to_change.get(), old_addr);
+}
+
+TEST_F(ShowStepTest, MustChangeStepAfterSecondExecute) {
+  SetArg("12 34");
+  step_->execute({});
+  TaskFactory task_factory;
+  SolidTasks solid_tasks{TaskToSolidTask(task_factory.GetNextTask(), 12),
+                         TaskToSolidTask(task_factory.GetNextTask(), 34)};
+  step_->execute({{}, std::move(solid_tasks), ModelController::Status::kOk});
+  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
+  const auto old_addr = to_change.get();
+  step_->ChangeStep(to_change);
+  EXPECT_NE(to_change.get(), old_addr);
+}

@@ -28,4 +28,12 @@ class StepTest : public ::testing::Test {
   std::shared_ptr<ISmallStepFactory> small_step_factory_;
 };
 
+class StepChangeStepTesting : public Step {
+ public:
+  std::unique_ptr<Command> execute(Context) override {
+    return std::unique_ptr<Command>();
+  }
+  void ChangeStep(std::shared_ptr<Step>&) override {}
+};
+
 #endif  // TASKMANAGER_TESTS_REPL_UNIT_STATE_MACHINE_REPL_STEPS_REPLSTEPTEST_H_

@@ -19,6 +19,7 @@ class ModelController {
     kNotPresentId,
     kLoadFailure,
     kSaveFailure,
+    kNotPresentLabel
   };
 
  public:

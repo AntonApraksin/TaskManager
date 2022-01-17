@@ -14,6 +14,9 @@ MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
 
     case TaskManager::Status::kOk:
       return MCStatus::kOk;
+
+    case TaskManager::Status::kNotPresentLabel:
+      return MCStatus::kNotPresentLabel;
   }
 }
 

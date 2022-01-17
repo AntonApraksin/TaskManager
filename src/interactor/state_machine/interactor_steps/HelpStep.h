@@ -10,6 +10,15 @@ class HelpStep : public Step, public ArgumentMixin {
 
   std::unique_ptr<Command> execute(Context ctx) override;
   void ChangeStep(std::shared_ptr<Step>&) override;
+
+ private:
+  template <int>
+  std::unique_ptr<Command> HandleStage(Context&);
+
+  template <>
+  std::unique_ptr<Command> HandleStage<0>(Context&);
+
+  int stage_ = 1;
 };
 }  // namespace task_manager
 

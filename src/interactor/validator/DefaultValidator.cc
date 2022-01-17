@@ -44,6 +44,14 @@ CommandEnum DefaultValidator::MatchCommand(const std::string &str) {
   if (str == "load" || str == "lo") {
     return CommandEnum::kLoad;
   }
+
+  if (str == "add_label" || str == "al") {
+    return CommandEnum::kAddLabel;
+  }
+
+  if (str == "delete_label" || str == "dl") {
+    return CommandEnum::kDeleteLabel;
+  }
   return CommandEnum::kUnknown;
 }
 std::pair<CommandEnum, std::string> DefaultValidator::MakeRequest(

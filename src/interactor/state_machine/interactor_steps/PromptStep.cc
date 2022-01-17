@@ -45,6 +45,10 @@ void PromptStep::ChangeStep(std::shared_ptr<Step>& active_step) {
           validator_, io_facility_, small_step_factory_, std::move(arg));
       return;
 
+    case CommandEnum::kAddLabel:
+
+    case CommandEnum::kDeleteLabel:
+
     case CommandEnum::kUnknown:
       active_step = std::make_shared<UnknownStep>(
           validator_, io_facility_, small_step_factory_, std::move(arg));

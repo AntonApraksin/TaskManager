@@ -13,6 +13,8 @@ enum class CommandEnum {
   kUnknown,
   kSave,
   kLoad,
+  kAddLabel,
+  kDeleteLabel,
 };
 }
 

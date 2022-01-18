@@ -41,8 +41,12 @@ constexpr ccp kHelp =
     "    Show all tasks.\n"
     "  save(sa) filename\n"
     "    Save current state to specified file.\n"
-    "  load(load) filename\n"
+    "  load(lo) filename\n"
     "    Load state from specified file. All current state is erased.\n"
+    "  add_label(al) id label\n"
+    "    Add label to specified task.\n"
+    "  delete_label(dl) id label\n"
+    "    Delete label from specified task.\n"
     "  quit(q)\n"
     "    Quit.\n";
 

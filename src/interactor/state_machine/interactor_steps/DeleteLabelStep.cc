@@ -22,20 +22,23 @@ std::unique_ptr<Command> DeleteLabelStep::HandleStage<1>(Context &) {
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
+
   auto token = validator_->ConsumeOneTokenFrom(arg_);
   auto to_edit = validator_->ParseInt(token);
-  if (to_edit) {
-    task_id_.set_id(*to_edit);
-  } else {
+  if (!to_edit) {
     return ReportError(Strings::InvalidId(token));
   }
+
+  task_id_.set_id(*to_edit);
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredLabel);
   }
+
   token = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
+
   label_.set_name(token);
   return std::make_unique<GetSpecifiedTasksCommand>(
       std::vector<TaskId>{task_id_});
@@ -47,12 +50,14 @@ std::unique_ptr<Command> DeleteLabelStep::HandleStage<0>(Context &ctx) {
       ctx.status == ModelController::Status::kNotPresentId) {
     return ReportError(Strings::NotPresentId(std::to_string(task_id_.id())));
   }
+
   auto found =
       std::find_if(ctx.solid_tasks->cbegin(), ctx.solid_tasks->cend(),
                    [this](const auto &i) { return i.task_id() == task_id_; });
   if (found == ctx.solid_tasks->cend()) {
     return ReportError(Strings::NotPresentId(std::to_string(task_id_.id())));
   }
+
   if (std::find_if(found->task().labels().begin(), found->task().labels().end(),
                    [this](auto &label) {
                      return label.name() == label_.name();
@@ -68,13 +73,16 @@ std::unique_ptr<Command> DeleteLabelStep::HandleStage<0>(Context &ctx) {
   io_facility_->Print(Strings::ProceedTo("delete label"));
   std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
+
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
   }
+
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
+
   return std::make_unique<DeleteLabelCommand>(task_id_, label_);
 }
 

@@ -40,6 +40,20 @@ TEST_F(AddLabelStepTest,
   EXPECT_DEATH(step_->execute({}), "");
 }
 
+TEST_F(AddLabelStepTest, FirstCallWithInvalidIdAndLabelMustReturnVoidCommand) {
+  SetArg("a foo");
+  auto command{step_->execute({})};
+  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+  EXPECT_DEATH(step_->execute({}), "");
+}
+
+TEST_F(AddLabelStepTest, FirstCallWithThirdArgumentMustReturnVoidCommand) {
+  SetArg("12 foo 34");
+  auto command{step_->execute({})};
+  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+  EXPECT_DEATH(step_->execute({}), "");
+}
+
 TEST_F(AddLabelStepTest, SecondCallWithoutSolidTasksReturnVoidCommand) {
   SetArg("12 foo");
   step_->execute({});
@@ -85,4 +99,27 @@ TEST_F(AddLabelStepTest,
       step_->execute({{}, solid_tasks, ModelController::Status::kOk});
   EXPECT_NE(dynamic_cast<AddLabelCommand*>(command.get()), nullptr);
   EXPECT_DEATH(step_->execute({}), "");
+}
+
+TEST_F(AddLabelStepTest, MustNotChangeStepAfterFirstExecute) {
+  SetArg("12 foo");
+  step_->execute({});
+  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
+  const auto old_addr = to_change.get();
+  step_->ChangeStep(to_change);
+  EXPECT_EQ(to_change.get(), old_addr);
+}
+
+TEST_F(AddLabelStepTest, MustChangeStepAfterSecondExecute) {
+  SetArg("12 foo");
+  step_->execute({});
+  SetInput({"y"});
+  TaskFactory task_factory;
+  auto task = task_factory.GetNextTask();
+  SolidTasks solid_tasks{TaskToSolidTask(task, 12)};
+  step_->execute({{}, solid_tasks, ModelController::Status::kOk});
+  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
+  const auto old_addr = to_change.get();
+  step_->ChangeStep(to_change);
+  EXPECT_NE(to_change.get(), old_addr);
 }

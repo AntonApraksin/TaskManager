@@ -40,6 +40,13 @@ std::string Strings::NotPresentId(const std::string& id) {
   return ss.str();
 }
 
+std::string Strings::NotPresentLabel(const std::string& id,
+                                     const std::string& label) {
+  std::stringstream ss;
+  ss << "Task '" << id << "' does not have label '" << label << "'.\n";
+  return ss.str();
+}
+
 std::string Strings::ShowId(const std::string& id) {
   std::stringstream ss;
   ss << "Id " << id << ".\n";
@@ -105,7 +112,15 @@ std::string Strings::ShowSolidTask(SolidTask solid_task) {
      << to_string(solid_task.task().progress()) << "] "
      << "(" << to_string(solid_task.task().priority()) << ") "
      << "{" << std::put_time(localized_time, kDatePattern) << "} "
-     << "'" << solid_task.task().title() << "'\n";
+     << "'" << solid_task.task().title() << "' ";
+  if (solid_task.task().labels_size() != 0) {
+    ss << "( ";
+    for (const auto& i : solid_task.task().labels()) {
+      ss << i.name() << " ";
+    }
+    ss << ")";
+  }
+  ss << '\n';
   return ss.str();
 }
 

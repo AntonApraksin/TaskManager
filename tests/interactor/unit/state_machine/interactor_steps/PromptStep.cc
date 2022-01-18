@@ -1,8 +1,10 @@
 #include "interactor/state_machine/interactor_steps/PromptStep.h"
 
 #include "StepTest.h"
+#include "interactor/state_machine/interactor_steps/AddLabelStep.h"
 #include "interactor/state_machine/interactor_steps/AddStep.h"
 #include "interactor/state_machine/interactor_steps/CompleteStep.h"
+#include "interactor/state_machine/interactor_steps/DeleteLabelStep.h"
 #include "interactor/state_machine/interactor_steps/DeleteStep.h"
 #include "interactor/state_machine/interactor_steps/EditStep.h"
 #include "interactor/state_machine/interactor_steps/HelpStep.h"
@@ -54,6 +56,8 @@ IT_WAS_NECESARRY_PLS_DONT_KILL_ME(SaveStep, "save")
 IT_WAS_NECESARRY_PLS_DONT_KILL_ME(LoadStep, "load")
 IT_WAS_NECESARRY_PLS_DONT_KILL_ME(UnknownStep, "gfdskghd")
 IT_WAS_NECESARRY_PLS_DONT_KILL_ME(HelpStep, "help")
+IT_WAS_NECESARRY_PLS_DONT_KILL_ME(AddLabelStep, "add_label")
+IT_WAS_NECESARRY_PLS_DONT_KILL_ME(DeleteLabelStep, "delete_label")
 
 TEST_F(PromptStepTest, ChangeStepMustSetNullptr) {
   SetArg("");

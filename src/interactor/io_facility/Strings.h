@@ -23,8 +23,10 @@ constexpr ccp kUnknownCommand =
 constexpr ccp kMultipleArgumentDoesNotSupported =
     "Multiple arguments does not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
+constexpr ccp kRequiredLabel = "Label is required for this command.\n";
 constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
 constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
+constexpr ccp kNotPresentLabel = "Given label wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"
     "  add(a) [id]\n"
@@ -45,6 +47,8 @@ constexpr ccp kHelp =
     "    Quit.\n";
 
 std::string NotPresentId(const std::string&);
+
+std::string NotPresentLabel(const std::string&, const std::string&);
 
 std::string InvalidId(const std::string&);
 

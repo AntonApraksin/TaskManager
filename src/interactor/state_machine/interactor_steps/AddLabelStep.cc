@@ -46,8 +46,7 @@ std::unique_ptr<Command> AddLabelStep::HandleStage<1>(Context &) {
 
 template <>
 std::unique_ptr<Command> AddLabelStep::HandleStage<0>(Context &ctx) {
-  if (!ctx.solid_tasks &&
-      ctx.status == ModelController::Status::kNotPresentId) {
+  if (ctx.status == ModelController::Status::kNotPresentId) {
     return ReportError(Strings::NotPresentId(std::to_string(task_id_.id())));
   }
 

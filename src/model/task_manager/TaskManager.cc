@@ -89,10 +89,10 @@ OperationResult<TMStatus> TaskManager::Delete(TaskId id) {
 OperationResult<TMStatus> TaskManager::AddLabel(TaskId id, Label label) {
   if (auto it = storage_.tasks.find(id); it != storage_.tasks.end()) {
     auto& task = it->second;
-    if (std::find_if(task.labels().begin(), task.labels().end(),
-                     [&label](auto& stored_lable) {
+    if (std::find_if(task.labels().cbegin(), task.labels().cend(),
+                     [&label](const auto& stored_lable) {
                        return label.name() == stored_lable.name();
-                     }) == task.labels().end()) {
+                     }) == task.labels().cend()) {
       auto new_label = task.add_labels();
       *new_label = std::move(label);
     }
@@ -104,12 +104,12 @@ OperationResult<TMStatus> TaskManager::AddLabel(TaskId id, Label label) {
 OperationResult<TMStatus> TaskManager::DeleteLabel(TaskId id, Label label) {
   if (auto it = storage_.tasks.find(id); it != storage_.tasks.end()) {
     auto& task = it->second;
-    if (auto to_erase = std::find_if(task.labels().begin(), task.labels().end(),
-                                     [&label](auto& stored_lable) {
-                                       return label.name() ==
-                                              stored_lable.name();
-                                     });
-        to_erase != task.labels().end()) {
+    if (auto to_erase =
+            std::find_if(task.labels().cbegin(), task.labels().cend(),
+                         [&label](const auto& stored_label) {
+                           return label.name() == stored_label.name();
+                         });
+        to_erase != task.labels().cend()) {
       task.mutable_labels()->erase(to_erase);
       return OperationResult<Status>::Ok();
     }

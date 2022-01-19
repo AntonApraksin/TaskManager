@@ -35,7 +35,7 @@ std::unique_ptr<Command> EditStep::HandleStage<1>(Context &) {
       return ReportError(Strings::InvalidId(token));
     }
   }
-  return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  return ReportError(Strings::kMultipleArgumentAreNotAllowed);
 }
 
 template <>

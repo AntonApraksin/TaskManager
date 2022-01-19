@@ -63,7 +63,7 @@ TEST_F(PlainOutputTest, MultipleIdMustAppear) {
       Strings::ShowId(std::to_string(0)),
       Strings::GetPrompt(""),
 
-      Strings::kMultipleArgumentDoesNotSupported,
+      Strings::kMultipleArgumentAreNotAllowed,
       Strings::GetPrompt(""),
   };
 

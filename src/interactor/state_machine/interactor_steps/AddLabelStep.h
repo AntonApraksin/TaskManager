@@ -21,9 +21,6 @@ class AddLabelStep : public Step, public ArgumentMixin {
   template <>
   std::unique_ptr<Command> HandleStage<0>(Context&);
 
-  std::unique_ptr<Command> HandleAddTask(Context&);
-  std::unique_ptr<Command> HandleAddSubTask(Context&);
-
   std::unique_ptr<Command> ReportError(std::string);
 
   int stage_ = 2;

@@ -20,7 +20,7 @@ constexpr ccp kOkayITreatItAsNo = "Okay, i treat it as no\n";
 constexpr ccp kYouAreGoingToEdit = "You are going to edit:\n";
 constexpr ccp kUnknownCommand =
     "Unknown command. Type 'help' to display all available commands.\n";
-constexpr ccp kMultipleArgumentAreNotAllowed =
+constexpr ccp kMultipleArgumentDoesNotSupported =
     "Multiple arguments does not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
 constexpr ccp kRequiredLabel = "Label is required for this command.\n";

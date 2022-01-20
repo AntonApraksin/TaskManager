@@ -27,11 +27,11 @@ void SaveStep::ChangeStep(std::shared_ptr<Step> &active_step) {
 template <>
 std::unique_ptr<Command> SaveStep::HandleStage<1>(Context &) {
   if (arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentAreNotAllowed);
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
   filename_ = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentAreNotAllowed);
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
   return std::make_unique<SaveTasksToFileCommand>(filename_);
 }

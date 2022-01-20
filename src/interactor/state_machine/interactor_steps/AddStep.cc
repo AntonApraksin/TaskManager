@@ -39,7 +39,7 @@ std::unique_ptr<Command> AddStep::HandleStage<2>(Context&) {
     }
     return ReportError(Strings::InvalidId(token));
   }
-  return ReportError(Strings::kMultipleArgumentAreNotAllowed);
+  return ReportError(Strings::kMultipleArgumentDoesNotSupported);
 }
 
 template <>

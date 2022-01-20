@@ -36,7 +36,7 @@ std::unique_ptr<Command> AddLabelStep::HandleStage<1>(Context &) {
 
   token = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentAreNotAllowed);
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
   label_.set_name(token);

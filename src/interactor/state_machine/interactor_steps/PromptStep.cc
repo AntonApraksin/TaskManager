@@ -12,7 +12,7 @@
 #include "interactor/state_machine/interactor_steps/UnknownStep.h"
 
 namespace task_manager {
-std::unique_ptr<Command> PromptStep::execute(Context) {
+std::unique_ptr<Command> PromptStep::execute(StepParameter&) {
   return std::make_unique<VoidCommand>();
 }
 

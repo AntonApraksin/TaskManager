@@ -8,28 +8,15 @@ class AddStep : public Step, public ArgumentMixin {
  public:
   using ArgumentMixin::ArgumentMixin;
 
-  std::unique_ptr<Command> execute(Context) override;
+  std::unique_ptr<Command> execute(StepParameter&) override;
   void ChangeStep(std::shared_ptr<Step>&) override;
 
  private:
-  template <int>
-  std::unique_ptr<Command> HandleStage(Context&);
-
-  template <>
-  std::unique_ptr<Command> HandleStage<2>(Context&);
-
-  template <>
-  std::unique_ptr<Command> HandleStage<1>(Context&);
-
-  template <>
-  std::unique_ptr<Command> HandleStage<0>(Context&);
-
-  std::unique_ptr<Command> HandleAddTask(Context&);
-  std::unique_ptr<Command> HandleAddSubTask(Context&);
+  std::unique_ptr<Command> HandleAddTask(StepParameter&);
+  std::unique_ptr<Command> HandleAddSubTask(StepParameter&);
 
   std::unique_ptr<Command> ReportError(std::string);
 
-  int stage_ = 3;
   std::optional<TaskId> task_id_;
 };
 }  // namespace task_manager

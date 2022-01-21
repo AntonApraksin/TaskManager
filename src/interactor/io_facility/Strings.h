@@ -44,6 +44,9 @@ constexpr ccp kHelp =
     "  quit(q)\n"
     "    Quit.\n";
 
+constexpr ccp kLoadFailure = "Failure during load\n";
+constexpr ccp kSaveFailure = "Failure during save\n";
+
 std::string NotPresentId(const std::string&);
 
 std::string InvalidId(const std::string&);

@@ -1,67 +1,28 @@
 #include "interactor/state_machine/interactor_steps/DeleteStep.h"
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
-std::unique_ptr<Command> DeleteStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 1) {
-    return HandleStage<1>(ctx);
-  }
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
-
-void DeleteStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                               small_step_factory_);
-  }
-}
-
-template <>
-std::unique_ptr<Command> DeleteStep::HandleStage<1>(Context &) {
+std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
   std::string token;
-  std::optional<int> to_complete;
-  for (; !arg_.empty();) {
-    token = validator_->ConsumeOneTokenFrom(arg_);
-    to_complete = validator_->ParseInt(token);
-    if (!to_complete) {
-      return ReportError(Strings::InvalidId(token));
-    }
-    task_ids_.push_back(CreateTaskId(*to_complete));
+  auto to_delete = validator_->ParseInt(validator_->ConsumeOneTokenFrom(arg_));
+  if (!to_delete) {
+    return ReportError(Strings::InvalidId(token));
   }
-  if (task_ids_.size() >
-      std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {
-    return ReportError(Strings::kRepeatedId);
-  }
-  return std::make_unique<GetSpecifiedTasksCommand>(task_ids_);
-}
+  task_id_.set_id(*to_delete);
 
-template <>
-std::unique_ptr<Command> DeleteStep::HandleStage<0>(Context &ctx) {
-  if (!ctx.solid_tasks &&
-      ctx.status == ModelController::Status::kNotPresentId) {
-    return ReportError(Strings::kNotPresentId);
+  auto found =
+      std::find_if(param.cache.begin(), param.cache.end(),
+                   [this](const auto &i) { return i.task_id() == task_id_; });
+  if (found != param.cache.end()) {
+    io_facility_->Print(Strings::YouAreGoingTo("delete"));
+    io_facility_->Print(Strings::ShowSolidTask(*found));
   }
-
-  auto has_parent_child_relationship =
-      HasParentChildRelationship(*ctx.solid_tasks, task_ids_);
-  if (has_parent_child_relationship) {
-    return ReportError(Strings::IdIsSubIdOf(
-        std::to_string(has_parent_child_relationship->first.id()),
-        std::to_string(has_parent_child_relationship->second.id())));
-  }
-  io_facility_->Print(Strings::YouAreGoingTo("delete"));
-
-  io_facility_->Print(Strings::ShowSolidTasks(*ctx.solid_tasks));
 
   io_facility_->Print(Strings::ProceedTo("delete"));
   std::string input = io_facility_->GetLine();
@@ -73,11 +34,15 @@ std::unique_ptr<Command> DeleteStep::HandleStage<0>(Context &ctx) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
-  return std::make_unique<DeleteTasksCommand>(std::move(task_ids_));
+  return std::make_unique<DeleteTasksCommand>(std::vector<TaskId>{task_id_});
+}
+
+void DeleteStep::ChangeStep(std::shared_ptr<Step> &active_step) {
+  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                               small_step_factory_);
 }
 
 std::unique_ptr<Command> DeleteStep::ReportError(std::string str) {
-  stage_ = 0;
   io_facility_->Print(str);
   return std::make_unique<VoidCommand>();
 }

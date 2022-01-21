@@ -30,7 +30,7 @@ class StepTest : public ::testing::Test {
 
 class StepChangeStepTesting : public Step {
  public:
-  std::unique_ptr<Command> execute(Context) override {
+  std::unique_ptr<Command> execute(StepParameter&) override {
     return std::unique_ptr<Command>();
   }
   void ChangeStep(std::shared_ptr<Step>&) override {}

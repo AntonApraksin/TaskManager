@@ -13,11 +13,15 @@ StateMachine::StateMachine(
       active_step_(std::make_shared<PromptStep>(validator_, io_facility_,
                                                 small_step_factory_)) {}
 
-std::unique_ptr<Command> StateMachine::execute(task_manager::Context ctx) {
+std::unique_ptr<Command> StateMachine::execute(Context ctx) {
   if (!active_step_) {
     return {};
   }
-  auto command{active_step_->execute(ctx)};
+  if (ctx.event == StepEvent::kNothing) {
+    ctx.event = step_parameter_.ctx.event;
+  }
+  step_parameter_.ctx = std::move(ctx);
+  auto command{active_step_->execute(step_parameter_)};
   auto next_step = active_step_;
   active_step_->ChangeStep(next_step);
   active_step_ = next_step;

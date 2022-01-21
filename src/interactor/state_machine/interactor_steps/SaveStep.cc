@@ -3,29 +3,10 @@
 #include <fstream>
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 namespace task_manager {
-std::unique_ptr<Command> SaveStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 1) {
-    return HandleStage<1>(ctx);
-  }
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
-
-void SaveStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                               small_step_factory_);
-  }
-}
-
-template <>
-std::unique_ptr<Command> SaveStep::HandleStage<1>(Context &) {
+std::unique_ptr<Command> SaveStep::execute(StepParameter &) {
   if (arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
@@ -36,16 +17,12 @@ std::unique_ptr<Command> SaveStep::HandleStage<1>(Context &) {
   return std::make_unique<SaveTasksToFileCommand>(filename_);
 }
 
-template <>
-std::unique_ptr<Command> SaveStep::HandleStage<0>(Context &ctx) {
-  if (ctx.status == ModelController::Status::kSaveFailure) {
-    return ReportError(Strings::FailureDuringSaving(filename_));
-  }
-  return std::make_unique<VoidCommand>();
+void SaveStep::ChangeStep(std::shared_ptr<Step> &active_step) {
+  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                               small_step_factory_);
 }
 
 std::unique_ptr<Command> SaveStep::ReportError(std::string str) {
-  stage_ = 0;
   io_facility_->Print(str);
   return std::make_unique<VoidCommand>();
 }

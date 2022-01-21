@@ -6,61 +6,27 @@
 #include "interactor/small_steps/ISmallStepFactory.h"
 #include "interactor/small_steps/TaskContext.h"
 #include "interactor/small_steps/TaskInitializerSmallStep.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
-std::unique_ptr<Command> AddStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 2) {
-    return HandleStage<2>(ctx);
-  }
-  if (stage_ == 1) {
-    return HandleStage<1>(ctx);
-  }
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
-
-template <>
-std::unique_ptr<Command> AddStep::HandleStage<2>(Context&) {
-  if (arg_.empty()) {
-    return std::make_unique<VoidCommand>();
-  }
-  auto token = validator_->ConsumeOneTokenFrom(arg_);
-  auto add_to = validator_->ParseInt(token);
-  if (arg_.empty()) {
-    if (add_to) {
-      task_id_ = CreateTaskId(*add_to);
-      return std::make_unique<GetSpecifiedTasksCommand>(
-          std::vector<TaskId>{*task_id_});
+std::unique_ptr<Command> AddStep::execute(StepParameter& param) {
+  if (!arg_.empty()) {
+    auto token = validator_->ConsumeOneTokenFrom(arg_);
+    auto add_to = validator_->ParseInt(token);
+    if (arg_.empty()) {
+      if (add_to) {
+        task_id_ = CreateTaskId(*add_to);
+        return HandleAddSubTask(param);
+      }
+      return ReportError(Strings::InvalidId(token));
     }
-    return ReportError(Strings::InvalidId(token));
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  return HandleAddTask(param);
 }
 
-template <>
-std::unique_ptr<Command> AddStep::HandleStage<1>(Context& ctx) {
-  if (task_id_) {
-    return HandleAddSubTask(ctx);
-  } else {
-    return HandleAddTask(ctx);
-  }
-}
-
-template <>
-std::unique_ptr<Command> AddStep::HandleStage<0>(Context& ctx) {
-  if (ctx.task_id) {
-    io_facility_->Print(Strings::ShowId(std::to_string(ctx.task_id->id())));
-  }
-  // TODO: Show error?
-  return std::make_unique<VoidCommand>();
-}
-
-std::unique_ptr<Command> AddStep::HandleAddTask(Context&) {
+std::unique_ptr<Command> AddStep::HandleAddTask(StepParameter& param) {
   TaskContext sub_context;
   sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
       TaskBuilder{std::nullopt,
@@ -78,34 +44,38 @@ std::unique_ptr<Command> AddStep::HandleAddTask(Context&) {
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
-    stage_ = 0;
     return std::make_unique<VoidCommand>();
   }
   if (*confirm == ConfirmationResult::kNo) {
-    stage_ = 0;
     return std::make_unique<VoidCommand>();
   }
-  return std::make_unique<AddTaskCommand>(
-      sub_context.GetTaskBuilder().GetTask());
+  auto new_task = sub_context.GetTaskBuilder().GetTask();
+  SolidTask solid_task;
+  solid_task.set_allocated_task(new Task(new_task));
+  param.cache.push_back(std::move(solid_task));
+  param.ctx.event = StepEvent::kShowId;
+  return std::make_unique<AddTaskCommand>(new_task);
 }
 
-std::unique_ptr<Command> AddStep::HandleAddSubTask(Context& ctx) {
-  if (!ctx.solid_tasks) {
-    return ReportError(Strings::NotPresentId(std::to_string(task_id_->id())));
-  }
+std::unique_ptr<Command> AddStep::HandleAddSubTask(StepParameter& param) {
   auto found =
-      std::find_if(ctx.solid_tasks->cbegin(), ctx.solid_tasks->cend(),
-                   [this](const auto& i) { return i.task_id() == *task_id_; });
-  if (found == ctx.solid_tasks->cend()) {
-    return ReportError(Strings::NotPresentId(std::to_string(task_id_->id())));
-  }
-  io_facility_->Print(Strings::kAddSubtaskTo);
-  auto& task = found->task();
-  io_facility_->Print(Strings::ShowSolidTask(*found));
+      std::find_if(param.cache.begin(), param.cache.end(),
+                   [this](const auto& i) { return i.task_id() == task_id_; });
   TaskContext sub_context;
-  sub_context.PushState(
-      std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
-          std::nullopt, task.due_date(), task.priority(), task.progress()}));
+  if (found != param.cache.end()) {
+    io_facility_->Print(Strings::kAddSubtaskTo);
+    io_facility_->Print(Strings::ShowSolidTask(*found));
+    auto& task = found->task();
+    sub_context.PushState(
+        std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
+            std::nullopt, task.due_date(), task.priority(), task.progress()}));
+  } else {
+    sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
+        TaskBuilder{std::nullopt,
+                    google::protobuf::util::TimeUtil::TimeTToTimestamp(
+                        std::time(nullptr)),
+                    Task::kLow, Task::kUncompleted}));
+  }
   sub_context.PushState(small_step_factory_->GetReadTitleSmallStep());
   sub_context.PushState(small_step_factory_->GetReadDateSmallStep());
   sub_context.PushState(small_step_factory_->GetReadPrioritySmallStep());
@@ -117,26 +87,26 @@ std::unique_ptr<Command> AddStep::HandleAddSubTask(Context& ctx) {
   auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
-    stage_ = 0;
     return std::make_unique<VoidCommand>();
   }
   if (*confirm == ConfirmationResult::kNo) {
-    stage_ = 0;
     return std::make_unique<VoidCommand>();
   }
-  return std::make_unique<AddSubtaskCommand>(
-      *task_id_, sub_context.GetTaskBuilder().GetTask());
+  auto new_task = sub_context.GetTaskBuilder().GetTask();
+  SolidTask solid_task;
+  solid_task.set_allocated_task(new Task(new_task));
+  solid_task.set_allocated_parent_id(new TaskId(*task_id_));
+  param.cache.push_back(std::move(solid_task));
+  param.ctx.event = StepEvent::kShowId;
+  return std::make_unique<AddSubtaskCommand>(*task_id_, new_task);
 }
 
 void AddStep::ChangeStep(std::shared_ptr<Step>& active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
+  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
                                                small_step_factory_);
-  }
 }
 
 std::unique_ptr<Command> AddStep::ReportError(std::string str) {
-  stage_ = 0;
   io_facility_->Print(str);
   return std::make_unique<VoidCommand>();
 }

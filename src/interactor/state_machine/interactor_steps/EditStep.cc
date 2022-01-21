@@ -11,11 +11,14 @@
 
 namespace task_manager {
 std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
+  param.ctx.event = StepEvent::kNothing;
+
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-  std::string token;
-  auto to_edit = validator_->ParseInt(validator_->ConsumeOneTokenFrom(arg_));
+
+  std::string token = validator_->ConsumeOneTokenFrom(arg_);
+  auto to_edit = validator_->ParseInt(token);
   if (!to_edit) {
     return ReportError(Strings::InvalidId(token));
   }
@@ -33,13 +36,14 @@ std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
     sub_context.PushState(
         std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
             task.title(), task.due_date(), task.priority(), task.progress()}));
+  } else {
+    sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
+        TaskBuilder{std::nullopt,
+                    google::protobuf::util::TimeUtil::TimeTToTimestamp(
+                        std::time(nullptr)),
+                    Task::kLow, Task::kUncompleted}));
   }
 
-  sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
-      TaskBuilder{std::nullopt,
-                  google::protobuf::util::TimeUtil::TimeTToTimestamp(
-                      std::time(nullptr)),
-                  Task::kLow, Task::kUncompleted}));
   sub_context.PushState(small_step_factory_->GetReadTitleSmallStep());
   sub_context.PushState(small_step_factory_->GetReadDateSmallStep());
   sub_context.PushState(small_step_factory_->GetReadPrioritySmallStep());

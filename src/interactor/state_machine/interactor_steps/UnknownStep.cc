@@ -4,8 +4,9 @@
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 namespace task_manager {
-std::unique_ptr<Command> UnknownStep::execute(StepParameter &) {
+std::unique_ptr<Command> UnknownStep::execute(StepParameter &param) {
   io_facility_->Print(Strings::kUnknownCommand);
+  param.ctx.event = StepEvent::kNothing;
   return std::make_unique<VoidCommand>();
 }
 

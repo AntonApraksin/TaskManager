@@ -13,8 +13,8 @@ class FinalizeStep : public Step, private DependenciesMixin {
 
  private:
   std::unique_ptr<Command> ShowAll(StepParameter&);
+  std::unique_ptr<Command> ShowId(StepParameter&);
   std::unique_ptr<Command> ShowSpecificTasks(StepParameter&);
-  std::unique_ptr<Command> ShowByLabel(StepParameter&);
 };
 }  // namespace task_manager
 

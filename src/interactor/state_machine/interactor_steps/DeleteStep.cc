@@ -6,11 +6,13 @@
 
 namespace task_manager {
 std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
+  param.ctx.event = StepEvent::kNothing;
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-  std::string token;
-  auto to_delete = validator_->ParseInt(validator_->ConsumeOneTokenFrom(arg_));
+
+  std::string token = validator_->ConsumeOneTokenFrom(arg_);
+  auto to_delete = validator_->ParseInt(token);
   if (!to_delete) {
     return ReportError(Strings::InvalidId(token));
   }
@@ -34,6 +36,8 @@ std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
+  // TODO: Update cache
+  param.cache.clear();
   return std::make_unique<DeleteTasksCommand>(std::vector<TaskId>{task_id_});
 }
 

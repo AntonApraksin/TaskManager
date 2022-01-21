@@ -11,6 +11,7 @@
 
 namespace task_manager {
 std::unique_ptr<Command> AddStep::execute(StepParameter& param) {
+  param.ctx.event = StepEvent::kNothing;
   if (!arg_.empty()) {
     auto token = validator_->ConsumeOneTokenFrom(arg_);
     auto add_to = validator_->ParseInt(token);
@@ -96,7 +97,9 @@ std::unique_ptr<Command> AddStep::HandleAddSubTask(StepParameter& param) {
   SolidTask solid_task;
   solid_task.set_allocated_task(new Task(new_task));
   solid_task.set_allocated_parent_id(new TaskId(*task_id_));
-  param.cache.push_back(std::move(solid_task));
+  if (found != param.cache.end()) {
+    param.cache.insert(found + 1, std::move(solid_task));
+  }
   param.ctx.event = StepEvent::kShowId;
   return std::make_unique<AddSubtaskCommand>(*task_id_, new_task);
 }

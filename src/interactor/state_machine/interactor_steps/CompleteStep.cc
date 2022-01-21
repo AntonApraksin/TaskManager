@@ -6,12 +6,13 @@
 
 namespace task_manager {
 std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
+  param.ctx.event = StepEvent::kNothing;
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-  std::string token;
-  auto to_complete =
-      validator_->ParseInt(validator_->ConsumeOneTokenFrom(arg_));
+
+  std::string token = validator_->ConsumeOneTokenFrom(arg_);
+  auto to_complete = validator_->ParseInt(token);
   if (!to_complete) {
     return ReportError(Strings::InvalidId(token));
   }
@@ -28,13 +29,17 @@ std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
   io_facility_->Print(Strings::ProceedTo("complete"));
   std::string input = io_facility_->GetLine();
   auto confirm = validator_->ParseConfirmation(input);
+
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
   }
+
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
+  // TODO: Update cache
+  param.cache.clear();
   return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{task_id_});
 }
 

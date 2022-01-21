@@ -5,8 +5,9 @@
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
-std::unique_ptr<Command> ShowStep::execute(StepParameter &) {
+std::unique_ptr<Command> ShowStep::execute(StepParameter &param) {
   if (arg_.empty()) {
+    param.ctx.event = StepEvent::kShowAll;
     return std::make_unique<GetAllTasksCommand>();
   }
   std::string token;
@@ -23,6 +24,7 @@ std::unique_ptr<Command> ShowStep::execute(StepParameter &) {
       std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {
     return ReportError(Strings::kRepeatedId);
   }
+  param.ctx.event = StepEvent::kShowById;
   return std::make_unique<GetSpecifiedTasksCommand>(task_ids_);
 }
 

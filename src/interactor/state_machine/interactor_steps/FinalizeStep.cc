@@ -7,8 +7,7 @@ namespace task_manager {
 std::unique_ptr<Command> FinalizeStep::execute(StepParameter &param) {
   switch (param.ctx.event) {
     case StepEvent::kShowId:
-      io_facility_->Print(
-          Strings::ShowId(std::to_string(param.ctx.task_id->id())));
+      ShowId(param);
       return std::make_unique<VoidCommand>();
 
     case StepEvent::kNotPresentLabel:
@@ -44,8 +43,21 @@ std::unique_ptr<Command> FinalizeStep::ShowAll(StepParameter &param) {
   param.ctx.solid_tasks.reset();
   return std::make_unique<VoidCommand>();
 }
+
+std::unique_ptr<Command> FinalizeStep::ShowId(StepParameter &param) {
+  io_facility_->Print(Strings::ShowId(std::to_string(param.ctx.task_id->id())));
+  for (auto &i : param.cache) {
+    if (!i.has_task_id()) {
+      i.set_allocated_task_id(new TaskId(std::move(*param.ctx.task_id)));
+    }
+  }
+  param.ctx.solid_tasks.reset();
+  return std::make_unique<VoidCommand>();
+}
+
 std::unique_ptr<Command> FinalizeStep::ShowSpecificTasks(StepParameter &param) {
   io_facility_->Print(Strings::ShowSolidTasks(*param.ctx.solid_tasks));
+  param.ctx.solid_tasks.reset();
   // TODO: Find a way to update cache here
   return std::make_unique<VoidCommand>();
 }

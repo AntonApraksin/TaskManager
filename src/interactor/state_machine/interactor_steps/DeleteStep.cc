@@ -2,7 +2,7 @@
 
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
-#include "utils/TaskIdUtils.h"
+#include "utils/Functions.h"
 
 namespace task_manager {
 std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
@@ -12,18 +12,21 @@ std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
   }
 
   std::string token = validator_->ConsumeOneTokenFrom(arg_);
+  if (!arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
   auto to_delete = validator_->ParseInt(token);
   if (!to_delete) {
     return ReportError(Strings::InvalidId(token));
   }
   task_id_.set_id(*to_delete);
 
-  auto found =
-      std::find_if(param.cache.begin(), param.cache.end(),
-                   [this](const auto &i) { return i.task_id() == task_id_; });
-  if (found != param.cache.end()) {
+  auto [beg, end] = GetTreeFromVector(param.cache, task_id_);
+  if (beg != param.cache.end()) {
+    SolidTasks tasks(beg, end);
+    tasks.front().clear_parent_id();
     io_facility_->Print(Strings::YouAreGoingTo("delete"));
-    io_facility_->Print(Strings::ShowSolidTask(*found));
+    io_facility_->Print(Strings::ShowSolidTasks(tasks));
   }
 
   io_facility_->Print(Strings::ProceedTo("delete"));
@@ -37,7 +40,7 @@ std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
     return std::make_unique<VoidCommand>();
   }
   // TODO: Update cache
-  param.cache.clear();
+  param.cache.erase(beg, end);
   return std::make_unique<DeleteTasksCommand>(std::vector<TaskId>{task_id_});
 }
 

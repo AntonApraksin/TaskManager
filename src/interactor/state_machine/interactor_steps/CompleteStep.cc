@@ -2,7 +2,7 @@
 
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
-#include "utils/TaskIdUtils.h"
+#include "utils/Functions.h"
 
 namespace task_manager {
 std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
@@ -10,20 +10,22 @@ std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-
   std::string token = validator_->ConsumeOneTokenFrom(arg_);
+  if (!arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
   auto to_complete = validator_->ParseInt(token);
   if (!to_complete) {
     return ReportError(Strings::InvalidId(token));
   }
   task_id_.set_id(*to_complete);
 
-  auto found =
-      std::find_if(param.cache.begin(), param.cache.end(),
-                   [this](const auto &i) { return i.task_id() == task_id_; });
-  if (found != param.cache.end()) {
+  auto [beg, end] = GetTreeFromVector(param.cache, task_id_);
+  if (beg != param.cache.end()) {
+    SolidTasks tasks(beg, end);
+    tasks.front().clear_parent_id();
     io_facility_->Print(Strings::YouAreGoingTo("complete"));
-    io_facility_->Print(Strings::ShowSolidTask(*found));
+    io_facility_->Print(Strings::ShowSolidTasks(tasks));
   }
 
   io_facility_->Print(Strings::ProceedTo("complete"));
@@ -39,7 +41,9 @@ std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
     return std::make_unique<VoidCommand>();
   }
   // TODO: Update cache
-  param.cache.clear();
+  for (; beg != end; ++beg) {
+    beg->mutable_task()->set_progress(Task::kCompleted);
+  }
   return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{task_id_});
 }
 

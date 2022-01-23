@@ -71,7 +71,7 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::kYouAreGoingToEdit,
+      Strings::YouAreGoingTo("edit"),
       Strings::ShowSolidTask(t0),
       Strings::LeaveEmptyFor(st0.title),
       Strings::GetPrompt("title"),

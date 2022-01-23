@@ -79,7 +79,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::ShowId(std::to_string(1)),
 
       Strings::GetPrompt(""),
-      Strings::kYouAreGoingToEdit,
+      Strings::YouAreGoingTo("edit"),
       Strings::ShowSolidTask(TaskDataToSolidTask(t1, 0)),
       Strings::LeaveEmptyFor(t1.title),
       Strings::GetPrompt("title"),
@@ -93,7 +93,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::ProceedTo("edit"),
 
       Strings::GetPrompt(""),
-      Strings::kYouAreGoingToEdit,
+      Strings::YouAreGoingTo("edit"),
       Strings::ShowSolidTask(TaskDataToSolidTask(sub_t1, 1)),
       Strings::LeaveEmptyFor(sub_t1.title),
       Strings::GetPrompt("title"),
@@ -107,7 +107,7 @@ TEST_F(EditOutputTest, RewriteItEveryTimeYouChangeTheSourceCode) {
       Strings::ProceedTo("edit"),
 
       Strings::GetPrompt(""),
-      Strings::kYouAreGoingToEdit,
+      Strings::YouAreGoingTo("edit"),
       Strings::ShowSolidTask(TaskDataToSolidTask(edit_t1, 0)),
       Strings::LeaveEmptyFor(edit_t1.title),
       Strings::GetPrompt("title"),

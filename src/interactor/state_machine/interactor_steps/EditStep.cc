@@ -18,6 +18,10 @@ std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
   }
 
   std::string token = validator_->ConsumeOneTokenFrom(arg_);
+
+  if (!arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
   auto to_edit = validator_->ParseInt(token);
   if (!to_edit) {
     return ReportError(Strings::InvalidId(token));

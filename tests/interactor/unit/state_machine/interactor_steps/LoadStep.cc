@@ -14,33 +14,17 @@ class LoadStepTest : public StepTest {
                                        small_step_factory_, std::move(arg));
   }
   std::unique_ptr<LoadStep> step_;
+  StepParameter step_parameter_;
 };
 
-TEST_F(LoadStepTest,
-       FirstCallWithoutArgumentReturnVoidCommandAndThenCauseDeath) {
+TEST_F(LoadStepTest, ExecuteWithoutArgumentReturnVoidCommand) {
   SetArg("");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
 }
 
-TEST_F(LoadStepTest, MustNotChangeStepAfterFirstExecute) {
+TEST_F(LoadStepTest, ExecuteWithArgumentReturnLoadFromFileCommand) {
   SetArg("foo.txt");
-  step_->execute({});
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  const auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_EQ(to_change.get(), old_addr);
+  auto command{step_->execute(step_parameter_)};
+  EXPECT_NE(dynamic_cast<LoadTasksFromFileCommand*>(command.get()), nullptr);
 }
-
-TEST_F(LoadStepTest, MustChangeStepAfterSecondExecute) {
-  SetArg("foo.txt");
-  step_->execute({});
-  step_->execute({{}, {}, ModelController::Status::kOk});
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  const auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_NE(to_change.get(), old_addr);
-}
-
-// TODO: How to test files?

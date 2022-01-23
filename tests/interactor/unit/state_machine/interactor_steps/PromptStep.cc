@@ -37,11 +37,12 @@ class PromptStepTest : public StepTest {
                                          small_step_factory_);
   }
   std::unique_ptr<PromptStep> step_;
+  StepParameter step_parameter_;
 };
 
 TEST_F(PromptStepTest, ExecuteReturnVoidCommand) {
   SetArg("");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
 

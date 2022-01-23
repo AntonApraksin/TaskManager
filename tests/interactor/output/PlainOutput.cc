@@ -105,11 +105,21 @@ TEST_F(PlainOutputTest, NotPresentIdMustAppear) {  // TODO: fix this
   ss << std::put_time(std::localtime(&time), kDatePattern);
   std::string default_date = ss.str();
 
-  auto [task_storage, output] = RunScenario({"e 0", "q"});
+  auto [task_storage, output] =
+      RunScenario({"e 0", "gds", "", "", "", "y", "q"});
 
   std::vector<std::string> desired_output{
       Strings::GetPrompt(""),
-      Strings::NotPresentId(std::to_string(0)),
+      Strings::GetPrompt("title"),
+      Strings::LeaveEmptyFor(default_date),
+      Strings::GetPrompt("due date", kDatePattern),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
+      Strings::GetPrompt("priority"),
+      Strings::kStateShouldBe,
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
+      Strings::GetPrompt("state"),
+      Strings::ProceedTo("edit"),
+      Strings::kNotPresentId,
       Strings::GetPrompt(""),
   };
 

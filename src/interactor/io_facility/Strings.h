@@ -38,7 +38,7 @@ constexpr ccp kHelp =
     "    Delete a task with the given id.\n"
     "  complete(c) id\n"
     "    Complete a task with the given id.\n"
-    "  show(s)\n"
+    "  show(s) label/id [id...]\n"
     "    Show all tasks.\n"
     "  save(sa)\n"
     "    Save current state.\n"

@@ -162,4 +162,14 @@ std::string Strings::ShowSolidTasks(SolidTasks solid_tasks)
     return ss.str();
 }
 
+std::string Strings::ShowSolidTasksWithoutNest(SolidTasks solid_tasks)
+{
+    std::stringstream ss;
+    std::vector<TaskId> id_stack;
+    for (const auto& i : solid_tasks)
+    {
+        ss << ' ' << ShowSolidTask(i);
+    }
+    return ss.str();
+}
 }  // namespace task_manager

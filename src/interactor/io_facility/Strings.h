@@ -68,6 +68,8 @@ std::string ShowSolidTask(SolidTask);
 
 std::string ShowSolidTasks(SolidTasks);
 
+std::string ShowSolidTasksWithoutNest(SolidTasks);
+
 const char* to_string(Task::Priority);
 const char* to_string(Task::Progress);
 }  // namespace Strings

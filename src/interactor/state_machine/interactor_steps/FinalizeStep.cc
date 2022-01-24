@@ -27,6 +27,8 @@ std::unique_ptr<Command> FinalizeStep::execute(StepParameter& param)
 
         case StepEvent::kShowById:return ShowSpecificTasks(param);
 
+        case StepEvent::kShowWithoutNest:return ShowWithoutNesting(param);
+
         case StepEvent::kNothing:return std::make_unique<VoidCommand>();
     }
 }
@@ -56,5 +58,14 @@ std::shared_ptr<Step> FinalizeStep::ChangeStep()
 {
     return std::make_shared<PromptStep>(validator_, io_facility_,
                                         small_step_factory_);
+}
+
+std::unique_ptr<Command> FinalizeStep::ShowWithoutNesting(
+    StepParameter& param)
+{
+    io_facility_->Print(
+        Strings::ShowSolidTasksWithoutNest(*param.ctx.solid_tasks));
+    param.ctx.solid_tasks.reset();
+    return std::make_unique<VoidCommand>();
 }
 }  // namespace task_manager

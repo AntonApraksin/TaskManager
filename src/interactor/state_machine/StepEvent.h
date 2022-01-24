@@ -10,9 +10,11 @@ enum class StepEvent
     kLoadFailure,
     kSaveFailure,
     kNotPresentLabel,
+
     kShowByLabel,
     kShowAll,
     kShowById,
+    kShowWithoutNest,
     kShowId
 };
 }

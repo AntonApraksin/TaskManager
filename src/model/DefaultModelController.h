@@ -29,6 +29,7 @@ public:
 
     OperationResult<Status, SolidTasks> GetAllSolidTasks() override;
     OperationResult<Status, SolidTasks> GetSpecificSolidTasks(std::vector<TaskId>) override;
+    OperationResult<Status, SolidTasks> GetTasksByLabel(Label label) override;
 
     OperationResult<Status> Load() override;
     OperationResult<Status> Save() override;

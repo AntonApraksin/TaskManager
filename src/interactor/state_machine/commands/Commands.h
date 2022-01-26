@@ -81,22 +81,14 @@ class GetAllTasksCommand : public Command {
   CommandResult execute(ModelController&) override;
 };
 
-class LoadTasksFromFileCommand : public Command {
+class LoadTasksCommand : public Command {
  public:
-  explicit LoadTasksFromFileCommand(std::string);
   CommandResult execute(ModelController&) override;
-
- private:
-  FilePersistence persistence_;
 };
 
-class SaveTasksToFileCommand : public Command {
+class SaveTasksCommand : public Command {
  public:
-  explicit SaveTasksToFileCommand(std::string);
   CommandResult execute(ModelController&) override;
-
- private:
-  FilePersistence persistence_;
 };
 
 class VoidCommand : public Command {

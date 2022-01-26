@@ -16,14 +16,6 @@ class SaveStepTest : public StepTest {
   std::unique_ptr<SaveStep> step_;
 };
 
-TEST_F(SaveStepTest,
-       FirstCallWithoutArgumentReturnVoidCommandAndThenCauseDeath) {
-  SetArg("");
-  auto command{step_->execute({})};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
 TEST_F(SaveStepTest, MustNotChangeStepAfterFirstExecute) {
   SetArg("foo.txt");
   step_->execute({});

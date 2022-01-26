@@ -9,6 +9,7 @@
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
 #include "test_utils/MockIoFacility.h"
+#include "test_utils/MockPersistence.h"
 #include "test_utils/MockTaskIdProducer.h"
 #include "test_utils/TaskStringedData.h"
 
@@ -18,8 +19,9 @@ class ScenarioFramework {
     io_facility_ = std::make_shared<MockIoFacility>();
     auto id_producer = std::make_unique<MockTaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
-    model_controller_ =
-        std::make_shared<DefaultModelController>(std::move(task_manager));
+    auto persistence = std::make_unique<MockPersistence>();
+    model_controller_ = std::make_shared<DefaultModelController>(
+        std::move(task_manager), std::move(persistence));
 
     validator_ = std::make_shared<DefaultValidator>();
 

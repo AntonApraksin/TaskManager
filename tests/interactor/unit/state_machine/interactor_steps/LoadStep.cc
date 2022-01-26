@@ -16,14 +16,6 @@ class LoadStepTest : public StepTest {
   std::unique_ptr<LoadStep> step_;
 };
 
-TEST_F(LoadStepTest,
-       FirstCallWithoutArgumentReturnVoidCommandAndThenCauseDeath) {
-  SetArg("");
-  auto command{step_->execute({})};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
 TEST_F(LoadStepTest, MustNotChangeStepAfterFirstExecute) {
   SetArg("foo.txt");
   step_->execute({});

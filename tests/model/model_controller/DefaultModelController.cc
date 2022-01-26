@@ -4,6 +4,7 @@
 
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
+#include "test_utils/MockPersistence.h"
 #include "test_utils/MockTaskIdProducer.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/operators.h"
@@ -16,7 +17,9 @@ class DefaultModelControllerTest : public ::testing::Test {
   void SetUp() override {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
-    model_controller_ = std::make_unique<DefaultModelController>(std::move(tm));
+    auto persistence = std::make_unique<MockPersistence>();
+    model_controller_ = std::make_unique<DefaultModelController>(
+        std::move(tm), std::move(persistence));
   }
   std::unique_ptr<DefaultModelController> model_controller_;
   TaskFactory task_factory_;

@@ -7,11 +7,9 @@
 #include "test_utils/operators.h"
 #include "test_utils/utils.h"
 
-#define PersistenceTest DISABLE_TESTS_WITH_FILES(PersistenceTest)
+class DISABLED_PersistenceTest : public ::testing::Test {};
 
-class PersistenceTest : public ::testing::Test {};
-
-TEST_F(PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {
+TEST_F(DISABLED_PersistenceTest, SaveAndLoadMustBePerformedInSameOrder) {
   TaskFactory tf;
   auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation
   auto __1 = tf.GetNextTask();   // NOLINT: beautiful tree representation
@@ -38,7 +36,7 @@ TEST_F(PersistenceTest, SaveMustFail){} // TODO: find a way to check this.
 Modify the std::stringstream so it will randomly fail.
 */
 
-TEST_F(PersistenceTest, LoadOnCorruptedDataMustFail) {
+TEST_F(DISABLED_PersistenceTest, LoadOnCorruptedDataMustFail) {
   TaskFactory tf;
   auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation
   auto __1 = tf.GetNextTask();   // NOLINT: beautiful tree representation

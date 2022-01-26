@@ -37,10 +37,10 @@ constexpr ccp kHelp =
     "    Complete a task with the given id.\n"
     "  show(s)\n"
     "    Show all tasks.\n"
-    "  save(sa) filename\n"
-    "    Save current state to specified file.\n"
-    "  load(load) filename\n"
-    "    Load state from specified file. All current state is erased.\n"
+    "  save(sa)\n"
+    "    Save current state.\n"
+    "  load(load)\n"
+    "    Load state. All current state is erased.\n"
     "  quit(q)\n"
     "    Quit.\n";
 

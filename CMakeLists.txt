@@ -12,6 +12,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-language-extension-tok
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=nullability")
 find_package(Protobuf REQUIRED)
 find_program(PROTOBUF_EXECUTABLE protoc)
+find_program(GRPC_PROTOBUF_PLUGIN grpc_cpp_plugin)
 
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/protobuf)
 set(PROTOBUF_CPP_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
@@ -27,6 +28,8 @@ function(compile_proto_file filename)
       DEPENDS ${PROTOBUF_DIR}/${basename}.proto
       COMMAND ${PROTOBUF_EXECUTABLE} ${PROTOBUF_DIR}/${basename}.proto
         --cpp_out=${PROTOBUF_CPP_OUT_DIR}
+        --grpc_out=${PROTOBUF_CPP_OUT_DIR}
+        --plugin=protoc-gen-grpc=${GRPC_PROTOBUF_PLUGIN}
         --proto_path=${PROTOBUF_DIR}
       VERBATIM
   )

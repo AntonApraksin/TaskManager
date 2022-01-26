@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "SolidTask.proto";
+import "TaskId.proto";
+import "Task.proto";
+import "google/protobuf/empty.proto";
+
+package task_manager;
+
+enum ModelControllerStatus
+{
+    kOk = 0;
+    kNotPresentId = 1;
+    kLoadFailure = 2;
+    kSaveFailure = 3;
+}
+
+message PlainResponse
+{
+    ModelControllerStatus status = 1;
+}
+
+message TaskIdResponse
+{
+    ModelControllerStatus status = 1;
+    TaskId task_id = 2;
+}
+
+message SolidTasksResponse
+{
+    ModelControllerStatus status = 1;
+    repeated SolidTask solid_tasks = 2;
+}
+
+message TaskIdsRequest
+{
+    repeated TaskId task_ids = 1;
+}
+
+message TaskAndTaskIdRequest
+{
+    TaskId task_id = 1;
+    Task task = 2;
+}
+
+service ModelService
+{
+    rpc AddTask(Task) returns (TaskIdResponse);
+    rpc AddSubtask(TaskAndTaskIdRequest) returns (TaskIdResponse);
+    rpc Edit(TaskAndTaskIdRequest) returns (PlainResponse);
+    rpc Complete(TaskId) returns (PlainResponse);
+    rpc Delete(TaskId) returns (PlainResponse);
+    rpc GetAllSolidTasks(google.protobuf.Empty) returns (SolidTasksResponse);
+    rpc GetSpecifiedSolidTasks(google.protobuf.Empty) returns (SolidTasksResponse);
+    rpc Load(google.protobuf.Empty) returns (PlainResponse);
+    rpc Save(google.protobuf.Empty) returns (PlainResponse);
+}

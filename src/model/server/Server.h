@@ -7,13 +7,13 @@
 
 #include "ModelService.grpc.pb.h"
 
-namespace task_manager
-{
+namespace task_manager {
 class ModelController;
 
 class Server final : public task_manager::ModelService::Service {
  public:
-  Server(std::unique_ptr<ModelController> model_controller);;
+  Server(std::unique_ptr<ModelController> model_controller);
+  ;
 
   grpc::Status AddTask(::grpc::ServerContext *context,
                        const ::task_manager::Task *request,
@@ -55,6 +55,6 @@ class Server final : public task_manager::ModelService::Service {
   std::unique_ptr<ModelController> model_controller_;
 };
 
-}
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_SERVER_SERVER_H_

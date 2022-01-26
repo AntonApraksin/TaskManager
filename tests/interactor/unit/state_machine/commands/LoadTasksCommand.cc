@@ -34,7 +34,7 @@ TEST_F(LoadTasksCommandTest, MustLoad) {
   FilePersistence persistence{filename};
   new_model_controller.SaveTo(persistence);
 
-  LoadTasksFromFileCommand command(filename);
+  LoadTasksCommand command(filename);
   auto ctx = command.execute(*model_controller_);
   ASSERT_EQ(ctx.status, ModelController::Status::kOk);
 
@@ -81,7 +81,7 @@ TEST_F(LoadTasksCommandTest, MustReturnLoadFailureOnCorruptedData) {
   to_corrupt.write("ffffff", 6);
   to_corrupt.close();
 
-  LoadTasksFromFileCommand command(filename);
+  LoadTasksCommand command(filename);
   auto ctx = command.execute(*model_controller_);
   ASSERT_EQ(ctx.status, ModelController::Status::kLoadFailure);
 }

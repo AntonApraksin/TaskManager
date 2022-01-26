@@ -26,20 +26,13 @@ void LoadStep::ChangeStep(std::shared_ptr<Step> &active_step) {
 
 template <>
 std::unique_ptr<Command> LoadStep::HandleStage<1>(Context &) {
-  if (arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
-  }
-  filename_ = validator_->ConsumeOneTokenFrom(arg_);
-  if (!arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
-  }
-  return std::make_unique<LoadTasksFromFileCommand>(filename_);
+  return std::make_unique<LoadTasksCommand>();
 }
 
 template <>
 std::unique_ptr<Command> LoadStep::HandleStage<0>(Context &ctx) {
   if (ctx.status == ModelController::Status::kLoadFailure) {
-    return ReportError(Strings::FailureDuringLoading(filename_));
+    return ReportError(Strings::kLoadFailure);
   }
   return std::make_unique<VoidCommand>();
 }

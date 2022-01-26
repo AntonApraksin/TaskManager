@@ -23,7 +23,6 @@ class LoadStep : public Step, public ArgumentMixin {
 
   std::unique_ptr<Command> ReportError(std::string);
 
-  std::string filename_;
   int stage_ = 2;
 };
 }  // namespace task_manager

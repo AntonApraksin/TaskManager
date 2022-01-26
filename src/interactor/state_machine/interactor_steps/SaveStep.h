@@ -24,7 +24,6 @@ class SaveStep : public Step, public ArgumentMixin {
   std::unique_ptr<Command> ReportError(std::string);
 
   int stage_ = 2;
-  std::string filename_;
 };
 }  // namespace task_manager
 

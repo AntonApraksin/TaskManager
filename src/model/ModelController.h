@@ -19,6 +19,7 @@ class ModelController {
     kNotPresentId,
     kLoadFailure,
     kSaveFailure,
+    kNotPresentLabel
   };
 
  public:
@@ -32,6 +33,9 @@ class ModelController {
       std::vector<TaskId>) = 0;
   virtual OperationResult<Status> LoadFrom(Persistence&) = 0;
   virtual OperationResult<Status> SaveTo(Persistence&) = 0;
+
+  virtual OperationResult<Status> AddLabel(TaskId task_id, Label label) = 0;
+  virtual OperationResult<Status> DeleteLabel(TaskId task_id, Label label) = 0;
 
   virtual ~ModelController() {}
 };

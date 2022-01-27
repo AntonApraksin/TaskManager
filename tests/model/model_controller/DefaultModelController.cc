@@ -260,3 +260,78 @@ TEST_F(DefaultModelControllerTest, GetSpecificSolidTasks) {
     EXPECT_EQ(result.AccessResult()[i], expected[i]);
   }
 }
+
+TEST_F(DefaultModelControllerTest, MustAddLabel) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+  auto storage = model_controller_->GetAllSolidTasks().AccessResult();
+  auto got_task = storage.at(0).task();
+  ASSERT_EQ(got_task.labels_size(), 1);
+  EXPECT_EQ(got_task.labels()[0].name(), label.name());
+}
+
+TEST_F(DefaultModelControllerTest, MustDeleteLabel) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+  result = model_controller_->DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+  auto storage = model_controller_->GetAllSolidTasks().AccessResult();
+  auto got_task = storage.at(0).task();
+  ASSERT_EQ(got_task.labels_size(), 0);
+}
+
+TEST_F(DefaultModelControllerTest,
+       AddLabelWithNotPresentIdMustResultInkNotPresentId) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  model_controller_->Delete(id);
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
+}
+
+TEST_F(DefaultModelControllerTest,
+       AddLabelWithRepeatedLabelMustNotAddItAndReturnkOk) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+  result = model_controller_->AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+  auto storage = model_controller_->GetAllSolidTasks().AccessResult();
+  auto got_task = storage.at(0).task();
+  ASSERT_EQ(got_task.labels_size(), 1);
+  EXPECT_EQ(got_task.labels()[0].name(), label.name());
+}
+
+TEST_F(DefaultModelControllerTest,
+       DeleteLabelWithNotPresentIdMustResultInkNotPresentId) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  model_controller_->Delete(id);
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
+}
+
+TEST_F(DefaultModelControllerTest,
+       DeleteLabelWithNotPresentLabelMustResultInkNotPresentLabel) {
+  auto task = task_factory_.GetNextTask();
+  auto id = model_controller_->Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = model_controller_->DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), ModelController::Status::kNotPresentLabel);
+}

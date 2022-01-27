@@ -12,8 +12,7 @@ class ModelController;
 
 class Server final : public task_manager::ModelService::Service {
  public:
-  Server(std::unique_ptr<ModelController> model_controller);
-  ;
+  explicit Server(std::unique_ptr<ModelController> model_controller);
 
   grpc::Status AddTask(::grpc::ServerContext *context,
                        const ::task_manager::Task *request,

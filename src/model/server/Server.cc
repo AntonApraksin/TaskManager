@@ -69,7 +69,7 @@ grpc::Status Server::Delete(::grpc::ServerContext *,
 }
 
 grpc::Status Server::GetAllSolidTasks(
-    ::grpc::ServerContext *, const ::google::protobuf::Empty *request,
+    ::grpc::ServerContext *, const ::google::protobuf::Empty *,
     ::task_manager::SolidTasksResponse *response) {
   auto result = model_controller_->GetAllSolidTasks();
   for (const auto &i : result.AccessResult()) {

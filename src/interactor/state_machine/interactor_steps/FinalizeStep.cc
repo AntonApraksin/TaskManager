@@ -10,10 +10,6 @@ std::unique_ptr<Command> FinalizeStep::execute(StepParameter &param) {
       ShowId(param);
       return std::make_unique<VoidCommand>();
 
-    case StepEvent::kNotPresentLabel:
-      io_facility_->Print(Strings::kNotPresentLabel);
-      return std::make_unique<VoidCommand>();
-
     case StepEvent::kNotPresentId:
       io_facility_->Print(Strings::kNotPresentId);
       return std::make_unique<VoidCommand>();

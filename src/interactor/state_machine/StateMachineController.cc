@@ -9,9 +9,6 @@ StepEvent MCStatusToStepEvent(ModelController::Status status) {
     case ModelController::Status::kOk:
       return StepEvent::kNothing;
 
-    case ModelController::Status::kNotPresentLabel:
-      return StepEvent::kNotPresentLabel;
-
     case ModelController::Status::kSaveFailure:
       return StepEvent::kSaveFailure;
 

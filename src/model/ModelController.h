@@ -6,10 +6,8 @@
 
 #include "OperationResult.h"
 #include "model/SolidTask.h"
-#include "persistence/Persistence.h"
 
 namespace task_manager {
-
 class ModelController {
  public:
   enum class Status {

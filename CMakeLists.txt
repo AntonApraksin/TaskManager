@@ -74,6 +74,10 @@ add_executable(server
     src/server.cc)
 target_link_libraries(server TaskManager)
 
+add_executable(client
+    src/client.cc)
+target_link_libraries(client TaskManager)
+
 target_include_directories(TaskManager
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${PROTOBUF_CPP_OUT_DIR}

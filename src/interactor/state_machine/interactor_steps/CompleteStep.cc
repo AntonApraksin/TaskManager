@@ -40,7 +40,6 @@ std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
-  // TODO: Update cache
   for (; beg != end; ++beg) {
     beg->mutable_task()->set_progress(Task::kCompleted);
   }

@@ -39,7 +39,6 @@ std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
-  // TODO: Update cache
   param.cache.erase(beg, end);
   return std::make_unique<DeleteTasksCommand>(std::vector<TaskId>{task_id_});
 }

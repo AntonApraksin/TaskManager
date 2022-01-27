@@ -4,7 +4,7 @@
 
 namespace task_manager {
 
-TaskServiceStatus ModelControllerStatusToTaskServiceStatus(
+TaskServiceStatus ConvertModelControllerStatusToTaskServiceStatus(
     ModelController::Status status) {
   switch (status) {
     case ModelController::Status::kNotPresentId:
@@ -30,7 +30,7 @@ grpc::Status DefaultTaskService::AddTask(
     response->set_allocated_task_id(new TaskId(result.AccessResult()));
   }
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -43,7 +43,7 @@ grpc::Status DefaultTaskService::AddSubtask(
     response->set_allocated_task_id(new TaskId(result.AccessResult()));
   }
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -53,7 +53,7 @@ grpc::Status DefaultTaskService::Edit(
     ::task_manager::PlainResponse *response) {
   auto result = model_controller_->Edit(request->task_id(), request->task());
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -62,7 +62,7 @@ grpc::Status DefaultTaskService::Complete(
     ::task_manager::PlainResponse *response) {
   auto result = model_controller_->Complete(*request);
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -71,7 +71,7 @@ grpc::Status DefaultTaskService::Delete(
     ::task_manager::PlainResponse *response) {
   auto result = model_controller_->Delete(*request);
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -83,7 +83,7 @@ grpc::Status DefaultTaskService::GetAllSolidTasks(
     response->add_solid_tasks()->CopyFrom(i);
   }
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
@@ -98,25 +98,25 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(
     response->add_solid_tasks()->CopyFrom(i);
   }
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
 grpc::Status DefaultTaskService::Load(::grpc::ServerContext *,
                                       const ::google::protobuf::Empty *,
                                       ::task_manager::PlainResponse *response) {
-  auto result = model_controller_->Save();
+  auto result = model_controller_->Load();
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 
 grpc::Status DefaultTaskService::Save(::grpc::ServerContext *,
                                       const ::google::protobuf::Empty *,
                                       ::task_manager::PlainResponse *response) {
-  auto result = model_controller_->Load();
+  auto result = model_controller_->Save();
   response->set_status(
-      ModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;
 }
 }  // namespace task_manager

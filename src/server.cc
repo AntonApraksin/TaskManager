@@ -1,5 +1,3 @@
-#include "model/server/Server.h"
-
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
@@ -7,6 +5,7 @@
 #include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/FilePersistence.h"
+#include "service/DefaultTaskService.h"
 
 int main() {
   using namespace task_manager;
@@ -20,7 +19,7 @@ int main() {
       std::move(task_manager), std::move(file_persister));
 
   auto server_address = "127.0.0.1:50051";
-  Server service(std::move(model_controller));
+  DefaultTaskService service(std::move(model_controller));
 
   grpc::ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.

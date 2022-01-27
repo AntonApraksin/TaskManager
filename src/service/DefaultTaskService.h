@@ -5,14 +5,15 @@
 
 #include <memory>
 
-#include "ModelService.grpc.pb.h"
+#include "TaskService.grpc.pb.h"
 
 namespace task_manager {
 class ModelController;
 
-class Server final : public task_manager::ModelService::Service {
+class DefaultTaskService final : public task_manager::TaskService::Service {
  public:
-  explicit Server(std::unique_ptr<ModelController> model_controller);
+  explicit DefaultTaskService(
+      std::unique_ptr<ModelController> model_controller);
 
   grpc::Status AddTask(::grpc::ServerContext *context,
                        const ::task_manager::Task *request,

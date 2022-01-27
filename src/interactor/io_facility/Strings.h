@@ -24,7 +24,9 @@ constexpr ccp kMultipleArgumentDoesNotSupported =
     "Multiple arguments does not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
 constexpr ccp kInvalidId = "Invalid id format.\n";
+constexpr ccp kRequiredLabel = "Label is required for this command.\n";
 constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
+constexpr ccp kNotPresentLabel = "Given label wasn`t found\n";
 constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"

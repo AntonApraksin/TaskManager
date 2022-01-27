@@ -17,6 +17,9 @@ StepEvent MCStatusToStepEvent(ModelController::Status status) {
 
     case ModelController::Status::kNotPresentId:
       return StepEvent::kNotPresentId;
+
+    case ModelController::Status::kNotPresentLabel:
+      return StepEvent::kNotPresentLabel;
   }
 }
 

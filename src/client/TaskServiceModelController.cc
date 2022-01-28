@@ -22,7 +22,7 @@ MCStatus ConvertTaskServiceStatusToModelControllerStatus(
 }
 
 TaskServiceModelController::TaskServiceModelController(
-    std::unique_ptr<task_manager::TaskService::Stub> stub)
+    std::unique_ptr<task_manager::TaskService::StubInterface> stub)
     : stub_(std::move(stub)) {}
 
 OperationResult<MCStatus, TaskId> task_manager::TaskServiceModelController::Add(

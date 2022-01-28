@@ -12,7 +12,7 @@ namespace task_manager {
 class TaskServiceModelController : public ModelController {
  public:
   TaskServiceModelController(
-      std::unique_ptr<task_manager::TaskService::Stub> stub);
+      std::unique_ptr<task_manager::TaskService::StubInterface> stub);
 
   OperationResult<Status, TaskId> Add(Task task) override;
   OperationResult<Status, TaskId> Add(TaskId task_id, Task task) override;
@@ -26,7 +26,7 @@ class TaskServiceModelController : public ModelController {
   OperationResult<Status> Save() override;
 
  private:
-  std::unique_ptr<task_manager::TaskService::Stub> stub_;
+  std::unique_ptr<task_manager::TaskService::StubInterface> stub_;
 };
 }  // namespace task_manager
 

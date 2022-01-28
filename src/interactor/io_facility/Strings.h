@@ -39,7 +39,7 @@ constexpr ccp kHelp =
     "    Show all tasks.\n"
     "  save(sa)\n"
     "    Save current state.\n"
-    "  load(load)\n"
+    "  load(lo)\n"
     "    Load state. All current state is erased.\n"
     "  quit(q)\n"
     "    Quit.\n";

@@ -289,7 +289,8 @@ TEST_F(DefaultModelControllerTest, MustCallSaveOnPersistence) {
   auto expected = model_controller_->GetAllSolidTasks().AccessResult();
 
   EXPECT_CALL(*persistence_, Save(expected)).Times(1);
-  model_controller_->Save();
+  auto result = model_controller_->Save();
+  EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
 }
 
 TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence) {
@@ -320,7 +321,8 @@ TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence) {
   ASSERT_TRUE(model_controller_->GetAllSolidTasks().AccessResult().empty());
 
   EXPECT_CALL(*persistence_, Load()).WillOnce(testing::Return(to_load));
-  model_controller_->Load();
+  auto result = model_controller_->Load();
+  EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
 
   auto loaded_state = model_controller_->GetAllSolidTasks().AccessResult();
   ASSERT_EQ(to_load.AccessResult().size(), loaded_state.size());

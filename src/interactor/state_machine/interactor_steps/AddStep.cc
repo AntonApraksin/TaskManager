@@ -51,10 +51,9 @@ std::unique_ptr<Command> AddStep::HandleAddTask(StepParameter& param) {
     return std::make_unique<VoidCommand>();
   }
   auto new_task = sub_context.GetTaskBuilder().GetTask();
-  SolidTask solid_task;
-  solid_task.set_allocated_task(new Task(new_task));
-  param.cache.push_back(std::move(solid_task));
   param.ctx.event = StepEvent::kShowId;
+
+  param.cache.clear();
   return std::make_unique<AddTaskCommand>(new_task);
 }
 
@@ -94,13 +93,9 @@ std::unique_ptr<Command> AddStep::HandleAddSubTask(StepParameter& param) {
     return std::make_unique<VoidCommand>();
   }
   auto new_task = sub_context.GetTaskBuilder().GetTask();
-  SolidTask solid_task;
-  solid_task.set_allocated_task(new Task(new_task));
-  solid_task.set_allocated_parent_id(new TaskId(*task_id_));
-  if (found != param.cache.end()) {
-    param.cache.insert(found + 1, std::move(solid_task));
-  }
   param.ctx.event = StepEvent::kShowId;
+
+  param.cache.clear();
   return std::make_unique<AddSubtaskCommand>(*task_id_, new_task);
 }
 

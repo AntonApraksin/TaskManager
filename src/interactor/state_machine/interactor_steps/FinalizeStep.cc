@@ -54,7 +54,6 @@ std::unique_ptr<Command> FinalizeStep::ShowId(StepParameter &param) {
 std::unique_ptr<Command> FinalizeStep::ShowSpecificTasks(StepParameter &param) {
   io_facility_->Print(Strings::ShowSolidTasks(*param.ctx.solid_tasks));
   param.ctx.solid_tasks.reset();
-  // TODO: Find a way to update cache here
   return std::make_unique<VoidCommand>();
 }
 

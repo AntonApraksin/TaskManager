@@ -17,6 +17,7 @@ std::unique_ptr<Command> LoadStep::execute(StepParameter &param) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
+  param.cache.clear();
   return std::make_unique<LoadTasksFromFileCommand>(filename_);
 }
 

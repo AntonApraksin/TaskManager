@@ -67,9 +67,8 @@ std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
   }
 
   auto new_task = sub_context.GetTaskBuilder().GetTask();
-  if (found != param.cache.end()) {
-    found->set_allocated_task(new Task(new_task));
-  }
+
+  param.cache.clear();
   return std::make_unique<EditTaskCommand>(task_id_, new_task);
 }
 

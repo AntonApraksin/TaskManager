@@ -40,9 +40,8 @@ std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
-  for (; beg != end; ++beg) {
-    beg->mutable_task()->set_progress(Task::kCompleted);
-  }
+
+  param.cache.clear();
   return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{task_id_});
 }
 

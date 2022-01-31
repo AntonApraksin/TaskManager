@@ -71,16 +71,13 @@ TEST_F(ConfirmationRandomInputOutputTest, EditRandomInputMustCancel) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("edit"),
-      Strings::ShowSolidTask(t0),
-      Strings::LeaveEmptyFor(st0.title),
       Strings::GetPrompt("title"),
-      Strings::LeaveEmptyFor(st0.date),
+      Strings::LeaveEmptyFor(default_date),
       Strings::GetPrompt("due date", kDatePattern),
-      Strings::LeaveEmptyFor(st0.priority),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kLow)),
       Strings::GetPrompt("priority"),
       Strings::kStateShouldBe,
-      Strings::LeaveEmptyFor(st0.state),
+      Strings::LeaveEmptyFor(Strings::to_string(Task::kUncompleted)),
       Strings::GetPrompt("state"),
       Strings::ProceedTo("edit"),
       Strings::kOkayITreatItAsNo,
@@ -122,8 +119,6 @@ TEST_F(ConfirmationRandomInputOutputTest, CompleteRandomInputMustCancel) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("complete"),
-      Strings::ShowSolidTasks(task_storage),
       Strings::ProceedTo("complete"),
       Strings::kOkayITreatItAsNo,
 
@@ -164,8 +159,6 @@ TEST_F(ConfirmationRandomInputOutputTest, DeleteRandomInputMustCancel) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("delete"),
-      Strings::ShowSolidTasks(task_storage),
       Strings::ProceedTo("delete"),
       Strings::kOkayITreatItAsNo,
 

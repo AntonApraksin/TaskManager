@@ -27,7 +27,7 @@ TEST_F(PlainOutputTest, InvalidIdMustAppear) {
 
   std::vector<std::string> desired_output{
       Strings::GetPrompt(""),
-      Strings::InvalidId("oqpw"),
+      Strings::kInvalidId,
       Strings::GetPrompt(""),
   };
 

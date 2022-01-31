@@ -34,9 +34,3 @@ TEST_F(ShowStepTest, ExecuteWithInvalidIdArgumentMustReturnVoidCommand) {
   auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
-
-TEST_F(ShowStepTest, ExecuteWithRepeatedIdArgumentMustReturnVoidCommand) {
-  SetArg("12 34 12");
-  auto command{step_->execute(step_parameter_)};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-}

@@ -74,8 +74,9 @@ TEST_F(AddActionTest, NestedTaskShouldInheritParentsData) {
   std::string priority = "medium";
   std::string state = "+";
 
-  auto [storage, _] = RunScenario({"add", title, date, priority, state, "y",
-                                   "add 0", "subtitle", "", "", "", "y", "q"});
+  auto [storage, _] =
+      RunScenario({"add", title, date, priority, state, "y", "s", "add 0",
+                   "subtitle", "", "", "", "y", "q"});
   auto t1 = FindSolidTask(storage, 0);
   auto t2 = FindSolidTask(storage, 1);
 

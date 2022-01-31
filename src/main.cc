@@ -1,3 +1,5 @@
+#include <boost/log/trivial.hpp>
+
 #include "interactor/io_facility/iostream/IostreamIoFacility.h"
 #include "interactor/small_steps/default/DefaultSmallStepFactory.h"
 #include "interactor/state_machine/StateMachineController.h"
@@ -8,6 +10,7 @@
 
 int main() {
   using namespace task_manager;
+  BOOST_LOG_TRIVIAL(warning) << "Starting...";
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
 

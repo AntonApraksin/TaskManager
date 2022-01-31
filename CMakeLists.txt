@@ -16,6 +16,9 @@ find_program(PROTOBUF_EXECUTABLE protoc)
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/protobuf)
 set(PROTOBUF_CPP_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
 
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS log REQUIRED)
+
 file(MAKE_DIRECTORY ${PROTOBUF_CPP_OUT_DIR})
 
 function(compile_proto_file filename)
@@ -55,7 +58,8 @@ file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
 add_library(TaskManager
   STATIC ${TaskManager_SRCS} ${PROTOBUF_GENERATED_SRCS}
 )
-target_link_libraries(TaskManager PUBLIC protobuf::libprotobuf)
+target_link_libraries(TaskManager PUBLIC protobuf::libprotobuf Boost::log)
+target_include_directories(TaskManager PUBLIC ${Boost_INCLUDE_DIRS})
 
 add_executable(main
         src/main.cc)

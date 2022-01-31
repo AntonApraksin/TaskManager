@@ -12,13 +12,13 @@ std::unique_ptr<Command> LoadStep::execute(StepParameter &param) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
-  filename_ = validator_->ConsumeOneTokenFrom(arg_);
+  auto filename = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
   param.cache.clear();
-  return std::make_unique<LoadTasksFromFileCommand>(filename_);
+  return std::make_unique<LoadTasksFromFileCommand>(filename);
 }
 
 void LoadStep::ChangeStep(std::shared_ptr<Step> &active_step) {

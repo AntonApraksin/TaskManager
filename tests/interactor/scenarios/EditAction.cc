@@ -26,7 +26,7 @@ TEST_F(EditActionTest, EmptyInputShouldLeavePreviousData) {
   auto t = task_stringed_data_producer_.GetData();
 
   auto [storage, _] = RunScenario({"add", t.title, t.date, t.priority, t.state,
-                                   "y", "edit 0", "", "", "", "", "y", "q"});
+                                   "y", "edit 0", "f", "", "", "", "y", "q"});
 
   auto expected_task = TaskDataToSolidTask(t, 0);
 

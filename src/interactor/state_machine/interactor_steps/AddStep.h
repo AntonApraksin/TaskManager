@@ -13,11 +13,9 @@ class AddStep : public Step, public ArgumentMixin {
 
  private:
   std::unique_ptr<Command> HandleAddTask(StepParameter&);
-  std::unique_ptr<Command> HandleAddSubTask(StepParameter&);
+  std::unique_ptr<Command> HandleAddSubTask(StepParameter&, const TaskId&);
 
   std::unique_ptr<Command> ReportError(std::string);
-
-  std::optional<TaskId> task_id_;
 };
 }  // namespace task_manager
 

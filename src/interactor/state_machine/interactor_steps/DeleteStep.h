@@ -13,8 +13,6 @@ class DeleteStep : public Step, public ArgumentMixin {
 
  private:
   std::unique_ptr<Command> ReportError(std::string);
-
-  TaskId task_id_;
 };
 }  // namespace task_manager
 

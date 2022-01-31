@@ -4,8 +4,10 @@
 #include "model/SolidTask.h"
 
 namespace task_manager {
-std::pair<SolidTasks::iterator, SolidTasks::iterator> GetTreeFromVector(
-    SolidTasks& solid_tasks, TaskId id);
-}
+SolidTasks GetTreeFromVector(const SolidTasks& solid_tasks, const TaskId& id);
+
+std::optional<SolidTask> FindSolidTaskById(const SolidTasks& solid_tasks,
+                                           const TaskId& task_id);
+}  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_UTILS_FUNCTIONS_H_

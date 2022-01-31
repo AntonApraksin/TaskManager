@@ -2,6 +2,7 @@
 
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
@@ -10,22 +11,19 @@ std::unique_ptr<Command> ShowStep::execute(StepParameter &param) {
     param.ctx.event = StepEvent::kShowAll;
     return std::make_unique<GetAllTasksCommand>();
   }
-  std::string token;
-  std::optional<int> to_show;
+
+  std::set<TaskId> task_ids;
   for (; !arg_.empty();) {
-    token = validator_->ConsumeOneTokenFrom(arg_);
-    to_show = validator_->ParseInt(token);
-    if (!to_show) {
-      return ReportError(Strings::InvalidId(token));
+    auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
+    if (!task_id) {
+      return ReportError(Strings::kInvalidId);
     }
-    task_ids_.push_back(CreateTaskId(*to_show));
+    task_ids.insert(*task_id);
   }
-  if (task_ids_.size() >
-      std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {
-    return ReportError(Strings::kRepeatedId);
-  }
+
   param.ctx.event = StepEvent::kShowById;
-  return std::make_unique<GetSpecifiedTasksCommand>(task_ids_);
+  return std::make_unique<GetSpecifiedTasksCommand>(
+      std::vector<TaskId>(task_ids.cbegin(), task_ids.cend()));
 }
 
 void ShowStep::ChangeStep(std::shared_ptr<Step> &active_step) {

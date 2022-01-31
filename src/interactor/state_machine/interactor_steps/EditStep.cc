@@ -3,61 +3,52 @@
 #include <google/protobuf/util/time_util.h>
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/small_steps/ISmallStepFactory.h"
+#include "interactor/small_steps/CreateFilledTaskContext.h"
 #include "interactor/small_steps/TaskContext.h"
 #include "interactor/small_steps/TaskInitializerSmallStep.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
-#include "utils/TaskIdUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/IoFacilityAndValidatorUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
+#include "utils/Functions.h"
 
 namespace task_manager {
 std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
+  using google::protobuf::util::TimeUtil;
   param.ctx.event = StepEvent::kNothing;
 
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
 
-  std::string token = validator_->ConsumeOneTokenFrom(arg_);
-
+  auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  auto to_edit = validator_->ParseInt(token);
-  if (!to_edit) {
-    return ReportError(Strings::InvalidId(token));
+  if (!task_id) {
+    return ReportError(Strings::kInvalidId);
   }
-  task_id_.set_id(*to_edit);
 
-  auto found =
-      std::find_if(param.cache.begin(), param.cache.end(),
-                   [this](const auto &i) { return i.task_id() == task_id_; });
-
-  TaskContext sub_context;
-  if (found != param.cache.end()) {
+  auto found = FindSolidTaskById(param.cache, *task_id);
+  TaskContext task_context;
+  if (found) {
     io_facility_->Print(Strings::YouAreGoingTo("edit"));
     io_facility_->Print(Strings::ShowSolidTask(*found));
+
     auto &task = found->task();
-    sub_context.PushState(
-        std::make_shared<DefaultTaskInitializerSmallStep>(TaskBuilder{
-            task.title(), task.due_date(), task.priority(), task.progress()}));
+    TaskBuilder task_builder{task.title(), task.due_date(), task.priority(),
+                             task.progress()};
+    task_context = CreateFilledTaskContext(*small_step_factory_, task_builder);
+
   } else {
-    sub_context.PushState(std::make_shared<DefaultTaskInitializerSmallStep>(
-        TaskBuilder{std::nullopt,
-                    google::protobuf::util::TimeUtil::TimeTToTimestamp(
-                        std::time(nullptr)),
-                    Task::kLow, Task::kUncompleted}));
+    TaskBuilder task_builder{std::nullopt,
+                             TimeUtil::TimeTToTimestamp(std::time(nullptr)),
+                             Task::kLow, Task::kUncompleted};
+    task_context = CreateFilledTaskContext(*small_step_factory_, task_builder);
   }
 
-  sub_context.PushState(small_step_factory_->GetReadTitleSmallStep());
-  sub_context.PushState(small_step_factory_->GetReadDateSmallStep());
-  sub_context.PushState(small_step_factory_->GetReadPrioritySmallStep());
-  sub_context.PushState(small_step_factory_->GetReadStateSmallStep());
-  sub_context.Run();
+  task_context.Run();
 
-  io_facility_->Print(Strings::ProceedTo("edit"));
-  std::string input = io_facility_->GetLine();
-  auto confirm = validator_->ParseConfirmation(input);
-
+  auto confirm = ReadConfirmation(*io_facility_, *validator_, "edit");
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
@@ -66,10 +57,10 @@ std::unique_ptr<Command> EditStep::execute(StepParameter &param) {
     return std::make_unique<VoidCommand>();
   }
 
-  auto new_task = sub_context.GetTaskBuilder().GetTask();
-
   param.cache.clear();
-  return std::make_unique<EditTaskCommand>(task_id_, new_task);
+
+  auto new_task = task_context.GetTaskBuilder().GetTask();
+  return std::make_unique<EditTaskCommand>(*task_id, new_task);
 }
 
 std::unique_ptr<Command> EditStep::ReportError(std::string str) {

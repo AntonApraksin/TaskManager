@@ -12,11 +12,12 @@ std::unique_ptr<Command> SaveStep::execute(StepParameter &param) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
-  filename_ = validator_->ConsumeOneTokenFrom(arg_);
+  auto filename = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  return std::make_unique<SaveTasksToFileCommand>(filename_);
+
+  return std::make_unique<SaveTasksToFileCommand>(filename);
 }
 
 void SaveStep::ChangeStep(std::shared_ptr<Step> &active_step) {

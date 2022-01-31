@@ -2,47 +2,44 @@
 
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
+#include "interactor/state_machine/interactor_steps/utils/IoFacilityAndValidatorUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
 #include "utils/Functions.h"
 
 namespace task_manager {
 std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
   param.ctx.event = StepEvent::kNothing;
+
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-  std::string token = validator_->ConsumeOneTokenFrom(arg_);
+
+  auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  auto to_complete = validator_->ParseInt(token);
-  if (!to_complete) {
-    return ReportError(Strings::InvalidId(token));
+  if (!task_id) {
+    return ReportError(Strings::kInvalidId);
   }
-  task_id_.set_id(*to_complete);
 
-  auto [beg, end] = GetTreeFromVector(param.cache, task_id_);
-  if (beg != param.cache.end()) {
-    SolidTasks tasks(beg, end);
-    tasks.front().clear_parent_id();
+  auto sub_tree = GetTreeFromVector(param.cache, *task_id);
+  if (!sub_tree.empty()) {
     io_facility_->Print(Strings::YouAreGoingTo("complete"));
-    io_facility_->Print(Strings::ShowSolidTasks(tasks));
+    io_facility_->Print(Strings::ShowSolidTasks(sub_tree));
   }
 
-  io_facility_->Print(Strings::ProceedTo("complete"));
-  std::string input = io_facility_->GetLine();
-  auto confirm = validator_->ParseConfirmation(input);
+  auto confirm = ReadConfirmation(*io_facility_, *validator_, "complete");
 
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
   }
-
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
 
   param.cache.clear();
-  return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{task_id_});
+  return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{*task_id});
 }
 
 void CompleteStep::ChangeStep(std::shared_ptr<Step> &active_step) {

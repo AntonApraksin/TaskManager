@@ -13,8 +13,6 @@ class ShowStep : public Step, public ArgumentMixin {
 
  private:
   std::unique_ptr<Command> ReportError(std::string);
-
-  std::vector<TaskId> task_ids_;
 };
 }  // namespace task_manager
 

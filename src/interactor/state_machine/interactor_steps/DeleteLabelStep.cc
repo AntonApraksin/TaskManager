@@ -2,7 +2,9 @@
 
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
-#include "utils/TaskIdUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/IoFacilityAndValidatorUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
+#include "utils/Functions.h"
 
 namespace task_manager {
 
@@ -12,36 +14,30 @@ std::unique_ptr<Command> DeleteLabelStep::execute(StepParameter &param) {
     return ReportError(Strings::kRequiredId);
   }
 
-  auto token = validator_->ConsumeOneTokenFrom(arg_);
-  auto to_edit = validator_->ParseInt(token);
-  if (!to_edit) {
-    return ReportError(Strings::InvalidId(token));
+  auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
+  if (!task_id) {
+    return ReportError(Strings::kInvalidId);
   }
 
-  task_id_.set_id(*to_edit);
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredLabel);
   }
 
-  token = validator_->ConsumeOneTokenFrom(arg_);
+  auto label_name = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-  label_.set_name(token);
+  Label label;
+  label.set_name(label_name);
 
-  auto found =
-      std::find_if(param.cache.begin(), param.cache.end(),
-                   [this](const auto &i) { return i.task_id() == task_id_; });
+  auto found = FindSolidTaskById(param.cache, *task_id);
 
-  if (found != param.cache.cend()) {
+  if (found) {
     io_facility_->Print(Strings::YouAreGoingTo("delete label from"));
     io_facility_->Print(Strings::ShowSolidTask(*found));
   }
 
-  io_facility_->Print(Strings::ProceedTo("delete label"));
-  std::string input = io_facility_->GetLine();
-  auto confirm = validator_->ParseConfirmation(input);
-
+  auto confirm = ReadConfirmation(*io_facility_, *validator_, "delete label");
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
@@ -51,16 +47,8 @@ std::unique_ptr<Command> DeleteLabelStep::execute(StepParameter &param) {
     return std::make_unique<VoidCommand>();
   }
 
-  if (found != param.cache.end()) {
-    auto found_label = std::find_if(
-        found->task().labels().begin(), found->task().labels().end(),
-        [this](auto &label) { return label.name() == label_.name(); });
-    if (found_label != found->task().labels().end()) {
-      found->mutable_task()->mutable_labels()->erase(found_label);
-    }
-  }
-
-  return std::make_unique<DeleteLabelCommand>(task_id_, label_);
+  param.cache.clear();
+  return std::make_unique<DeleteLabelCommand>(*task_id, label);
 }
 
 void DeleteLabelStep::ChangeStep(std::shared_ptr<Step> &active_step) {

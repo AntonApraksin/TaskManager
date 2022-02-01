@@ -13,9 +13,6 @@ class AddLabelStep : public Step, public ArgumentMixin {
 
  private:
   std::unique_ptr<Command> ReportError(std::string);
-
-  TaskId task_id_;
-  Label label_;
 };
 }  // namespace task_manager
 

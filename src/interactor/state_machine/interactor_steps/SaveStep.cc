@@ -1,7 +1,5 @@
 #include "interactor/state_machine/interactor_steps/SaveStep.h"
 
-#include <fstream>
-
 #include "interactor/io_facility/Strings.h"
 #include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 

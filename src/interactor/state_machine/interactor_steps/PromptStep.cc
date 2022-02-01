@@ -1,11 +1,11 @@
 #include "interactor/state_machine/interactor_steps/PromptStep.h"
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/AddStep.h"
 #include "interactor/state_machine/interactor_steps/AddLabelStep.h"
+#include "interactor/state_machine/interactor_steps/AddStep.h"
 #include "interactor/state_machine/interactor_steps/CompleteStep.h"
-#include "interactor/state_machine/interactor_steps/DeleteStep.h"
 #include "interactor/state_machine/interactor_steps/DeleteLabelStep.h"
+#include "interactor/state_machine/interactor_steps/DeleteStep.h"
 #include "interactor/state_machine/interactor_steps/EditStep.h"
 #include "interactor/state_machine/interactor_steps/HelpStep.h"
 #include "interactor/state_machine/interactor_steps/LoadStep.h"

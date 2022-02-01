@@ -40,8 +40,6 @@ TEST_F(AddLabelOutputTest, AddLabelShowTasksAndDeleteLabelShowTasks) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("add label to"),
-      Strings::ShowSolidTask(task),
       Strings::ProceedTo("add label"),
 
       Strings::GetPrompt(""),
@@ -113,8 +111,6 @@ TEST_F(AddLabelOutputTest, RandomConfirmation) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("add label to"),
-      Strings::ShowSolidTask(task),
       Strings::ProceedTo("add label"),
       Strings::kOkayITreatItAsNo,
 

@@ -56,8 +56,6 @@ TEST_F(DeleteLabelOutputTest, DeleteLabelNotPresentLable) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("delete label from"),
-      Strings::ShowSolidTask(TaskDataToSolidTask(stringed_task, 0)),
       Strings::ProceedTo("delete label"),
       Strings::kNotPresentLabel,
 
@@ -103,13 +101,9 @@ TEST_F(DeleteLabelOutputTest, RandomConfirmation) {
       Strings::ShowId(std::to_string(0)),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("add label to"),
-      Strings::ShowSolidTask(task),
       Strings::ProceedTo("add label"),
 
       Strings::GetPrompt(""),
-      Strings::YouAreGoingTo("delete label from"),
-      Strings::ShowSolidTask(task_with_label),
       Strings::ProceedTo("delete label"),
       Strings::kOkayITreatItAsNo,
 

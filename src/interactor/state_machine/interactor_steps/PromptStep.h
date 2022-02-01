@@ -10,7 +10,7 @@ class PromptStep : public Step, public DependenciesMixin {
   using DependenciesMixin::DependenciesMixin;
 
   std::unique_ptr<Command> execute(StepParameter &param) override;
-  void ChangeStep(std::shared_ptr<Step> &) override;
+  std::shared_ptr<Step> ChangeStep() override;
 };
 }  // namespace task_manager
 

@@ -9,7 +9,7 @@ class FinalizeStep : public Step, private DependenciesMixin {
   using DependenciesMixin::DependenciesMixin;
 
   std::unique_ptr<Command> execute(StepParameter&) override;
-  void ChangeStep(std::shared_ptr<Step>&) override;
+  std::shared_ptr<Step> ChangeStep() override;
 
  private:
   std::unique_ptr<Command> ShowAll(StepParameter&);

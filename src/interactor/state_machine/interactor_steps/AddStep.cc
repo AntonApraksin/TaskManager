@@ -94,9 +94,9 @@ std::unique_ptr<Command> AddStep::HandleAddSubTask(StepParameter& param,
   return std::make_unique<AddSubtaskCommand>(task_id, new_task);
 }
 
-void AddStep::ChangeStep(std::shared_ptr<Step>& active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> AddStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> AddStep::ReportError(std::string str) {

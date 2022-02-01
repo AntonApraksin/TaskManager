@@ -16,58 +16,48 @@ std::unique_ptr<Command> PromptStep::execute(StepParameter&) {
   return std::make_unique<VoidCommand>();
 }
 
-void PromptStep::ChangeStep(std::shared_ptr<Step>& active_step) {
+std::shared_ptr<Step> PromptStep::ChangeStep() {
   std::string input = PrintAndGet(*io_facility_, Strings::GetPrompt(""));
   auto [command, arg] = validator_->MakeRequest(input);
   switch (command) {
     case CommandEnum::kAdd:
-      active_step = std::make_shared<AddStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<AddStep>(validator_, io_facility_,
+                                       small_step_factory_, std::move(arg));
 
     case CommandEnum::kEdit:
-      active_step = std::make_shared<EditStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<EditStep>(validator_, io_facility_,
+                                        small_step_factory_, std::move(arg));
 
     case CommandEnum::kComplete:
-      active_step = std::make_shared<CompleteStep>(
+      return std::make_shared<CompleteStep>(
           validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
 
     case CommandEnum::kDelete:
-      active_step = std::make_shared<DeleteStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<DeleteStep>(validator_, io_facility_,
+                                          small_step_factory_, std::move(arg));
 
     case CommandEnum::kHelp:
-      active_step = std::make_shared<HelpStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<HelpStep>(validator_, io_facility_,
+                                        small_step_factory_, std::move(arg));
 
     case CommandEnum::kUnknown:
-      active_step = std::make_shared<UnknownStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<UnknownStep>(validator_, io_facility_,
+                                           small_step_factory_, std::move(arg));
 
     case CommandEnum::kShow:
-      active_step = std::make_shared<ShowStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<ShowStep>(validator_, io_facility_,
+                                        small_step_factory_, std::move(arg));
 
     case CommandEnum::kSave:
-      active_step = std::make_shared<SaveStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<SaveStep>(validator_, io_facility_,
+                                        small_step_factory_, std::move(arg));
 
     case CommandEnum::kLoad:
-      active_step = std::make_shared<LoadStep>(
-          validator_, io_facility_, small_step_factory_, std::move(arg));
-      return;
+      return std::make_shared<LoadStep>(validator_, io_facility_,
+                                        small_step_factory_, std::move(arg));
 
     case CommandEnum::kQuit:
-      active_step.reset();
-      return;
+      return nullptr;
   }
 }
 }  // namespace task_manager

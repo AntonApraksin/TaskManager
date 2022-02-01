@@ -9,7 +9,7 @@ class HelpStep : public Step, public ArgumentMixin {
   using ArgumentMixin::ArgumentMixin;
 
   std::unique_ptr<Command> execute(StepParameter &param) override;
-  void ChangeStep(std::shared_ptr<Step> &) override;
+  std::shared_ptr<Step> ChangeStep() override;
 };
 }  // namespace task_manager
 

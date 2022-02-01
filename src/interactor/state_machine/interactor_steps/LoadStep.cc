@@ -19,9 +19,9 @@ std::unique_ptr<Command> LoadStep::execute(StepParameter &param) {
   return std::make_unique<LoadTasksFromFileCommand>(filename);
 }
 
-void LoadStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> LoadStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> LoadStep::ReportError(std::string str) {

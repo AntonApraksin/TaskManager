@@ -13,7 +13,7 @@ class ISmallStepFactory;
 class Step {
  public:
   virtual std::unique_ptr<Command> execute(StepParameter &param) = 0;
-  virtual void ChangeStep(std::shared_ptr<Step> &) = 0;
+  virtual std::shared_ptr<Step> ChangeStep() = 0;
   virtual ~Step() {}
 };
 

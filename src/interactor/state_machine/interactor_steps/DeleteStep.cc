@@ -42,9 +42,9 @@ std::unique_ptr<Command> DeleteStep::execute(StepParameter &param) {
   return std::make_unique<DeleteTasksCommand>(std::vector<TaskId>{*task_id});
 }
 
-void DeleteStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> DeleteStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> DeleteStep::ReportError(std::string str) {

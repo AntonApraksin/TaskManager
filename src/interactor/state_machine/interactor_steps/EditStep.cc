@@ -68,9 +68,9 @@ std::unique_ptr<Command> EditStep::ReportError(std::string str) {
   return std::make_unique<VoidCommand>();
 }
 
-void EditStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> EditStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 }  // namespace task_manager

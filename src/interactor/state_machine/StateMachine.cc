@@ -22,8 +22,7 @@ std::unique_ptr<Command> StateMachine::execute(Context ctx) {
   }
   step_parameter_.ctx = std::move(ctx);
   auto command{active_step_->execute(step_parameter_)};
-  auto next_step = active_step_;
-  active_step_->ChangeStep(next_step);
+  auto next_step = active_step_->ChangeStep();
   active_step_ = next_step;
   return command;
 }

@@ -50,8 +50,8 @@ std::unique_ptr<Command> FinalizeStep::ShowSpecificTasks(StepParameter &param) {
   return std::make_unique<VoidCommand>();
 }
 
-void FinalizeStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                             small_step_factory_);
+std::shared_ptr<Step> FinalizeStep::ChangeStep() {
+  return std::make_shared<PromptStep>(validator_, io_facility_,
+                                      small_step_factory_);
 }
 }  // namespace task_manager

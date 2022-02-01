@@ -33,7 +33,9 @@ class StepChangeStepTesting : public Step {
   std::unique_ptr<Command> execute(StepParameter&) override {
     return std::unique_ptr<Command>();
   }
-  void ChangeStep(std::shared_ptr<Step>&) override {}
+  std::shared_ptr<Step> ChangeStep() override {
+    return std::make_shared<StepChangeStepTesting>();
+  }
 };
 
 #endif  // TASKMANAGER_TESTS_REPL_UNIT_STATE_MACHINE_REPL_STEPS_REPLSTEPTEST_H_

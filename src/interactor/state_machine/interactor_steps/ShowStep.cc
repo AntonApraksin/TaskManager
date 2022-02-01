@@ -26,9 +26,9 @@ std::unique_ptr<Command> ShowStep::execute(StepParameter &param) {
       std::vector<TaskId>(task_ids.cbegin(), task_ids.cend()));
 }
 
-void ShowStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> ShowStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> ShowStep::ReportError(std::string str) {

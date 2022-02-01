@@ -18,9 +18,9 @@ std::unique_ptr<Command> SaveStep::execute(StepParameter &param) {
   return std::make_unique<SaveTasksToFileCommand>(filename);
 }
 
-void SaveStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
-                                               small_step_factory_);
+std::shared_ptr<Step> SaveStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> SaveStep::ReportError(std::string str) {

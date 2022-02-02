@@ -79,8 +79,11 @@ grpc::Status DefaultTaskService::GetAllSolidTasks(
     ::grpc::ServerContext *, const ::google::protobuf::Empty *,
     ::task_manager::SolidTasksResponse *response) {
   auto result = model_controller_->GetAllSolidTasks();
-  for (const auto &i : result.AccessResult()) {
-    response->add_solid_tasks()->CopyFrom(i);
+  if (result)
+  {
+    for (const auto &i : result.AccessResult()) {
+      response->add_solid_tasks()->CopyFrom(i);
+    }
   }
   response->set_status(
       ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
@@ -94,8 +97,11 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(
   std::copy(request->task_ids().cbegin(), request->task_ids().cend(),
             std::back_inserter(ids));
   auto result = model_controller_->GetSpecificSolidTasks(std::move(ids));
-  for (const auto &i : result.AccessResult()) {
-    response->add_solid_tasks()->CopyFrom(i);
+  if (result)
+  {
+    for (const auto &i : result.AccessResult()) {
+      response->add_solid_tasks()->CopyFrom(i);
+    }
   }
   response->set_status(
       ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));

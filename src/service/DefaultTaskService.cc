@@ -4,6 +4,7 @@
 
 #include <boost/log/attributes/named_scope.hpp>
 #include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "logging/DefaultLogFacility.h"
 #include "model/ModelController.h"

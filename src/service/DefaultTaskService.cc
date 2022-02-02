@@ -1,5 +1,11 @@
 #include "DefaultTaskService.h"
 
+#include <google/protobuf/util/time_util.h>
+
+#include <boost/log/attributes/named_scope.hpp>
+#include <boost/log/core.hpp>
+
+#include "logging/DefaultLogFacility.h"
 #include "model/ModelController.h"
 
 namespace task_manager {
@@ -19,16 +25,36 @@ DefaultTaskService::DefaultTaskService(
     std::unique_ptr<ModelController> model_controller)
     : model_controller_(std::move(model_controller)) {}
 
-grpc::Status DefaultTaskService::AddTask(::grpc::ServerContext *,
-                                         const ::task_manager::Task *request,
-                                         ::task_manager::TaskIdResponse *response) {
-    auto result = model_controller_->Add(*request);
-    if (result) {
-        response->set_allocated_task_id(new TaskId(result.AccessResult()));
-    }
-    response->set_status(
-        ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
-    return grpc::Status::OK;
+grpc::Status DefaultTaskService::AddTask(
+    ::grpc::ServerContext *, const ::task_manager::Task *request,
+    ::task_manager::TaskIdResponse *response) {
+  BOOST_LOG_NAMED_SCOPE("DefaultTaskService::AddTask");
+  auto &logger = logging::GetDefaultLogger();
+
+  BOOST_LOG_SEV(logger, logging::severinity::debug)
+      << "request: "
+      << "TITLE:'" << request->title() << "' DUEDATE:" << request->due_date()
+      << " PRIORITY:" << Task_Priority_Name(request->priority())
+      << " PROGRESS:" << Task_Progress_Name(request->progress());
+
+  auto result = model_controller_->Add(*request);
+  if (result) {
+    response->set_allocated_task_id(new TaskId(result.AccessResult()));
+  }
+  response->set_status(
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+
+  if (response->has_task_id()) {
+    BOOST_LOG_SEV(logger, logging::severinity::debug)
+        << "response: "
+        << "STATUS:" << TaskServiceStatus_Name(response->status())
+        << " TASKID:" << response->task_id().id();
+  } else {
+    BOOST_LOG_SEV(logger, logging::severinity::debug)
+        << "response: "
+        << "STATUS:" << TaskServiceStatus_Name(response->status());
+  }
+  return grpc::Status::OK;
 }
 
 grpc::Status DefaultTaskService::AddSubtask(::grpc::ServerContext *,

@@ -11,7 +11,6 @@
 
 int main() {
   using namespace task_manager;
-
   {
     auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
     logging::SetUp();

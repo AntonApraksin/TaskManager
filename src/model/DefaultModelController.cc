@@ -147,9 +147,29 @@ DefaultModelController::GetAllSolidTasks() {
 
 OperationResult<MCStatus, SolidTasks>
 DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids) {
+  BOOST_LOG_NAMED_SCOPE("DefaultModelController::GetSpecificSolidTasks");
+
+  auto& logger = logging::GetDefaultLogger();
+
+  {
+    boost::log::record rec = logger.open_record(boost::log::keywords::severity =
+                                                    logging::severinity::info);
+    if (rec) {
+      boost::log::record_ostream strm(rec);
+      strm << "getting tasks with ids: ";
+      for (const auto& i : ids) {
+        strm << i.id() << " ";
+      }
+      strm.flush();
+      logger.push_record(std::move(rec));
+    }
+  }
+
   auto storage = task_manager_->Show().AccessResult();
   for (const auto& i : ids) {
     if (storage.tasks.find(i) == storage.tasks.end()) {
+      BOOST_LOG_SEV(logger, logging::severinity::info)
+          << "id " << i.id() << " was not found";
       return OperationResult<Status, SolidTasks>::Error(Status::kNotPresentId);
     }
   }

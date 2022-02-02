@@ -4,6 +4,7 @@
 
 #include <boost/log/attributes/named_scope.hpp>
 #include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "logging/DefaultLogFacility.h"
 #include "model/ModelController.h"
@@ -110,21 +111,42 @@ grpc::Status DefaultTaskService::GetAllSolidTasks(::grpc::ServerContext *,
     return grpc::Status::OK;
 }
 
-grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(::grpc::ServerContext *,
-                                                        const TaskIdsRequest *request,
-                                                        ::task_manager::SolidTasksResponse *response) {
-    std::vector<TaskId> ids;
-    std::copy(request->task_ids().cbegin(), request->task_ids().cend(),
-              std::back_inserter(ids));
-    auto result = model_controller_->GetSpecificSolidTasks(std::move(ids));
-    if (result) {
-        for (const auto &i: result.AccessResult()) {
-            response->add_solid_tasks()->CopyFrom(i);
-        }
+grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(
+    ::grpc::ServerContext *, const TaskIdsRequest *request,
+    ::task_manager::SolidTasksResponse *response) {
+  BOOST_LOG_NAMED_SCOPE("DefaultTaskService::GetSpecifiedSolidTasks");
+
+  auto &logger = logging::GetDefaultLogger();
+  {
+    boost::log::record rec = logger.open_record(boost::log::keywords::severity =
+                                                    logging::severinity::debug);
+    if (rec) {
+      boost::log::record_ostream strm(rec);
+      strm << "request: ";
+      for (const auto &i : request->task_ids()) {
+        strm << i.id() << " ";
+      }
+      strm.flush();
+      logger.push_record(std::move(rec));
     }
-    response->set_status(
-        ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
-    return grpc::Status::OK;
+  }
+
+  std::vector<TaskId> ids;
+  std::copy(request->task_ids().cbegin(), request->task_ids().cend(),
+            std::back_inserter(ids));
+  auto result = model_controller_->GetSpecificSolidTasks(std::move(ids));
+  if (result)
+  {
+    for (const auto &i : result.AccessResult()) {
+      response->add_solid_tasks()->CopyFrom(i);
+    }
+  }
+  response->set_status(
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+
+  BOOST_LOG_SEV(logger, logging::severinity::debug)
+      << "response: " << TaskServiceStatus_Name(response->status());
+  return grpc::Status::OK;
 }
 
 grpc::Status DefaultTaskService::Load(::grpc::ServerContext *,

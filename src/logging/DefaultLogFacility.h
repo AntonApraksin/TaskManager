@@ -17,6 +17,8 @@ void CreateConsoleLog(const std::string& format, severinity level);
 
 void CreateFileLog(const std::string& filename, const std::string& format,
                    severinity level);
+
+std::optional<severinity> ConvertStringToLogLevel(const std::string& str);
 }  // namespace logging
 }  // namespace task_manager
 

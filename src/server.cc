@@ -11,7 +11,12 @@
 
 int main() {
   using namespace task_manager;
-  logging::SetUp();
+
+  {
+    auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
+    logging::SetUp();
+    logging::CreateFileLog("server", format, logging::severinity::debug);
+  }
 
   auto& logger = logging::GetDefaultLogger();
 

@@ -23,10 +23,11 @@ sources::severity_logger<trivial::severity_level>& GetDefaultLogger() {
   return default_logger;
 }
 
-void CreateFileLog(logging::trivial::severity_level level,
-                   const std::string& format) {
+void CreateFileLog(const std::string& filename, const std::string& format,
+                   severinity level) {
+  auto rotated_filename = filename + "_%N.log";
   boost::log::add_file_log(
-      keywords::file_name = "sample_%N.log",
+      keywords::file_name = rotated_filename.c_str(),
       keywords::rotation_size = 10 * 1024 * 1024, keywords::auto_flush = true,
       keywords::time_based_rotation =
           sinks::file::rotation_at_time_point(0, 0, 0),
@@ -34,17 +35,14 @@ void CreateFileLog(logging::trivial::severity_level level,
       keywords::format = format);
 }
 
-void SetUp() {
-  boost::log::add_common_attributes();
-
-  auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
-
-  CreateFileLog(logging::trivial::trace, format);
-
+void CreateConsoleLog(const std::string& format, severinity level) {
   boost::log::add_console_log(
       std::clog, boost::log::keywords::format = format,
-      keywords::filter = logging::trivial::severity >= logging::trivial::info);
+      keywords::filter = logging::trivial::severity >= level);
+}
 
+void SetUp() {
+  boost::log::add_common_attributes();
   GetDefaultLogger().add_attribute("Scope", attributes::named_scope());
 }
 }  // namespace logging

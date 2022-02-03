@@ -12,6 +12,11 @@ boost::log::sources::severity_logger<boost::log::trivial::severity_level>&
 GetDefaultLogger();
 
 void SetUp();
+
+void CreateConsoleLog(const std::string& format, severinity level);
+
+void CreateFileLog(const std::string& filename, const std::string& format,
+                   severinity level);
 }  // namespace logging
 }  // namespace task_manager
 

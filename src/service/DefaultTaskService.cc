@@ -33,10 +33,7 @@ grpc::Status DefaultTaskService::AddTask(
   auto &logger = logging::GetDefaultLogger();
 
   BOOST_LOG_SEV(logger, logging::severinity::debug)
-      << "request: "
-      << "TITLE:'" << request->title() << "' DUEDATE:" << request->due_date()
-      << " PRIORITY:" << Task_Priority_Name(request->priority())
-      << " PROGRESS:" << Task_Progress_Name(request->progress());
+      << "request: " << request->DebugString();
 
   auto result = model_controller_->Add(*request);
   if (result) {
@@ -45,16 +42,8 @@ grpc::Status DefaultTaskService::AddTask(
   response->set_status(
       ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
 
-  if (response->has_task_id()) {
-    BOOST_LOG_SEV(logger, logging::severinity::debug)
-        << "response: "
-        << "STATUS:" << TaskServiceStatus_Name(response->status())
-        << " TASKID:" << response->task_id().id();
-  } else {
-    BOOST_LOG_SEV(logger, logging::severinity::debug)
-        << "response: "
-        << "STATUS:" << TaskServiceStatus_Name(response->status());
-  }
+  BOOST_LOG_SEV(logger, logging::severinity::debug) << response->DebugString();
+
   return grpc::Status::OK;
 }
 
@@ -115,21 +104,10 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(
     ::grpc::ServerContext *, const TaskIdsRequest *request,
     ::task_manager::SolidTasksResponse *response) {
   BOOST_LOG_NAMED_SCOPE("DefaultTaskService::GetSpecifiedSolidTasks");
-
   auto &logger = logging::GetDefaultLogger();
-  {
-    boost::log::record rec = logger.open_record(boost::log::keywords::severity =
-                                                    logging::severinity::debug);
-    if (rec) {
-      boost::log::record_ostream strm(rec);
-      strm << "request: ";
-      for (const auto &i : request->task_ids()) {
-        strm << i.id() << " ";
-      }
-      strm.flush();
-      logger.push_record(std::move(rec));
-    }
-  }
+
+  BOOST_LOG_SEV(logger, logging::severinity::debug)
+      << "request: " << request->DebugString();
 
   std::vector<TaskId> ids;
   std::copy(request->task_ids().cbegin(), request->task_ids().cend(),

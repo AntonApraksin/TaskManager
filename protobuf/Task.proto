@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "Label.proto";
 
 package task_manager;
 
@@ -23,4 +24,5 @@ message Task
     google.protobuf.Timestamp due_date = 2;
     Priority priority = 3;
     Progress progress = 4;
+    repeated Label labels = 5;
 }

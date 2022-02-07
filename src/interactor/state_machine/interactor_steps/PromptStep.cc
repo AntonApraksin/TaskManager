@@ -1,8 +1,10 @@
 #include "interactor/state_machine/interactor_steps/PromptStep.h"
 
 #include "interactor/io_facility/Strings.h"
+#include "interactor/state_machine/interactor_steps/AddLabelStep.h"
 #include "interactor/state_machine/interactor_steps/AddStep.h"
 #include "interactor/state_machine/interactor_steps/CompleteStep.h"
+#include "interactor/state_machine/interactor_steps/DeleteLabelStep.h"
 #include "interactor/state_machine/interactor_steps/DeleteStep.h"
 #include "interactor/state_machine/interactor_steps/EditStep.h"
 #include "interactor/state_machine/interactor_steps/HelpStep.h"
@@ -39,6 +41,16 @@ std::shared_ptr<Step> PromptStep::ChangeStep() {
     case CommandEnum::kHelp:
       return std::make_shared<HelpStep>(validator_, io_facility_,
                                         small_step_factory_, std::move(arg));
+
+    case CommandEnum::kAddLabel:
+      active_step = std::make_shared<AddLabelStep>(
+          validator_, io_facility_, small_step_factory_, std::move(arg));
+      return;
+
+    case CommandEnum::kDeleteLabel:
+      active_step = std::make_shared<DeleteLabelStep>(
+          validator_, io_facility_, small_step_factory_, std::move(arg));
+      return;
 
     case CommandEnum::kUnknown:
       return std::make_shared<UnknownStep>(validator_, io_facility_,

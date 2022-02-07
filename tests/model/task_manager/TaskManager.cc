@@ -143,4 +143,87 @@ TEST_F(TaskManagerTest, ProperEdition) {
   ASSERT_EQ(storage.roots.size(), 0);
 }
 
+TEST_F(TaskManagerTest, MustAddLabel) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = tm.AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
+  auto storage = tm.Show().AccessResult();
+  auto got_task = storage.tasks.at(id);
+  ASSERT_EQ(got_task.labels_size(), 1);
+  EXPECT_EQ(got_task.labels()[0].name(), label.name());
+}
+
+TEST_F(TaskManagerTest, MustDeleteLabel) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = tm.AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
+  result = tm.DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
+  auto storage = tm.Show().AccessResult();
+  auto got_task = storage.tasks.at(id);
+  ASSERT_EQ(got_task.labels_size(), 0);
+}
+
+TEST_F(TaskManagerTest, AddLabelWithNotPresentIdMustResultInkNotPresentId) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  tm.Delete(id);
+  Label label;
+  label.set_name("label1");
+  auto result = tm.AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kNotPresentId);
+}
+
+TEST_F(TaskManagerTest, AddLabelWithRepeatedLabelMustNotAddItAndReturnkOk) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = tm.AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
+  result = tm.AddLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
+  auto storage = tm.Show().AccessResult();
+  auto got_task = storage.tasks.at(id);
+  ASSERT_EQ(got_task.labels_size(), 1);
+  EXPECT_EQ(got_task.labels()[0].name(), label.name());
+}
+
+TEST_F(TaskManagerTest, DeleteLabelWithNotPresentIdMustResultInkNotPresentId) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  tm.Delete(id);
+  Label label;
+  label.set_name("label1");
+  auto result = tm.DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kNotPresentId);
+}
+
+TEST_F(TaskManagerTest,
+       DeleteLabelWithNotPresentLabelMustResultInkNotPresentLabel) {
+  TaskManager tm{get_default_task_id_producer()};
+  TaskFactory tf;
+  auto task = tf.GetNextTask();
+  auto id = tm.Add(task).AccessResult();
+  Label label;
+  label.set_name("label1");
+  auto result = tm.DeleteLabel(id, label);
+  ASSERT_EQ(result.GetStatus(), TaskManager::Status::kNotPresentLabel);
+}
 // TODO: Add tests for nested things

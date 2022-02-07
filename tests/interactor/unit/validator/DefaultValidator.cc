@@ -32,6 +32,13 @@ TEST_F(DefaultValidatorTest, MustAcceptShortAndLongVariantsOfCommands) {
 
   EXPECT_EQ(validator_.MakeRequest("quit").first, CommandEnum::kQuit);
   EXPECT_EQ(validator_.MakeRequest("q").first, CommandEnum::kQuit);
+
+  EXPECT_EQ(validator_.MakeRequest("add_label").first, CommandEnum::kAddLabel);
+  EXPECT_EQ(validator_.MakeRequest("al").first, CommandEnum::kAddLabel);
+
+  EXPECT_EQ(validator_.MakeRequest("delete_label").first,
+            CommandEnum::kDeleteLabel);
+  EXPECT_EQ(validator_.MakeRequest("dl").first, CommandEnum::kDeleteLabel);
 }
 
 TEST_F(DefaultValidatorTest, CommandsMustBeCaseInsensitive) {
@@ -42,6 +49,9 @@ TEST_F(DefaultValidatorTest, CommandsMustBeCaseInsensitive) {
   EXPECT_EQ(validator_.MakeRequest("SHow").first, CommandEnum::kShow);
   EXPECT_EQ(validator_.MakeRequest("HElp").first, CommandEnum::kHelp);
   EXPECT_EQ(validator_.MakeRequest("QUiT").first, CommandEnum::kQuit);
+  EXPECT_EQ(validator_.MakeRequest("aDD_LaBel").first, CommandEnum::kAddLabel);
+  EXPECT_EQ(validator_.MakeRequest("DeleTE_LaBel").first,
+            CommandEnum::kDeleteLabel);
 }
 
 TEST_F(DefaultValidatorTest, EmptyTitleIsNullopt) {

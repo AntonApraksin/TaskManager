@@ -7,6 +7,7 @@ enum class StepEvent {
   kNotPresentId,
   kLoadFailure,
   kSaveFailure,
+  kNotPresentLabel,
 
   kShowAll,
   kShowById,

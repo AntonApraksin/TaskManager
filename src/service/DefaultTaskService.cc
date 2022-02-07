@@ -15,6 +15,8 @@ TaskServiceStatus ConvertModelControllerStatusToTaskServiceStatus(
       return TaskServiceStatus::kLoadFailure;
     case ModelController::Status::kSaveFailure:
       return TaskServiceStatus::kSaveFailure;
+    case ModelController::Status::kNotPresentLabel:
+      return TaskServiceStatus::kNotPresentLabel;
   }
 }
 
@@ -79,8 +81,7 @@ grpc::Status DefaultTaskService::GetAllSolidTasks(
     ::grpc::ServerContext *, const ::google::protobuf::Empty *,
     ::task_manager::SolidTasksResponse *response) {
   auto result = model_controller_->GetAllSolidTasks();
-  if (result)
-  {
+  if (result) {
     for (const auto &i : result.AccessResult()) {
       response->add_solid_tasks()->CopyFrom(i);
     }
@@ -97,8 +98,7 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(
   std::copy(request->task_ids().cbegin(), request->task_ids().cend(),
             std::back_inserter(ids));
   auto result = model_controller_->GetSpecificSolidTasks(std::move(ids));
-  if (result)
-  {
+  if (result) {
     for (const auto &i : result.AccessResult()) {
       response->add_solid_tasks()->CopyFrom(i);
     }
@@ -121,6 +121,26 @@ grpc::Status DefaultTaskService::Save(::grpc::ServerContext *,
                                       const ::google::protobuf::Empty *,
                                       ::task_manager::PlainResponse *response) {
   auto result = model_controller_->Save();
+  response->set_status(
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+  return grpc::Status::OK;
+}
+grpc::Status DefaultTaskService::AddLabel(
+    ::grpc::ServerContext *,
+    const ::task_manager::TaskIdAndLabelRequest *request,
+    ::task_manager::PlainResponse *response) {
+  auto result =
+      model_controller_->AddLabel(request->task_id(), request->label());
+  response->set_status(
+      ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+  return grpc::Status::OK;
+}
+grpc::Status DefaultTaskService::DeleteLabel(
+    ::grpc::ServerContext *,
+    const ::task_manager::TaskIdAndLabelRequest *request,
+    ::task_manager::PlainResponse *response) {
+  auto result =
+      model_controller_->DeleteLabel(request->task_id(), request->label());
   response->set_status(
       ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
   return grpc::Status::OK;

@@ -51,6 +51,14 @@ class DefaultTaskService final : public task_manager::TaskService::Service {
                     const ::google::protobuf::Empty *request,
                     ::task_manager::PlainResponse *response) override;
 
+  grpc::Status AddLabel(::grpc::ServerContext *context,
+                        const ::task_manager::TaskIdAndLabelRequest *request,
+                        ::task_manager::PlainResponse *response) override;
+
+  grpc::Status DeleteLabel(::grpc::ServerContext *context,
+                           const ::task_manager::TaskIdAndLabelRequest *request,
+                           ::task_manager::PlainResponse *response) override;
+
  private:
   std::unique_ptr<ModelController> model_controller_;
 };

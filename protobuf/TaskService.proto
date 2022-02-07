@@ -3,6 +3,7 @@ syntax = "proto3";
 import "SolidTask.proto";
 import "TaskId.proto";
 import "Task.proto";
+import "Label.proto";
 import "google/protobuf/empty.proto";
 
 package task_manager;
@@ -13,6 +14,7 @@ enum TaskServiceStatus
     kNotPresentId = 1;
     kLoadFailure = 2;
     kSaveFailure = 3;
+    kNotPresentLabel = 4;
 }
 
 message PlainResponse
@@ -43,6 +45,12 @@ message TaskAndTaskIdRequest
     Task task = 2;
 }
 
+message TaskIdAndLabelRequest
+{
+    TaskId task_id = 1;
+    Label label = 2;
+}
+
 service TaskService
 {
     rpc AddTask(Task) returns (TaskIdResponse);
@@ -54,4 +62,7 @@ service TaskService
     rpc GetSpecifiedSolidTasks(TaskIdsRequest) returns (SolidTasksResponse);
     rpc Load(google.protobuf.Empty) returns (PlainResponse);
     rpc Save(google.protobuf.Empty) returns (PlainResponse);
+
+    rpc AddLabel(TaskIdAndLabelRequest) returns (PlainResponse);
+    rpc DeleteLabel(TaskIdAndLabelRequest) returns (PlainResponse);
 }

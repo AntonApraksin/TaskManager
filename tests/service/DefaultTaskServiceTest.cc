@@ -178,3 +178,16 @@ TEST_F(DefaultTaskServiceTest, MustDeleteLabelFromTask)
     ASSERT_EQ(storage.size(), 1);
     EXPECT_EQ(storage[0].task().labels().size(), 0);
 }
+
+TEST_F(DefaultTaskServiceTest, MustGetTasksByLabel) {
+    auto task1 = task_factory.GetNextTask();
+    task1.add_labels()->set_name("label");
+    auto task2 = task_factory.GetNextTask();
+    auto id1 = model_controller->Add(task1).AccessResult();
+    model_controller->Add(id1, task2).AccessResult();
+    Label label;
+    label.set_name("label");
+    SolidTasksResponse response;
+    task_service->GetTasksByLabel(nullptr, &label, &response);
+    EXPECT_EQ(response.solid_tasks().cbegin()->task(), task1);
+}

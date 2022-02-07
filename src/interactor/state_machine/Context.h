@@ -3,14 +3,14 @@
 
 #include <optional>
 
-#include "model/ModelController.h"
+#include "interactor/state_machine/StepEvent.h"
 #include "model/SolidTask.h"
 
 namespace task_manager {
 struct Context {
   std::optional<TaskId> task_id;
   std::optional<SolidTasks> solid_tasks;
-  ModelController::Status status;
+  StepEvent event;
 };
 }  // namespace task_manager
 

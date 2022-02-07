@@ -1,64 +1,37 @@
 #include "interactor/state_machine/interactor_steps/ShowStep.h"
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
 #include "utils/TaskIdUtils.h"
 
 namespace task_manager {
-std::unique_ptr<Command> ShowStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 1) {
-    return HandleStage<1>(ctx);
-  }
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
-
-void ShowStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                               small_step_factory_);
-  }
-}
-
-template <>
-std::unique_ptr<Command> ShowStep::HandleStage<1>(Context &) {
+std::unique_ptr<Command> ShowStep::execute(StepParameter &param) {
   if (arg_.empty()) {
+    param.ctx.event = StepEvent::kShowAll;
     return std::make_unique<GetAllTasksCommand>();
   }
-  std::string token;
-  std::optional<int> to_show;
+
+  std::set<TaskId> task_ids;
   for (; !arg_.empty();) {
-    token = validator_->ConsumeOneTokenFrom(arg_);
-    to_show = validator_->ParseInt(token);
-    if (!to_show) {
-      return ReportError(Strings::InvalidId(token));
+    auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
+    if (!task_id) {
+      return ReportError(Strings::kInvalidId);
     }
-    task_ids_.push_back(CreateTaskId(*to_show));
+    task_ids.insert(*task_id);
   }
-  if (task_ids_.size() >
-      std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {
-    return ReportError(Strings::kRepeatedId);
-  }
-  return std::make_unique<GetSpecifiedTasksCommand>(task_ids_);
+
+  param.ctx.event = StepEvent::kShowById;
+  return std::make_unique<GetSpecifiedTasksCommand>(
+      std::vector<TaskId>(task_ids.cbegin(), task_ids.cend()));
 }
 
-template <>
-std::unique_ptr<Command> ShowStep::HandleStage<0>(Context &ctx) {
-  if (!ctx.solid_tasks &&
-      ctx.status == ModelController::Status::kNotPresentId) {
-    return ReportError(Strings::kNotPresentId);
-  }
-  if (ctx.solid_tasks) {
-    io_facility_->Print(Strings::ShowSolidTasks(*ctx.solid_tasks));
-  }
-  return std::make_unique<VoidCommand>();
+std::shared_ptr<Step> ShowStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> ShowStep::ReportError(std::string str) {
-  stage_ = 0;
   io_facility_->Print(str);
   return std::make_unique<VoidCommand>();
 }

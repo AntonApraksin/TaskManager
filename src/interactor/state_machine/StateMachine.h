@@ -17,6 +17,7 @@ class StateMachine {
   std::shared_ptr<IIoFacility> io_facility_;
   std::shared_ptr<ISmallStepFactory> small_step_factory_;
   std::shared_ptr<Step> active_step_;
+  StepParameter step_parameter_;
 };
 }  // namespace task_manager
 

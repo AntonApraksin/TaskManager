@@ -13,18 +13,15 @@
 #include "test_utils/TaskFactory.h"
 #include "test_utils/utils.h"
 
-#define IT_WAS_NECESARRY_PLS_DONT_KILL_ME(StepName, long_name)    \
-  TEST_F(PromptStepTest, ChangeStepMustSet##StepName) {           \
-    SetArg("");                                                   \
-    SetInput({long_name});                                        \
-    std::shared_ptr<Step> to_change;                              \
-    step_->ChangeStep(to_change);                                 \
-    EXPECT_NE(dynamic_cast<StepName*>(to_change.get()), nullptr); \
-    to_change.reset();                                            \
-    SetInput({long_name " 12 eeqw 43ew"});                        \
-    step_->ChangeStep(to_change);                                 \
-    EXPECT_NE(dynamic_cast<StepName*>(to_change.get()), nullptr); \
-    to_change.reset();                                            \
+#define IT_WAS_NECESARRY_PLS_DONT_KILL_ME(StepName, long_name)       \
+  TEST_F(PromptStepTest, ChangeStepMustSet##StepName) {              \
+    SetArg("");                                                      \
+    SetInput({long_name});                                           \
+    auto changed_step = step_->ChangeStep();                         \
+    EXPECT_NE(dynamic_cast<StepName*>(changed_step.get()), nullptr); \
+    SetInput({long_name " 12 eeqw 43ew"});                           \
+    changed_step = step_->ChangeStep();                              \
+    EXPECT_NE(dynamic_cast<StepName*>(changed_step.get()), nullptr); \
   }
 
 class PromptStepTest : public StepTest {
@@ -37,11 +34,12 @@ class PromptStepTest : public StepTest {
                                          small_step_factory_);
   }
   std::unique_ptr<PromptStep> step_;
+  StepParameter step_parameter_;
 };
 
 TEST_F(PromptStepTest, ExecuteReturnVoidCommand) {
   SetArg("");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
 
@@ -59,11 +57,11 @@ TEST_F(PromptStepTest, ChangeStepMustSetNullptr) {
   SetArg("");
   SetInput({"quit"});
   std::shared_ptr<Step> to_change;
-  step_->ChangeStep(to_change);
+  step_->ChangeStep();
   EXPECT_EQ(to_change, nullptr);
   to_change.reset();
   SetInput({"quit 12 eeqw 43ew"});
-  step_->ChangeStep(to_change);
+  step_->ChangeStep();
   EXPECT_EQ(to_change, nullptr);
   to_change.reset();
 }

@@ -4,7 +4,7 @@
 #include "interactor/validator/DefaultValidator.h"
 #include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
-#include "persistence/Persistence.h"
+#include "persistence/FilePersistence.h"
 
 int main() {
   using namespace task_manager;
@@ -16,8 +16,11 @@ int main() {
   auto small_step_factory =
       std::make_shared<DefaultSmallStepFactory>(io_facility, validator);
 
-  auto model_controller =
-      std::make_shared<DefaultModelController>(std::move(task_manager));
+  auto file_persister = std::make_unique<FilePersistence>(
+      "very_long_name_that_wont_conflict.txt");
+
+  auto model_controller = std::make_shared<DefaultModelController>(
+      std::move(task_manager), std::move(file_persister));
 
   auto state_machine = std::make_unique<StateMachine>(validator, io_facility,
                                                       small_step_factory);

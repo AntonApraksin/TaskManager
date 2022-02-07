@@ -4,6 +4,7 @@
 
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
+#include "test_utils/MockPersistence.h"
 #include "test_utils/MockTaskIdProducer.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/operators.h"
@@ -16,8 +17,12 @@ class DefaultModelControllerTest : public ::testing::Test {
   void SetUp() override {
     auto mtip = std::make_unique<MockTaskIdProducer>();
     auto tm = std::make_unique<TaskManager>(std::move(mtip));
-    model_controller_ = std::make_unique<DefaultModelController>(std::move(tm));
+    auto persistence = std::make_unique<MockPersistence>();
+    persistence_ = persistence.get();
+    model_controller_ = std::make_unique<DefaultModelController>(
+        std::move(tm), std::move(persistence));
   }
+  MockPersistence* persistence_;
   std::unique_ptr<DefaultModelController> model_controller_;
   TaskFactory task_factory_;
 };
@@ -259,6 +264,77 @@ TEST_F(DefaultModelControllerTest, GetSpecificSolidTasks) {
   for (size_t i{0}, sz{expected.size()}; i != sz; ++i) {
     EXPECT_EQ(result.AccessResult()[i], expected[i]);
   }
+}
+
+TEST_F(DefaultModelControllerTest, MustCallSaveOnPersistence) {
+  auto _0 = task_factory_.GetNextTask();     // NOLINT
+  auto __1 = task_factory_.GetNextTask();    // NOLINT
+  auto ___3 = task_factory_.GetNextTask();   // NOLINT
+  auto ____7 = task_factory_.GetNextTask();  // NOLINT
+  auto ___6 = task_factory_.GetNextTask();   // NOLINT
+  auto __2 = task_factory_.GetNextTask();    // NOLINT
+  auto _4 = task_factory_.GetNextTask();     // NOLINT
+  auto __5 = task_factory_.GetNextTask();    // NOLINT
+  auto _8 = task_factory_.GetNextTask();     // NOLINT
+  model_controller_->Add(_0);
+  model_controller_->Add(CreateTaskId(0), __1);
+  model_controller_->Add(CreateTaskId(0), __2);
+  model_controller_->Add(CreateTaskId(1), ___3);
+  model_controller_->Add(_4);
+  model_controller_->Add(CreateTaskId(4), __5);
+  model_controller_->Add(CreateTaskId(1), ___6);
+  model_controller_->Add(CreateTaskId(3), ____7);
+  model_controller_->Add(_8);
+
+  auto expected = model_controller_->GetAllSolidTasks().AccessResult();
+
+  EXPECT_CALL(*persistence_, Save(expected)).Times(1);
+  auto result = model_controller_->Save();
+  EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
+}
+
+TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence) {
+  auto _0 = task_factory_.GetNextTask();     // NOLINT
+  auto __1 = task_factory_.GetNextTask();    // NOLINT
+  auto ___3 = task_factory_.GetNextTask();   // NOLINT
+  auto ____7 = task_factory_.GetNextTask();  // NOLINT
+  auto ___6 = task_factory_.GetNextTask();   // NOLINT
+  auto __2 = task_factory_.GetNextTask();    // NOLINT
+  auto _4 = task_factory_.GetNextTask();     // NOLINT
+  auto __5 = task_factory_.GetNextTask();    // NOLINT
+  auto _8 = task_factory_.GetNextTask();     // NOLINT
+  model_controller_->Add(_0);
+  model_controller_->Add(CreateTaskId(0), __1);
+  model_controller_->Add(CreateTaskId(0), __2);
+  model_controller_->Add(CreateTaskId(1), ___3);
+  model_controller_->Add(_4);
+  model_controller_->Add(CreateTaskId(4), __5);
+  model_controller_->Add(CreateTaskId(1), ___6);
+  model_controller_->Add(CreateTaskId(3), ____7);
+  model_controller_->Add(_8);
+
+  auto to_load = OperationResult<Persistence::Status, SolidTasks>::Ok(
+      model_controller_->GetAllSolidTasks().AccessResult());
+  model_controller_->Delete(CreateTaskId(0));
+  model_controller_->Delete(CreateTaskId(4));
+  model_controller_->Delete(CreateTaskId(8));
+  ASSERT_TRUE(model_controller_->GetAllSolidTasks().AccessResult().empty());
+
+  EXPECT_CALL(*persistence_, Load()).WillOnce(testing::Return(to_load));
+  auto result = model_controller_->Load();
+  EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
+
+  auto loaded_state = model_controller_->GetAllSolidTasks().AccessResult();
+  ASSERT_EQ(to_load.AccessResult().size(), loaded_state.size());
+
+  auto previous_state = to_load.AccessResult();
+  std::sort(previous_state.begin(), previous_state.end(),
+            [](auto& lhs, auto& rhs) { return lhs.task_id() < rhs.task_id(); });
+  std::sort(loaded_state.begin(), loaded_state.end(),
+            [](auto& lhs, auto& rhs) { return lhs.task_id() < rhs.task_id(); });
+
+  ASSERT_TRUE(std::equal(previous_state.cbegin(), previous_state.cend(),
+                         loaded_state.cbegin()));
 }
 
 TEST_F(DefaultModelControllerTest, MustAddLabel) {

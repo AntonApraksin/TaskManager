@@ -17,14 +17,8 @@ class SaveStepTest : public StepTest {
   StepParameter step_parameter_;
 };
 
-TEST_F(SaveStepTest, ExecuteWithoutArgumentReturnVoidCommand) {
+TEST_F(SaveStepTest, ExecuteWithoutArgumentReturnSaveTasksCommand) {
   SetArg("");
   auto command{step_->execute(step_parameter_)};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-}
-
-TEST_F(SaveStepTest, ExecuteWithoutArgumentReturnSaveToFileCommand) {
-  SetArg("foo.txt");
-  auto command{step_->execute(step_parameter_)};
-  EXPECT_NE(dynamic_cast<SaveTasksToFileCommand*>(command.get()), nullptr);
+  EXPECT_NE(dynamic_cast<SaveTasksCommand*>(command.get()), nullptr);
 }

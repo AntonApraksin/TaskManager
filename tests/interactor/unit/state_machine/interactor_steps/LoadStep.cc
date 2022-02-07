@@ -17,14 +17,8 @@ class LoadStepTest : public StepTest {
   StepParameter step_parameter_;
 };
 
-TEST_F(LoadStepTest, ExecuteWithoutArgumentReturnVoidCommand) {
+TEST_F(LoadStepTest, ExecuteWithoutArgumentReturnLoadTasksCommand) {
   SetArg("");
   auto command{step_->execute(step_parameter_)};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-}
-
-TEST_F(LoadStepTest, ExecuteWithArgumentReturnLoadFromFileCommand) {
-  SetArg("foo.txt");
-  auto command{step_->execute(step_parameter_)};
-  EXPECT_NE(dynamic_cast<LoadTasksFromFileCommand*>(command.get()), nullptr);
+  EXPECT_NE(dynamic_cast<LoadTasksCommand*>(command.get()), nullptr);
 }

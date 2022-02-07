@@ -51,8 +51,8 @@ std::unique_ptr<Command> DeleteLabelStep::execute(StepParameter &param) {
   return std::make_unique<DeleteLabelCommand>(*task_id, label);
 }
 
-void DeleteLabelStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
+std::shared_ptr<Step> DeleteLabelStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
                                                small_step_factory_);
 }
 

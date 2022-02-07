@@ -10,11 +10,12 @@
 
 namespace task_manager {
 class TaskManager;
-class FilePersistence;
+class Persistence;
 
 class DefaultModelController : public ModelController {
  public:
-  explicit DefaultModelController(std::unique_ptr<TaskManager> task_manager);
+  explicit DefaultModelController(std::unique_ptr<TaskManager> task_manager,
+                                  std::unique_ptr<Persistence> persistence);
 
   OperationResult<Status, TaskId> Add(Task task) override;
   OperationResult<Status, TaskId> Add(TaskId task_id, Task task) override;
@@ -27,14 +28,15 @@ class DefaultModelController : public ModelController {
   OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
       std::vector<TaskId>) override;
 
-  OperationResult<Status> LoadFrom(Persistence&) override;
-  OperationResult<Status> SaveTo(Persistence&) override;
+  OperationResult<Status> Load() override;
+  OperationResult<Status> Save() override;
 
   OperationResult<Status> AddLabel(TaskId task_id, Label label) override;
   OperationResult<Status> DeleteLabel(TaskId task_id, Label label) override;
 
  private:
   std::unique_ptr<TaskManager> task_manager_;
+  std::unique_ptr<Persistence> persistence_;
 };
 
 std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(

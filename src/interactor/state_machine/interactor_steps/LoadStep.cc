@@ -6,17 +6,12 @@
 namespace task_manager {
 std::unique_ptr<Command> LoadStep::execute(StepParameter &param) {
   param.ctx.event = StepEvent::kNothing;
-  if (arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
-  }
-
-  auto filename = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
 
   param.cache.clear();
-  return std::make_unique<LoadTasksFromFileCommand>(filename);
+  return std::make_unique<LoadTasksCommand>();
 }
 
 std::shared_ptr<Step> LoadStep::ChangeStep() {

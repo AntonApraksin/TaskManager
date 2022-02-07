@@ -6,12 +6,8 @@
 
 #include "OperationResult.h"
 #include "model/SolidTask.h"
-#include "persistence/Persistence.h"
 
 namespace task_manager {
-class TaskManager;
-class FilePersistence;
-
 class ModelController {
  public:
   enum class Status {
@@ -31,8 +27,8 @@ class ModelController {
   virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
   virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
       std::vector<TaskId>) = 0;
-  virtual OperationResult<Status> LoadFrom(Persistence&) = 0;
-  virtual OperationResult<Status> SaveTo(Persistence&) = 0;
+  virtual OperationResult<Status> Load() = 0;
+  virtual OperationResult<Status> Save() = 0;
 
   virtual OperationResult<Status> AddLabel(TaskId task_id, Label label) = 0;
   virtual OperationResult<Status> DeleteLabel(TaskId task_id, Label label) = 0;

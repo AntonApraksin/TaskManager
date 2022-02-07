@@ -52,8 +52,8 @@ std::unique_ptr<Command> AddLabelStep::execute(StepParameter &param) {
   return std::make_unique<AddLabelCommand>(*task_id, label);
 }
 
-void AddLabelStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  active_step = std::make_shared<FinalizeStep>(validator_, io_facility_,
+std::shared_ptr<Step> AddLabelStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
                                                small_step_factory_);
 }
 

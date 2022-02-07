@@ -6,16 +6,10 @@
 namespace task_manager {
 std::unique_ptr<Command> SaveStep::execute(StepParameter &param) {
   param.ctx.event = StepEvent::kNothing;
-  if (arg_.empty()) {
-    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
-  }
-
-  auto filename = validator_->ConsumeOneTokenFrom(arg_);
   if (!arg_.empty()) {
     return ReportError(Strings::kMultipleArgumentDoesNotSupported);
   }
-
-  return std::make_unique<SaveTasksToFileCommand>(filename);
+  return std::make_unique<SaveTasksCommand>();
 }
 
 std::shared_ptr<Step> SaveStep::ChangeStep() {

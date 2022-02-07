@@ -66,9 +66,6 @@ TEST_F(DeleteLabelStepTest, ExecuteWithIdAndLabelMustReturnDeleteLabelCommand) {
 
 TEST_F(DeleteLabelStepTest, ChangeStepMustChangeToFinalizeStep) {
   SetArg("12 foo");
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_NE(to_change.get(), old_addr);
-  EXPECT_NE(dynamic_cast<FinalizeStep*>(to_change.get()), nullptr);
+  auto changed_step = step_->ChangeStep();
+  EXPECT_NE(dynamic_cast<FinalizeStep*>(changed_step.get()), nullptr);
 }

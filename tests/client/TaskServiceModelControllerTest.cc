@@ -11,6 +11,11 @@ bool operator==(const TaskAndTaskIdRequest& lhs,
   return lhs.task_id() == rhs.task_id() and lhs.task() == rhs.task();
 }
 
+bool operator==(const TaskIdAndLabelRequest& lhs,
+                const TaskIdAndLabelRequest& rhs) {
+    return lhs.task_id() == rhs.task_id() and lhs.label().name() == rhs.label().name();
+}
+
 TaskIdResponse CreateTaskIdResponseWithOk(google::protobuf::int32 id) {
   TaskIdResponse ret;
   ret.set_allocated_task_id(new TaskId(CreateTaskId(id)));
@@ -335,4 +340,80 @@ TEST_F(TaskServiceModelControllerTest, FaultyLoad) {
 
   auto result = task_service_model_controller->Load();
   EXPECT_EQ(result.GetStatus(), ModelController::Status::kLoadFailure);
+}
+
+TEST_F(TaskServiceModelControllerTest, MustAddLabel)
+{
+    using testing::_;
+    auto id = CreateTaskId(0);
+    Label label;
+    label.set_name("label");
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(id));
+    request.set_allocated_label(new Label(label));
+
+    EXPECT_CALL(*mock_task_service_stub, AddLabel(_, request, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<TaskIdAndLabelRequest, PlainResponse>(
+                CreatePlainResponseWithOk())));
+
+    auto result = task_service_model_controller->AddLabel(id, label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
+}
+
+TEST_F(TaskServiceModelControllerTest, FaultyAddLabel)
+{
+    using testing::_;
+    auto id = CreateTaskId(0);
+    Label label;
+    label.set_name("label");
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(id));
+    request.set_allocated_label(new Label(label));
+
+    EXPECT_CALL(*mock_task_service_stub, AddLabel(_, request, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<TaskIdAndLabelRequest, PlainResponse>(
+                CreateFaultyResponse<PlainResponse>(task_manager::kNotPresentId))));
+
+    auto result = task_service_model_controller->AddLabel(id, label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
+}
+
+TEST_F(TaskServiceModelControllerTest, MustDeleteLabel)
+{
+    using testing::_;
+    auto id = CreateTaskId(0);
+    Label label;
+    label.set_name("label");
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(id));
+    request.set_allocated_label(new Label(label));
+
+    EXPECT_CALL(*mock_task_service_stub, DeleteLabel(_, request, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<TaskIdAndLabelRequest, PlainResponse>(
+                CreatePlainResponseWithOk())));
+
+    auto result = task_service_model_controller->DeleteLabel(id, label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
+}
+
+TEST_F(TaskServiceModelControllerTest, FaultyDeleteLabel)
+{
+    using testing::_;
+    auto id = CreateTaskId(0);
+    Label label;
+    label.set_name("label");
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(id));
+    request.set_allocated_label(new Label(label));
+
+    EXPECT_CALL(*mock_task_service_stub, DeleteLabel(_, request, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<TaskIdAndLabelRequest, PlainResponse>(
+                CreateFaultyResponse<PlainResponse>(task_manager::kNotPresentId))));
+
+    auto result = task_service_model_controller->DeleteLabel(id, label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
 }

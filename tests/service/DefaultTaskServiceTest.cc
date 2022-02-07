@@ -135,3 +135,35 @@ TEST_F(DefaultTaskServiceTest,
   PlainResponse response;
   task_service->Load(nullptr, &request, &response);
 }
+
+TEST_F(DefaultTaskServiceTest, MustAddLabelToTask) {
+  auto task = task_factory.GetNextTask();
+  auto id = model_controller->Add(std::move(task)).AccessResult();
+  Label label;
+  label.set_name("label");
+  TaskIdAndLabelRequest request;
+  request.set_allocated_task_id(new TaskId(id));
+  request.set_allocated_label(new Label(label));
+  PlainResponse response;
+  task_service->AddLabel(nullptr, &request, &response);
+  auto storage = model_controller->GetAllSolidTasks().AccessResult();
+  ASSERT_EQ(storage.size(), 1);
+  EXPECT_EQ(storage[0].task().labels().size(), 1);
+  EXPECT_EQ(storage[0].task().labels(0).name(), label.name());
+}
+
+TEST_F(DefaultTaskServiceTest, MustDeleteLabelFromTask) {
+  auto task = task_factory.GetNextTask();
+  auto id = model_controller->Add(std::move(task)).AccessResult();
+  Label label;
+  label.set_name("label");
+  model_controller->AddLabel(id, label);
+  TaskIdAndLabelRequest request;
+  request.set_allocated_task_id(new TaskId(id));
+  request.set_allocated_label(new Label(label));
+  PlainResponse response;
+  task_service->DeleteLabel(nullptr, &request, &response);
+  auto storage = model_controller->GetAllSolidTasks().AccessResult();
+  ASSERT_EQ(storage.size(), 1);
+  EXPECT_EQ(storage[0].task().labels().size(), 0);
+}

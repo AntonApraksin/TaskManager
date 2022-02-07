@@ -137,5 +137,34 @@ OperationResult<MCStatus> task_manager::TaskServiceModelController::Save() {
     return OperationResult<MCStatus>::Error(
         ConvertTaskServiceStatusToModelControllerStatus(response.status()));
 }
+OperationResult<MCStatus> TaskServiceModelController::AddLabel(TaskId task_id, Label label) {
+    grpc::ClientContext ctx;
+    PlainResponse response;
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(task_id));
+    request.set_allocated_label(new Label(label));
+    stub_->AddLabel(&ctx, request, &response);
+    if (response.status() == TaskServiceStatus::kOk)
+    {
+        return OperationResult<MCStatus>::Ok();
+    }
+    return OperationResult<MCStatus>::Error(
+        ConvertTaskServiceStatusToModelControllerStatus(response.status()));
+}
+
+OperationResult<MCStatus> TaskServiceModelController::DeleteLabel(TaskId task_id, Label label) {
+    grpc::ClientContext ctx;
+    PlainResponse response;
+    TaskIdAndLabelRequest request;
+    request.set_allocated_task_id(new TaskId(task_id));
+    request.set_allocated_label(new Label(label));
+    stub_->DeleteLabel(&ctx, request, &response);
+    if (response.status() == TaskServiceStatus::kOk)
+    {
+        return OperationResult<MCStatus>::Ok();
+    }
+    return OperationResult<MCStatus>::Error(
+        ConvertTaskServiceStatusToModelControllerStatus(response.status()));
+}
 
 }  // namespace task_manager

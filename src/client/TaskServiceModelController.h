@@ -32,6 +32,10 @@ class TaskServiceModelController : public ModelController {
 
   OperationResult<Status> Save() override;
 
+  OperationResult<Status> AddLabel(TaskId task_id, Label label) override;
+
+  OperationResult<Status> DeleteLabel(TaskId task_id, Label label) override;
+
  private:
   std::unique_ptr<task_manager::TaskService::StubInterface> stub_;
 };

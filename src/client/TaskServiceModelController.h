@@ -15,14 +15,21 @@ class TaskServiceModelController : public ModelController {
       std::unique_ptr<task_manager::TaskService::StubInterface> stub);
 
   OperationResult<Status, TaskId> Add(Task task) override;
+
   OperationResult<Status, TaskId> Add(TaskId task_id, Task task) override;
+
   OperationResult<Status> Edit(TaskId id, Task task) override;
+
   OperationResult<Status> Complete(TaskId id) override;
+
   OperationResult<Status> Delete(TaskId id) override;
+
   OperationResult<Status, SolidTasks> GetAllSolidTasks() override;
-  OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
-      std::vector<TaskId> vector) override;
+
+  OperationResult<Status, SolidTasks> GetSpecificSolidTasks(std::vector<TaskId> vector) override;
+
   OperationResult<Status> Load() override;
+
   OperationResult<Status> Save() override;
 
  private:

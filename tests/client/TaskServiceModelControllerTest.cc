@@ -19,6 +19,11 @@ bool operator==(const TaskIdAndLabelRequest& lhs,
     return lhs.task_id() == rhs.task_id() and lhs.label().name() == rhs.label().name();
 }
 
+bool operator==(const Label& lhs, const Label& rhs)
+{
+    return lhs.name() == rhs.name();
+}
+
 TaskIdResponse CreateTaskIdResponseWithOk(google::protobuf::int32 id)
 {
     TaskIdResponse ret;
@@ -444,4 +449,53 @@ TEST_F(TaskServiceModelControllerTest, FaultyDeleteLabel)
 
     auto result = task_service_model_controller->DeleteLabel(id, label);
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
+}
+
+TEST_F(TaskServiceModelControllerTest, MustShowByLabel)
+{
+    using testing::_;
+
+    SolidTasksResponse response;
+    SolidTask solid_task;
+    SolidTasks solid_tasks;
+    solid_task.set_allocated_task(new Task(task_factory.GetNextTask()));
+    solid_task.set_allocated_task_id(new TaskId(CreateTaskId(0)));
+    solid_task.mutable_task()->add_labels()->set_name("label");
+    solid_tasks.push_back(solid_task);
+    response.add_solid_tasks()->CopyFrom(solid_task);
+    solid_task.set_allocated_task(new Task(task_factory.GetNextTask()));
+    solid_task.set_allocated_task_id(new TaskId(CreateTaskId(1)));
+    solid_task.mutable_task()->add_labels()->set_name("label");
+    response.add_solid_tasks()->CopyFrom(solid_task);
+    solid_tasks.push_back(solid_task);
+    response.set_status(task_manager::kOk);
+
+    Label label;
+    label.set_name("label");
+
+    EXPECT_CALL(*mock_task_service_stub, GetTasksByLabel(_, label, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<Label, SolidTasksResponse>(
+                response)));
+
+    auto result = task_service_model_controller->GetTasksByLabel(label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
+    EXPECT_EQ(result.AccessResult()[0], solid_tasks[0]);
+    EXPECT_EQ(result.AccessResult()[1], solid_tasks[1]);
+}
+
+TEST_F(TaskServiceModelControllerTest, FaultyShowByLabel)
+{
+    using testing::_;
+
+    Label label;
+    label.set_name("label");
+
+    EXPECT_CALL(*mock_task_service_stub, GetTasksByLabel(_, label, _))
+        .WillOnce(testing::Invoke(
+            InvokeResultFactory<Label, SolidTasksResponse>(
+                CreateFaultyResponse<SolidTasksResponse>(task_manager::kNotPresentLabel))));
+
+    auto result = task_service_model_controller->GetTasksByLabel(label);
+    EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentLabel);
 }

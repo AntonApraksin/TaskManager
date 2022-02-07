@@ -1,7 +1,9 @@
-#include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include <boost/log/trivial.hpp>
+
+#include "logging/DefaultLogFacility.h"
 #include "model/DefaultModelController.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/FilePersistence.h"
@@ -9,6 +11,10 @@
 
 int main() {
   using namespace task_manager;
+  logging::SetUp();
+
+  auto& logger = logging::GetDefaultLogger();
+
   auto id_producer = std::make_unique<TaskIdProducer>();
   auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
 
@@ -19,6 +25,9 @@ int main() {
       std::move(task_manager), std::move(file_persister));
 
   auto server_address = "0.0.0.0:50051";
+
+  BOOST_LOG_SEV(logger, logging::severinity::info)
+      << "Server up on: " << server_address;
   DefaultTaskService service(std::move(model_controller));
 
   grpc::ServerBuilder builder;
@@ -29,11 +38,11 @@ int main() {
   builder.RegisterService(&service);
   // Finally assemble the server.
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-  std::cout << "Server listening on " << server_address << std::endl;
 
   // Wait for the server to shutdown. Note that some other thread must be
   // responsible for shutting down the server for this call to ever return.
   server->Wait();
+  BOOST_LOG_SEV(logger, logging::severinity::info) << "Server shutdown";
 
   return 0;
 }

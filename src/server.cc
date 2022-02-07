@@ -18,7 +18,7 @@ int main() {
   auto model_controller = std::make_unique<DefaultModelController>(
       std::move(task_manager), std::move(file_persister));
 
-  auto server_address = "127.0.0.1:50051";
+  auto server_address = "0.0.0.0:50051";
   DefaultTaskService service(std::move(model_controller));
 
   grpc::ServerBuilder builder;

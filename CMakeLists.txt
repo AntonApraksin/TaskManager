@@ -32,7 +32,7 @@ function(compile_proto_file filename)
       DEPENDS ${PROTOBUF_DIR}/${basename}.proto
       COMMAND ${PROTOBUF_EXECUTABLE} ${PROTOBUF_DIR}/${basename}.proto
         --cpp_out=${PROTOBUF_CPP_OUT_DIR}
-        --grpc_out=${PROTOBUF_CPP_OUT_DIR}
+        --grpc_out=generate_mock_code=true:${PROTOBUF_CPP_OUT_DIR}
         --plugin=protoc-gen-grpc=${GRPC_PROTOBUF_PLUGIN}
         --proto_path=${PROTOBUF_DIR}
       VERBATIM
@@ -73,6 +73,10 @@ target_link_libraries(main TaskManager)
 add_executable(server
     src/server.cc)
 target_link_libraries(server TaskManager)
+
+add_executable(client
+    src/client.cc)
+target_link_libraries(client TaskManager)
 
 target_include_directories(TaskManager
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src

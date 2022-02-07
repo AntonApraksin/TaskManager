@@ -60,6 +60,7 @@ service TaskService
     rpc Delete(TaskId) returns (PlainResponse);
     rpc GetAllSolidTasks(google.protobuf.Empty) returns (SolidTasksResponse);
     rpc GetSpecifiedSolidTasks(TaskIdsRequest) returns (SolidTasksResponse);
+    rpc GetTasksByLabel(Label) returns (SolidTasksResponse);
     rpc Load(google.protobuf.Empty) returns (PlainResponse);
     rpc Save(google.protobuf.Empty) returns (PlainResponse);
 

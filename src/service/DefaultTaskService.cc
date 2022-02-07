@@ -189,4 +189,13 @@ grpc::Status DefaultTaskService::DeleteLabel(::grpc::ServerContext*,
         ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
     return grpc::Status::OK;
 }
+grpc::Status DefaultTaskService::GetTasksByLabel(::grpc::ServerContext *,
+                                                 const ::task_manager::Label *request,
+                                                 ::task_manager::SolidTasksResponse *response) {
+    auto result =
+        model_controller_->GetTasksByLabel(*request);
+    response->set_status(
+        ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+    return grpc::Status::OK;
+}
 }  // namespace task_manager

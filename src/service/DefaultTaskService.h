@@ -35,13 +35,13 @@ class DefaultTaskService final : public task_manager::TaskService::Service {
                       const ::task_manager::TaskId *request,
                       ::task_manager::PlainResponse *response) override;
 
-  grpc::Status GetAllSolidTasks(
-      ::grpc::ServerContext *context, const ::google::protobuf::Empty *request,
-      ::task_manager::SolidTasksResponse *response) override;
+  grpc::Status GetAllSolidTasks(::grpc::ServerContext *context,
+                                const ::google::protobuf::Empty *request,
+                                ::task_manager::SolidTasksResponse *response) override;
 
-  grpc::Status GetSpecifiedSolidTasks(
-      ::grpc::ServerContext *context, const TaskIdsRequest *request,
-      ::task_manager::SolidTasksResponse *response) override;
+  grpc::Status GetSpecifiedSolidTasks(::grpc::ServerContext *context,
+                                      const TaskIdsRequest *request,
+                                      ::task_manager::SolidTasksResponse *response) override;
 
   grpc::Status Load(::grpc::ServerContext *context,
                     const ::google::protobuf::Empty *request,

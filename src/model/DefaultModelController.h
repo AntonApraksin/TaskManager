@@ -31,6 +31,9 @@ class DefaultModelController : public ModelController {
   OperationResult<Status> Load() override;
   OperationResult<Status> Save() override;
 
+  OperationResult<Status> AddLabel(TaskId task_id, Label label) override;
+  OperationResult<Status> DeleteLabel(TaskId task_id, Label label) override;
+
  private:
   std::unique_ptr<TaskManager> task_manager_;
   std::unique_ptr<Persistence> persistence_;

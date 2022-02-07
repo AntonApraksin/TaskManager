@@ -91,6 +91,26 @@ class SaveTasksCommand : public Command {
   CommandResult execute(ModelController&) override;
 };
 
+class AddLabelCommand : public Command {
+ public:
+  AddLabelCommand(TaskId, Label);
+  CommandResult execute(ModelController&) override;
+
+ private:
+  TaskId task_id_;
+  Label label_;
+};
+
+class DeleteLabelCommand : public Command {
+ public:
+  DeleteLabelCommand(TaskId, Label);
+  CommandResult execute(ModelController&) override;
+
+ private:
+  TaskId task_id_;
+  Label label_;
+};
+
 class VoidCommand : public Command {
  public:
   CommandResult execute(ModelController&) override;

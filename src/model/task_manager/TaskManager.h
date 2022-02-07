@@ -22,10 +22,7 @@ class TaskManager final {
     Roots roots;
   };
 
-  enum class Status {
-    kOk,
-    kNotPresentId,
-  };
+  enum class Status { kOk, kNotPresentId, kNotPresentLabel };
 
   explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
@@ -37,6 +34,9 @@ class TaskManager final {
   OperationResult<Status> Edit(TaskId id, Task task);
   OperationResult<Status> Complete(TaskId id);
   OperationResult<Status> Delete(TaskId id);
+
+  OperationResult<Status> AddLabel(TaskId id, Label label);
+  OperationResult<Status> DeleteLabel(TaskId id, Label label);
 
   OperationResult<Status, Storage> Show() const;
 

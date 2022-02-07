@@ -1,27 +1,17 @@
 #include "interactor/state_machine/interactor_steps/UnknownStep.h"
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 namespace task_manager {
-std::unique_ptr<Command> UnknownStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
-
-template <>
-std::unique_ptr<Command> UnknownStep::HandleStage<0>(Context &) {
+std::unique_ptr<Command> UnknownStep::execute(StepParameter &param) {
   io_facility_->Print(Strings::kUnknownCommand);
+  param.ctx.event = StepEvent::kNothing;
   return std::make_unique<VoidCommand>();
 }
 
-void UnknownStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                               small_step_factory_);
-  }
+std::shared_ptr<Step> UnknownStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 }  // namespace task_manager

@@ -1,71 +1,35 @@
 #include "interactor/state_machine/interactor_steps/CompleteStep.h"
 
 #include "interactor/io_facility/Strings.h"
-#include "interactor/state_machine/interactor_steps/PromptStep.h"
-#include "utils/TaskIdUtils.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
+#include "interactor/state_machine/interactor_steps/utils/IoFacilityAndValidatorUtils.h"
+#include "interactor/state_machine/interactor_steps/utils/ValidatorUtils.h"
+#include "utils/Functions.h"
 
 namespace task_manager {
-std::unique_ptr<Command> CompleteStep::execute(Context ctx) {
-  --stage_;
-  if (stage_ == 1) {
-    return HandleStage<1>(ctx);
-  }
-  if (stage_ == 0) {
-    return HandleStage<0>(ctx);
-  }
-  std::terminate();
-}
+std::unique_ptr<Command> CompleteStep::execute(StepParameter &param) {
+  param.ctx.event = StepEvent::kNothing;
 
-void CompleteStep::ChangeStep(std::shared_ptr<Step> &active_step) {
-  if (stage_ == 0) {
-    active_step = std::make_shared<PromptStep>(validator_, io_facility_,
-                                               small_step_factory_);
-  }
-}
-
-template <>
-std::unique_ptr<Command> CompleteStep::HandleStage<1>(Context &) {
   if (arg_.empty()) {
     return ReportError(Strings::kRequiredId);
   }
-  std::string token;
-  std::optional<int> to_complete;
-  for (; !arg_.empty();) {
-    token = validator_->ConsumeOneTokenFrom(arg_);
-    to_complete = validator_->ParseInt(token);
-    if (!to_complete) {
-      return ReportError(Strings::InvalidId(token));
-    }
-    task_ids_.push_back(CreateTaskId(*to_complete));
-  }
-  if (task_ids_.size() >
-      std::set<TaskId>(task_ids_.begin(), task_ids_.end()).size()) {
-    return ReportError(Strings::kRepeatedId);
-  }
-  return std::make_unique<GetSpecifiedTasksCommand>(task_ids_);
-}
 
-template <>
-std::unique_ptr<Command> CompleteStep::HandleStage<0>(Context &ctx) {
-  if (!ctx.solid_tasks &&
-      ctx.status == ModelController::Status::kNotPresentId) {
-    return ReportError(Strings::kNotPresentId);
+  auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
+  if (!arg_.empty()) {
+    return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+  }
+  if (!task_id) {
+    return ReportError(Strings::kInvalidId);
   }
 
-  auto has_parent_child_relationship =
-      HasParentChildRelationship(*ctx.solid_tasks, task_ids_);
-  if (has_parent_child_relationship) {
-    return ReportError(Strings::IdIsSubIdOf(
-        std::to_string(has_parent_child_relationship->first.id()),
-        std::to_string(has_parent_child_relationship->second.id())));
+  auto sub_tree = GetTreeFromVector(param.cache, *task_id);
+  if (!sub_tree.empty()) {
+    io_facility_->Print(Strings::YouAreGoingTo("complete"));
+    io_facility_->Print(Strings::ShowSolidTasks(sub_tree));
   }
-  io_facility_->Print(Strings::YouAreGoingTo("complete"));
 
-  io_facility_->Print(Strings::ShowSolidTasks(*ctx.solid_tasks));
+  auto confirm = ReadConfirmation(*io_facility_, *validator_, "complete");
 
-  io_facility_->Print(Strings::ProceedTo("complete"));
-  std::string input = io_facility_->GetLine();
-  auto confirm = validator_->ParseConfirmation(input);
   if (!confirm) {
     io_facility_->Print(Strings::kOkayITreatItAsNo);
     return std::make_unique<VoidCommand>();
@@ -73,11 +37,17 @@ std::unique_ptr<Command> CompleteStep::HandleStage<0>(Context &ctx) {
   if (*confirm == ConfirmationResult::kNo) {
     return std::make_unique<VoidCommand>();
   }
-  return std::make_unique<CompleteTasksCommand>(std::move(task_ids_));
+
+  param.cache.clear();
+  return std::make_unique<CompleteTasksCommand>(std::vector<TaskId>{*task_id});
+}
+
+std::shared_ptr<Step> CompleteStep::ChangeStep() {
+  return std::make_shared<FinalizeStep>(validator_, io_facility_,
+                                        small_step_factory_);
 }
 
 std::unique_ptr<Command> CompleteStep::ReportError(std::string str) {
-  stage_ = 0;
   io_facility_->Print(str);
   return std::make_unique<VoidCommand>();
 }

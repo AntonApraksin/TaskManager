@@ -23,7 +23,10 @@ constexpr ccp kUnknownCommand =
 constexpr ccp kMultipleArgumentDoesNotSupported =
     "Multiple arguments does not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
+constexpr ccp kInvalidId = "Invalid id format.\n";
+constexpr ccp kRequiredLabel = "Label is required for this command.\n";
 constexpr ccp kRepeatedId = "Repeated Ids are not allowed.\n";
+constexpr ccp kNotPresentLabel = "Given label wasn`t found\n";
 constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"
@@ -31,9 +34,9 @@ constexpr ccp kHelp =
     "    Add a new task.\n"
     "  edit(e) id\n"
     "    Edit a task with given id.\n"
-    "  delete(d) id [id...]\n"
+    "  delete(d) id\n"
     "    Delete a task with the given id.\n"
-    "  complete(c) id [id...]\n"
+    "  complete(c) id\n"
     "    Complete a task with the given id.\n"
     "  show(s)\n"
     "    Show all tasks.\n"

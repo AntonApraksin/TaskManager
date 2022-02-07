@@ -1,6 +1,7 @@
 #include "interactor/state_machine/interactor_steps/EditStep.h"
 
 #include "StepTest.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/utils.h"
 
@@ -14,118 +15,44 @@ class EditStepTest : public StepTest {
                                        small_step_factory_, std::move(arg));
   }
   std::unique_ptr<EditStep> step_;
+  StepParameter step_parameter_;
 };
 
-TEST_F(EditStepTest,
-       FirstCallWithoutArgumentMustReturnVoidCommandAndThenCauseDeath) {
+TEST_F(EditStepTest, ExecuteWithoutArgumentMustReturnVoidCommand) {
   SetArg("");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
 }
 
-TEST_F(EditStepTest,
-       FirstCallWithMultipleArgumentMustReturnVoidCommandAndThenCauseDeath) {
+TEST_F(EditStepTest, ExecuteWithMultipleArgumentMustReturnVoidCommand) {
   SetArg("12 43");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
 }
 
-TEST_F(EditStepTest,
-       FirstCallWithInvalidIdArgumentMustReturnVoidCommandAndThenCauseDeath) {
+TEST_F(EditStepTest, ExecuteWithInvalidIdArgumentMustReturnVoidCommand) {
   SetArg("qw");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
 }
 
-TEST_F(EditStepTest, FirstCallWithArgumentMustReturnGetSpecifiedTasksCommand) {
-  SetArg("12");
-  auto command{step_->execute({})};
-  EXPECT_NE(dynamic_cast<GetSpecifiedTasksCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
-TEST_F(EditStepTest, SecondCallWithoutSolidTasksReturnVoidCommand) {
-  SetArg("12");
-  step_->execute({});
-  auto command{
-      step_->execute({{}, {}, ModelController::Status::kNotPresentId})};
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
-TEST_F(EditStepTest, SecondCallWithoutProperTaskReturnVoidCommand) {
+TEST_F(EditStepTest, ExecuteWithConfirmationYesReturnEditCommand) {
   SetArg("3");
-  step_->execute({});
   SetInput({"dafs", "", "", "", "y"});
-  TaskFactory task_factory;
-  SolidTasks solid_tasks{TaskToSolidTask(task_factory.GetNextTask(), 1),
-                         TaskToSolidTask(task_factory.GetNextTask(), 2),
-                         TaskToSolidTask(task_factory.GetNextTask(), 4, 2)};
-  auto command =
-      step_->execute({{}, solid_tasks, ModelController::Status::kOk});
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
-TEST_F(EditStepTest,
-       SecondCallWithProperTaskAndConfirmationYesMustReturnEditCommand) {
-  SetArg("3");
-  step_->execute({});
-  SetInput({"dafs", "", "", "", "y"});
-  TaskFactory task_factory;
-  SolidTasks solid_tasks{TaskToSolidTask(task_factory.GetNextTask(), 3)};
-  auto command =
-      step_->execute({{}, solid_tasks, ModelController::Status::kOk});
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<EditTaskCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
+}
+
+TEST_F(EditStepTest, ExecuteWithConfirmatioNoReturnVoidCommand) {
+  SetArg("3");
+  SetInput({"dafs", "", "", "", "n"});
+  auto command{step_->execute(step_parameter_)};
+  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
 
 TEST_F(EditStepTest, SecondCallWithRandomConfirmationMustReturnVoidCommand) {
   SetArg("3");
-  step_->execute({});
   SetInput({"dafs", "", "", "", "dfa"});
-  TaskFactory task_factory;
-  SolidTasks solid_tasks{TaskToSolidTask(task_factory.GetNextTask(), 3)};
-  auto command =
-      step_->execute({{}, solid_tasks, ModelController::Status::kOk});
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
-TEST_F(EditStepTest, SecondCallWithConfirmationNoMustReturnVoidCommand) {
-  SetArg("3");
-  step_->execute({});
-  SetInput({"dafs", "", "", "", "n"});
-  TaskFactory task_factory;
-  SolidTasks solid_tasks{TaskToSolidTask(task_factory.GetNextTask(), 3)};
-  auto command =
-      step_->execute({{}, solid_tasks, ModelController::Status::kOk});
-  EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-  EXPECT_DEATH(step_->execute({}), "");
-}
-
-TEST_F(EditStepTest, MustNotChangeStepAfterFirstExecute) {
-  SetArg("1");
-  step_->execute({});
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  const auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_EQ(to_change.get(), old_addr);
-}
-
-TEST_F(EditStepTest, MustChangeStepAfterSecondExecute) {
-  SetArg("1");
-  step_->execute({});
-  SetInput({"dafs", "", "", "", "y"});
-  TaskFactory task_factory;
-  auto solid_task{TaskToSolidTask(task_factory.GetNextTask(), 1)};
-  step_->execute(
-      {{}, SolidTasks{std::move(solid_task)}, ModelController::Status::kOk});
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  const auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_NE(to_change.get(), old_addr);
 }

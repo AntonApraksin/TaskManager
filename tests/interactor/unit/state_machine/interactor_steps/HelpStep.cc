@@ -14,25 +14,17 @@ class HelpStepTest : public StepTest {
                                        small_step_factory_, std::move(arg));
   }
   std::unique_ptr<HelpStep> step_;
+  StepParameter step_parameter_;
 };
 
-TEST_F(HelpStepTest, WithoutArgumentMustReturnVoidCommmand) {
+TEST_F(HelpStepTest, ExecuteWithoutArgumentMustReturnVoidCommmand) {
   SetArg("");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
 
-TEST_F(HelpStepTest, WithArgumentMustReturnVoidCommmand) {
+TEST_F(HelpStepTest, ExecuteWithArgumentMustReturnVoidCommmand) {
   SetArg("sfsad");
-  auto command{step_->execute({})};
+  auto command{step_->execute(step_parameter_)};
   EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
-}
-
-TEST_F(HelpStepTest, MustChangeStepAfterFirstExecute) {
-  SetArg("");
-  step_->execute({});
-  std::shared_ptr<Step> to_change{std::make_shared<StepChangeStepTesting>()};
-  const auto old_addr = to_change.get();
-  step_->ChangeStep(to_change);
-  EXPECT_NE(to_change.get(), old_addr);
 }

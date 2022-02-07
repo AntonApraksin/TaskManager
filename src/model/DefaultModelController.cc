@@ -14,6 +14,9 @@ MCStatus TMStatusToMCStatus(TaskManager::Status tmstatus) {
 
     case TaskManager::Status::kOk:
       return MCStatus::kOk;
+
+    case TaskManager::Status::kNotPresentLabel:
+      return MCStatus::kNotPresentLabel;
   }
 }
 
@@ -177,6 +180,26 @@ OperationResult<MCStatus> DefaultModelController::Save() {
   return OperationResult<Status>::Ok();
 }
 
+OperationResult<MCStatus> DefaultModelController::AddLabel(TaskId task_id,
+                                                           Label label) {
+  auto result = task_manager_->AddLabel(std::move(task_id), std::move(label));
+  if (result) {
+    return OperationResult<Status>::Ok();
+  }
+  return OperationResult<MCStatus>::Error(
+      TMStatusToMCStatus(result.GetStatus()));
+}
+OperationResult<MCStatus> DefaultModelController::DeleteLabel(TaskId task_id,
+                                                              Label label) {
+  auto result =
+      task_manager_->DeleteLabel(std::move(task_id), std::move(label));
+  if (result) {
+    return OperationResult<Status>::Ok();
+  }
+  return OperationResult<MCStatus>::Error(
+      TMStatusToMCStatus(result.GetStatus()));
+}
+
 std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
     const SolidTasks& tasks, const std::vector<TaskId>& ids) {
   std::unordered_map<TaskId, std::vector<TaskId>> visited;
@@ -199,4 +222,5 @@ std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
   }
   return {};
 }
+
 }  // namespace task_manager

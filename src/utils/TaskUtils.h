@@ -2,6 +2,7 @@
 #define TASKMANAGER_SRC_UTILS_TASKUTILS_H_
 
 #include <google/protobuf/timestamp.pb.h>
+#include <optional>
 
 #include "Task.pb.h"
 

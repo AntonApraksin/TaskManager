@@ -4,6 +4,8 @@
 #include "Task.pb.h"
 #include "utils/TaskUtils.h"
 
+#include <optional>
+
 namespace task_manager {
 struct TaskBuilder {
   Task GetTask();

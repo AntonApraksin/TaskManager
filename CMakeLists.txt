@@ -30,4 +30,8 @@ add_executable(client
     src/client.cc)
 target_link_libraries(client TaskManager)
 
+add_executable(ddos_main
+    src/ddos_main.cc)
+target_link_libraries(ddos_main TaskManager)
+
 include(cmake/Tests.cmake)

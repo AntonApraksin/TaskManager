@@ -8,7 +8,7 @@ namespace task_manager {
 namespace logging {
 using severinity = boost::log::trivial::severity_level;
 
-boost::log::sources::severity_logger<boost::log::trivial::severity_level>&
+boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level>&
 GetDefaultLogger();
 
 void SetUp();

@@ -103,14 +103,13 @@ void Work(ModelController& model_controller, std::atomic<int>& n_performed,
   }
 }
 
-template <int NCommands>
 int RunNCommandsPerThread(ModelController& model_controller,
-                          unsigned int n_threads) {
+                          unsigned int n_threads, int n_commands) {
   std::atomic<int> n_performed_commands = 0;
   std::vector<std::thread> threads;
   for (unsigned int i = 0; i != n_threads; ++i) {
     threads.emplace_back(Work, std::ref(model_controller),
-                         std::ref(n_performed_commands), NCommands);
+                         std::ref(n_performed_commands), n_commands);
   }
   for (auto& i : threads) {
     i.join();
@@ -122,7 +121,7 @@ TEST_F(DefaultModelControllerDDOSTest, Run20CommandsPerThread) {
   auto n_threads = std::thread::hardware_concurrency();
   constexpr int kNCommands = 20;
   auto expected =
-      RunNCommandsPerThread<kNCommands>(*model_controller_, n_threads);
+      RunNCommandsPerThread(*model_controller_, n_threads, kNCommands);
   ASSERT_EQ(expected, n_threads * kNCommands);
 }
 
@@ -130,7 +129,7 @@ TEST_F(DefaultModelControllerDDOSTest, Run50CommandsPerThread) {
   auto n_threads = std::thread::hardware_concurrency();
   constexpr int kNCommands = 50;
   auto expected =
-      RunNCommandsPerThread<kNCommands>(*model_controller_, n_threads);
+      RunNCommandsPerThread(*model_controller_, n_threads, kNCommands);
   ASSERT_EQ(expected, n_threads * kNCommands);
 }
 
@@ -138,7 +137,7 @@ TEST_F(DefaultModelControllerDDOSTest, Run100CommandsPerThread) {
   auto n_threads = std::thread::hardware_concurrency();
   constexpr int kNCommands = 100;
   auto expected =
-      RunNCommandsPerThread<kNCommands>(*model_controller_, n_threads);
+      RunNCommandsPerThread(*model_controller_, n_threads, kNCommands);
   ASSERT_EQ(expected, n_threads * kNCommands);
 }
 
@@ -146,7 +145,7 @@ TEST_F(DefaultModelControllerDDOSTest, Run300CommandsPerThread) {
   auto n_threads = std::thread::hardware_concurrency();
   constexpr int kNCommands = 300;
   auto expected =
-      RunNCommandsPerThread<kNCommands>(*model_controller_, n_threads);
+      RunNCommandsPerThread(*model_controller_, n_threads, kNCommands);
   ASSERT_EQ(expected, n_threads * kNCommands);
 }
 
@@ -154,6 +153,6 @@ TEST_F(DefaultModelControllerDDOSTest, Run500CommandsPerThread) {
   auto n_threads = std::thread::hardware_concurrency();
   constexpr int kNCommands = 500;
   auto expected =
-      RunNCommandsPerThread<kNCommands>(*model_controller_, n_threads);
+      RunNCommandsPerThread(*model_controller_, n_threads, kNCommands);
   ASSERT_EQ(expected, n_threads * kNCommands);
 }

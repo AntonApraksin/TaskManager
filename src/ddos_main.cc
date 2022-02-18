@@ -86,11 +86,17 @@ std::unique_ptr<Command> GetRandomCommand() {
   return (function_map.at(rand() % 11))();
 }
 
-constexpr int kNCommands = 2000;
+constexpr int kNCommands = 1200;
+std::atomic<int> NCommandsPerformed = 0;
+std::string server_address = "127.0.0.1:50051";
 
-void Worker(ModelController& controller) {
+void Worker() {
+  auto stub = std::make_unique<TaskService::Stub>(
+      grpc::CreateChannel(server_address, grpc::InsecureChannelCredentials()));
+  TaskServiceModelController task_service_model_controller(std::move(stub));
   for (int i = 0; i != kNCommands; ++i) {
-    GetRandomCommand()->execute(controller);
+    GetRandomCommand()->execute(task_service_model_controller);
+    NCommandsPerformed.fetch_add(1);
   }
 }
 }  // namespace task_manager
@@ -98,20 +104,18 @@ void Worker(ModelController& controller) {
 int main() {
   using namespace task_manager;
   std::srand(std::time(nullptr));
-  std::string server_address = "127.0.0.1:50051";
-
-  auto stub = std::make_unique<TaskService::Stub>(
-      grpc::CreateChannel(server_address, grpc::InsecureChannelCredentials()));
-  TaskServiceModelController task_service_model_controller(std::move(stub));
+  boost::log::core::get()->set_logging_enabled(false);
 
   std::vector<std::thread> threads;
   for (unsigned int i = 0; i != std::thread::hardware_concurrency(); ++i) {
-    threads.emplace_back(Worker, std::ref(task_service_model_controller));
+    threads.emplace_back(Worker);
   }
 
   for (auto& i : threads) {
     i.join();
   }
 
+  std::cout << "Performed " << NCommandsPerformed << ", expected "
+            << kNCommands * std::thread::hardware_concurrency() << '\n';
   return 0;
 }

@@ -273,7 +273,6 @@ OperationResult<MCStatus> DefaultModelController::AddLabel(TaskId task_id,
                                                            Label label) {
   auto func = [this](TaskId id, Label label) {
     return task_manager_->AddLabel(std::move(id), std::move(label));
-    ;
   };
   auto result = SafeInvoke(task_manager_mutex_, func, std::move(task_id),
                            std::move(label));

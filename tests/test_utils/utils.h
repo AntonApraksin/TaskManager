@@ -30,7 +30,7 @@ inline SolidTask TaskToSolidTask(const Task& task, google::protobuf::int32 id,
 }
 
 inline TaskDate_t parse_date(std::string date) {
-  tm timeinfo;
+  std::tm timeinfo {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr};
   std::string pattern{"%d/%m/%y"};
   strptime(date.c_str(), pattern.c_str(), &timeinfo);
   return google::protobuf::util::TimeUtil::TimeTToTimestamp(

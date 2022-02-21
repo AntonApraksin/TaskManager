@@ -27,7 +27,7 @@ sources::severity_logger_mt<trivial::severity_level>& GetDefaultLogger()
 }
 
 void CreateFileLog(const std::string& filename, const std::string& format,
-                   severinity level)
+                   severity level)
 {
     auto rotated_filename = filename + "_%N.log";
     boost::log::add_file_log(
@@ -45,9 +45,9 @@ void SetUp()
     GetDefaultLogger().add_attribute("Scope", attributes::named_scope());
 }
 
-std::optional<severinity> ConvertStringToLogLevel(const std::string& str)
+std::optional<severity> ConvertStringToLogLevel(const std::string& str)
 {
-    severinity sev;
+    severity sev;
     auto result = boost::log::trivial::from_string(str.c_str(), str.size(), sev);
     if (result)
     {

@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
     auto server_address = "0.0.0.0:50051";
 
-    BOOST_LOG_SEV(logger, logging::severinity::info)
+    BOOST_LOG_SEV(logger, logging::severity::info)
         << "Server up on: " << server_address;
     DefaultTaskService service(std::move(model_controller));
 
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
 
     server->Wait();
-    BOOST_LOG_SEV(logger, logging::severinity::info) << "Server shutdown";
+    BOOST_LOG_SEV(logger, logging::severity::info) << "Server shutdown";
 
     return 0;
 }

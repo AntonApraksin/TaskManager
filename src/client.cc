@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     }
 
     auto& logger = logging::GetDefaultLogger();
-    BOOST_LOG_SEV(logger, logging::severinity::info)
+    BOOST_LOG_SEV(logger, logging::severity::info)
         << "Connecting to " << host << ":" << port;
 
     auto validator = std::make_shared<DefaultValidator>();

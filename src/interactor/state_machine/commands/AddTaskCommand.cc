@@ -12,7 +12,7 @@ CommandResult AddTaskCommand::execute(ModelController& model_controller)
     BOOST_LOG_NAMED_SCOPE("AddTaskCommand::execute");
     auto& logger = logging::GetDefaultLogger();
 
-    BOOST_LOG_SEV(logger, logging::severinity::info)
+    BOOST_LOG_SEV(logger, logging::severity::info)
         << "Adding task: " << task_.DebugString();
 
     CommandResult command_result;
@@ -21,12 +21,12 @@ CommandResult AddTaskCommand::execute(ModelController& model_controller)
     {
         command_result.task_id = result.AccessResult();
 
-        BOOST_LOG_SEV(logger, logging::severinity::info)
+        BOOST_LOG_SEV(logger, logging::severity::info)
             << "Ok. New TaskId: " << result.AccessResult().DebugString();
     }
     else
     {
-        BOOST_LOG_SEV(logger, logging::severinity::info)
+        BOOST_LOG_SEV(logger, logging::severity::info)
             << "Error: " << static_cast<int>(result.GetStatus());
     }
     command_result.status = result.GetStatus();

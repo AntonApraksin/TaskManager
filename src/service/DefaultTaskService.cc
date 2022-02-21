@@ -48,7 +48,7 @@ grpc::Status DefaultTaskService::AddTask(::grpc::ServerContext*, const Task* req
     BOOST_LOG_NAMED_SCOPE("DefaultTaskService::AddTask");
     auto& logger = logging::GetDefaultLogger();
 
-    BOOST_LOG_SEV(logger, logging::severinity::debug)
+    BOOST_LOG_SEV(logger, logging::severity::debug)
         << "request: " << request->DebugString();
 
     auto result = model_controller_->AddTask(*request);
@@ -59,7 +59,7 @@ grpc::Status DefaultTaskService::AddTask(::grpc::ServerContext*, const Task* req
     response->set_status(
         ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
 
-    BOOST_LOG_SEV(logger, logging::severinity::debug) << response->DebugString();
+    BOOST_LOG_SEV(logger, logging::severity::debug) << response->DebugString();
 
     return grpc::Status::OK;
 }
@@ -128,7 +128,7 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(::grpc::ServerContext*, 
     BOOST_LOG_NAMED_SCOPE("DefaultTaskService::GetSpecifiedSolidTasks");
     auto& logger = logging::GetDefaultLogger();
 
-    BOOST_LOG_SEV(logger, logging::severinity::debug)
+    BOOST_LOG_SEV(logger, logging::severity::debug)
         << "request: " << request->DebugString();
 
     std::vector<TaskId> ids;
@@ -145,7 +145,7 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(::grpc::ServerContext*, 
     response->set_status(
         ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
 
-    BOOST_LOG_SEV(logger, logging::severinity::debug)
+    BOOST_LOG_SEV(logger, logging::severity::debug)
         << "response: " << TaskServiceStatus_Name(response->status());
     return grpc::Status::OK;
 }

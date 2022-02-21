@@ -46,7 +46,7 @@ OperationResult<MCStatus, TaskId> DefaultModelController::AddTask(Task task)
 
     if (result)
     {
-        BOOST_LOG_SEV(logger, logging::severinity::info)
+        BOOST_LOG_SEV(logger, logging::severity::info)
             << "Added task: "
             << "TITLE:'" << to_log.title() << "' DUEDATE:" << to_log.due_date()
             << " PRIORITY:" << Task_Priority_Name(to_log.priority())
@@ -55,7 +55,7 @@ OperationResult<MCStatus, TaskId> DefaultModelController::AddTask(Task task)
         return OperationResult<Status, TaskId>::Ok(result.AccessResult());
     }
 
-    BOOST_LOG_SEV(logger, logging::severinity::info)
+    BOOST_LOG_SEV(logger, logging::severity::info)
         << "Failed to add task: "
         << "TITLE:'" << to_log.title() << "' DUEDATE:" << to_log.due_date()
         << " PRIORITY:" << Task_Priority_Name(to_log.priority())
@@ -206,7 +206,7 @@ DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids)
 
     {
         boost::log::record rec = logger.open_record(boost::log::keywords::severity =
-                                                        logging::severinity::info);
+                                                        logging::severity::info);
         if (rec)
         {
             boost::log::record_ostream strm(rec);
@@ -230,7 +230,7 @@ DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids)
     {
         if (storage.tasks.find(i) == storage.tasks.end())
         {
-            BOOST_LOG_SEV(logger, logging::severinity::info)
+            BOOST_LOG_SEV(logger, logging::severity::info)
                 << "id " << i.id() << " was not found";
             return OperationResult<Status, SolidTasks>::Error(Status::kNotPresentId);
         }

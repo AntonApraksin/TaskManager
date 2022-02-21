@@ -14,7 +14,7 @@ CommandResult GetSpecifiedTasksCommand::execute(
     BOOST_LOG_NAMED_SCOPE("GetSpecifiedTasksCommand::execute");
     auto& logger = logging::GetDefaultLogger();
 
-    BOOST_LOG_SEV(logger, logging::severinity::info)
+    BOOST_LOG_SEV(logger, logging::severity::info)
         << "Querying " << task_ids_.size() << " ids";
 
     CommandResult command_result;
@@ -23,12 +23,12 @@ CommandResult GetSpecifiedTasksCommand::execute(
     {
         command_result.solid_tasks = result.AccessResult();
 
-        BOOST_LOG_SEV(logger, logging::severinity::info)
+        BOOST_LOG_SEV(logger, logging::severity::info)
             << "Ok. Got " << result.AccessResult().size() << " tasks";
     }
     else
     {
-        BOOST_LOG_SEV(logger, logging::severinity::info)
+        BOOST_LOG_SEV(logger, logging::severity::info)
             << "Error: " << static_cast<int>(result.GetStatus());
     }
     command_result.status = result.GetStatus();

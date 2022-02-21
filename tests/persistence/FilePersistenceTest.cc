@@ -7,9 +7,9 @@
 #include "test_utils/operators.h"
 #include "test_utils/utils.h"
 
-class DISABLED_PersistenceTest : public ::testing::Test {};
+class DISABLED_FilePersistenceTest : public ::testing::Test {};
 
-TEST_F(DISABLED_PersistenceTest, SaveAndLoadMustBePerformedInSameOrder)
+TEST_F(DISABLED_FilePersistenceTest, SaveAndLoadMustBePerformedInSameOrder)
 {
     TaskFactory tf;
     auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation
@@ -33,7 +33,7 @@ TEST_F(DISABLED_PersistenceTest, SaveAndLoadMustBePerformedInSameOrder)
     }
 }
 
-TEST_F(DISABLED_PersistenceTest, LoadOnCorruptedDataMustFail)
+TEST_F(DISABLED_FilePersistenceTest, LoadOnCorruptedDataMustFail)
 {
     TaskFactory tf;
     auto _0 = tf.GetNextTask();    // NOLINT: beautiful tree representation

@@ -13,7 +13,7 @@
 #include "test_utils/TaskFactory.h"
 #include "test_utils/utils.h"
 
-#define IT_WAS_NECESARRY_PLS_DONT_KILL_ME(StepName, long_name)       \
+#define GENERATE_TEST(StepName, long_name)       \
   TEST_F(PromptStepTest, ChangeStepMustSet##StepName) {              \
     SetArg("");                                                      \
     SetInput({long_name});                                           \
@@ -46,15 +46,15 @@ TEST_F(PromptStepTest, ExecuteReturnVoidCommand)
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
 
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(AddStep, "add")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(EditStep, "edit")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(CompleteStep, "complete")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(DeleteStep, "delete")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(ShowStep, "show")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(SaveStep, "save")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(LoadStep, "load")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(UnknownStep, "gfdskghd")
-IT_WAS_NECESARRY_PLS_DONT_KILL_ME(HelpStep, "help")
+GENERATE_TEST(AddStep, "add")
+GENERATE_TEST(EditStep, "edit")
+GENERATE_TEST(CompleteStep, "complete")
+GENERATE_TEST(DeleteStep, "delete")
+GENERATE_TEST(ShowStep, "show")
+GENERATE_TEST(SaveStep, "save")
+GENERATE_TEST(LoadStep, "load")
+GENERATE_TEST(UnknownStep, "gfdskghd")
+GENERATE_TEST(HelpStep, "help")
 
 TEST_F(PromptStepTest, ChangeStepMustSetNullptr)
 {

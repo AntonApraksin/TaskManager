@@ -3,7 +3,8 @@
 
 #include "interactor/small_steps/ISmallStepFactory.h"
 
-namespace task_manager {
+namespace task_manager
+{
 struct TaskBuilder;
 
 TaskContext CreateFilledTaskContext(ISmallStepFactory& small_step_factory,

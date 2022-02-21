@@ -8,21 +8,24 @@
 #include "OperationResult.h"
 #include "model/SolidTask.h"
 
-namespace task_manager {
-class Persistence {
- public:
-  enum class Status {
-    kOk,
-    kFailureReading,
-    kFailureWriting,
-    kFailureDuringEstablishing,
-  };
+namespace task_manager
+{
+class Persistence
+{
+public:
+    enum class Status
+    {
+        kOk,
+        kFailureReading,
+        kFailureWriting,
+        kFailureDuringEstablishing,
+    };
 
- public:
-  virtual OperationResult<Status> Save(SolidTasks to_save) const = 0;
-  virtual OperationResult<Status, SolidTasks> Load() const = 0;
+public:
+    virtual OperationResult<Status> Save(SolidTasks to_save) const = 0;
+    virtual OperationResult<Status, SolidTasks> Load() const = 0;
 
-  virtual ~Persistence() {}
+    virtual ~Persistence() {}
 };
 }  // namespace task_manager
 

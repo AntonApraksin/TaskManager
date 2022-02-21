@@ -9,40 +9,43 @@
 #include "model/id/TaskIdProducer.h"
 #include "utils/TaskIdUtils.h"
 
-namespace task_manager {
-class TaskManager final {
- public:
-  using Tasks = std::unordered_map<TaskId, Task>;
-  using Parents = std::unordered_map<TaskId, std::vector<TaskId>>;
-  using Roots = std::vector<TaskId>;
+namespace task_manager
+{
+class TaskManager final
+{
+public:
+    using Tasks = std::unordered_map<TaskId, Task>;
+    using Parents = std::unordered_map<TaskId, std::vector<TaskId>>;
+    using Roots = std::vector<TaskId>;
 
-  struct Storage {
-    Tasks tasks;
-    Parents parents;
-    Roots roots;
-  };
+    struct Storage
+    {
+        Tasks tasks;
+        Parents parents;
+        Roots roots;
+    };
 
-  enum class Status { kOk, kNotPresentId, kNotPresentLabel };
+    enum class Status { kOk, kNotPresentId, kNotPresentLabel };
 
-  explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
+    explicit TaskManager(std::unique_ptr<ITaskIdProducer> id_producer);
 
-  TaskManager(std::unique_ptr<ITaskIdProducer> id_producer, Storage);
+    TaskManager(std::unique_ptr<ITaskIdProducer> id_producer, Storage);
 
-  OperationResult<Status, TaskId> Add(Task task);
-  OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
+    OperationResult<Status, TaskId> Add(Task task);
+    OperationResult<Status, TaskId> Add(TaskId task_id, Task task);
 
-  OperationResult<Status> Edit(TaskId id, Task task);
-  OperationResult<Status> Complete(TaskId id);
-  OperationResult<Status> Delete(TaskId id);
+    OperationResult<Status> Edit(TaskId id, Task task);
+    OperationResult<Status> Complete(TaskId id);
+    OperationResult<Status> Delete(TaskId id);
 
-  OperationResult<Status> AddLabel(TaskId id, Label label);
-  OperationResult<Status> DeleteLabel(TaskId id, Label label);
+    OperationResult<Status> AddLabel(TaskId id, Label label);
+    OperationResult<Status> DeleteLabel(TaskId id, Label label);
 
-  OperationResult<Status, Storage> Show() const;
+    OperationResult<Status, Storage> Show() const;
 
- private:
-  Storage storage_;
-  std::unique_ptr<ITaskIdProducer> id_producer_;
+private:
+    Storage storage_;
+    std::unique_ptr<ITaskIdProducer> id_producer_;
 };
 
 void GetCompleteSubTree(TaskId id, const TaskManager::Parents&,

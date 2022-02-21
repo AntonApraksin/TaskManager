@@ -3,13 +3,15 @@
 
 #include "TaskId.pb.h"
 
-namespace task_manager {
-class ITaskIdProducer {
- public:
-  virtual TaskId GetNextId() = 0;
-  virtual TaskId GetCurrentId() = 0;
+namespace task_manager
+{
+class ITaskIdProducer
+{
+public:
+    virtual TaskId GetNextId() = 0;
+    virtual TaskId GetCurrentId() = 0;
 
-  virtual ~ITaskIdProducer(){};
+    virtual ~ITaskIdProducer() {};
 };
 }  // namespace task_manager
 

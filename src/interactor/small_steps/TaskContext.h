@@ -7,20 +7,22 @@
 #include "TaskId.pb.h"
 #include "utils/TaskBuilder.h"
 
-namespace task_manager {
-class TaskContext {
- public:
-  void PushState(const std::shared_ptr<ISmallStep>&);
-  void PopState();
+namespace task_manager
+{
+class TaskContext
+{
+public:
+    void PushState(const std::shared_ptr<ISmallStep>&);
+    void PopState();
 
-  TaskBuilder& GetTaskBuilder();
+    TaskBuilder& GetTaskBuilder();
 
-  void Run();
+    void Run();
 
- private:
-  std::deque<std::shared_ptr<ISmallStep>> states_;
+private:
+    std::deque<std::shared_ptr<ISmallStep>> states_;
 
-  TaskBuilder task_builder_;
+    TaskBuilder task_builder_;
 };
 }  // namespace task_manager
 

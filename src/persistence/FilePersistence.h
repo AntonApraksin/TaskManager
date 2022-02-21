@@ -3,16 +3,18 @@
 
 #include "persistence/Persistence.h"
 
-namespace task_manager {
-class FilePersistence : public Persistence {
- public:
-  FilePersistence(std::string filename);
+namespace task_manager
+{
+class FilePersistence : public Persistence
+{
+public:
+    FilePersistence(std::string filename);
 
-  OperationResult<Status> Save(SolidTasks) const override;
-  OperationResult<Status, SolidTasks> Load() const override;
+    OperationResult<Status> Save(SolidTasks) const override;
+    OperationResult<Status, SolidTasks> Load() const override;
 
- private:
-  std::string filename_;
+private:
+    std::string filename_;
 };
 }  // namespace task_manager
 

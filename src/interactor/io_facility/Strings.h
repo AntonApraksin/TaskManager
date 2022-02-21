@@ -6,8 +6,10 @@
 #include "interactor/io_facility/IIoFacility.h"
 #include "model/SolidTask.h"
 
-namespace task_manager {
-namespace Strings {  // NOLINT: For a purpose
+namespace task_manager
+{
+namespace Strings
+{  // NOLINT: For a purpose
 using ccp = const char*;
 
 constexpr ccp kTitleMustNotBeEmpty = "Title must not be empty.\n";

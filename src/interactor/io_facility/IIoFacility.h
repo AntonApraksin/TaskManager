@@ -3,13 +3,15 @@
 
 #include <string>
 
-namespace task_manager {
-class IIoFacility {
- public:
-  virtual ~IIoFacility() {}
+namespace task_manager
+{
+class IIoFacility
+{
+public:
+    virtual ~IIoFacility() {}
 
-  virtual void Print(const std::string&) = 0;
-  virtual std::string GetLine() = 0;
+    virtual void Print(const std::string&) = 0;
+    virtual std::string GetLine() = 0;
 };
 }  // namespace task_manager
 

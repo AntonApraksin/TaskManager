@@ -5,7 +5,8 @@
 
 #include "TaskId.pb.h"
 
-namespace task_manager {
+namespace task_manager
+{
 class IValidator;
 std::optional<TaskId> ConsumeTaskIdFromString(IValidator& validator,
                                               std::string& str);

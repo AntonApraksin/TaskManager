@@ -4,14 +4,16 @@
 #include "ISmallStep.h"
 #include "utils/TaskBuilder.h"
 
-namespace task_manager {
-class DefaultTaskInitializerSmallStep : public ISmallStep {
- public:
-  explicit DefaultTaskInitializerSmallStep(const TaskBuilder&);
-  void Execute(TaskContext& ctx) override;
+namespace task_manager
+{
+class DefaultTaskInitializerSmallStep : public ISmallStep
+{
+public:
+    explicit DefaultTaskInitializerSmallStep(const TaskBuilder&);
+    void Execute(TaskContext& ctx) override;
 
- private:
-  TaskBuilder task_builder_;
+private:
+    TaskBuilder task_builder_;
 };
 }  // namespace task_manager
 

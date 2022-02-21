@@ -1,18 +1,22 @@
 #include "TaskContext.h"
 
-namespace task_manager {
-void TaskContext::PushState(const std::shared_ptr<ISmallStep>& state) {
-  states_.push_back(state);
+namespace task_manager
+{
+void TaskContext::PushState(const std::shared_ptr<ISmallStep>& state)
+{
+    states_.push_back(state);
 }
 
 void TaskContext::PopState() { states_.pop_front(); }
 
 TaskBuilder& TaskContext::GetTaskBuilder() { return task_builder_; }
 
-void TaskContext::Run() {
-  for (; !states_.empty();) {
-    auto to_run_on = states_.front();
-    to_run_on->Execute(*this);
-  }
+void TaskContext::Run()
+{
+    for (; !states_.empty() ;)
+    {
+        auto to_run_on = states_.front();
+        to_run_on->Execute(*this);
+    }
 }
 }  // namespace task_manager

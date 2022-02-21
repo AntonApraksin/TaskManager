@@ -10,7 +10,7 @@ RUN git checkout fix/CmakeRestructuring
 
 RUN cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -S. -Bbuild
 
-RUN cmake --build ./build -- -j64
+RUN cmake --build ./build -- -j2
 
 EXPOSE 50051
 

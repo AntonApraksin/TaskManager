@@ -2,6 +2,7 @@
 #include <grpcpp/health_check_service_interface.h>
 
 #include <boost/log/trivial.hpp>
+#include <boost/program_options.hpp>
 
 #include "logging/DefaultLogFacility.h"
 #include "model/DefaultModelController.h"
@@ -9,13 +10,38 @@
 #include "persistence/FilePersistence.h"
 #include "service/DefaultTaskService.h"
 
-int main() {
+int main(int argc, char** argv) {
   using namespace task_manager;
+  namespace po = boost::program_options;
 
-  {
-    auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
-    logging::SetUp();
-    logging::CreateFileLog("server", format, logging::severinity::debug);
+  std::string log_level_str;
+  po::options_description desc("Allowed options");
+  desc.add_options()(
+      "level,l", po::value<std::string>(&log_level_str)->default_value("info"),
+      "Level of logging");
+
+  po::variables_map opts;
+  po::store(po::parse_command_line(argc, argv, desc), opts);
+  po::notify(opts);
+
+  auto log_level = logging::ConvertStringToLogLevel(log_level_str);
+
+  if (log_level) {
+    {
+      auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
+      logging::SetUp();
+      logging::CreateFileLog("server", format, *log_level);
+    }
+  } else {
+    std::cerr << "Invalid level option.\n"
+                 "  Allowed options: \n"
+                 "   - 'trace'\n"
+                 "   - 'debug'\n"
+                 "   - 'info'\n"
+                 "   - 'warning'\n"
+                 "   - 'error'\n"
+                 "   - 'fatal'\n";
+    return 1;
   }
 
   auto& logger = logging::GetDefaultLogger();

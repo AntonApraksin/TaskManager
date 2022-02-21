@@ -19,7 +19,7 @@ find_package(gRPC REQUIRED)
 find_program(GRPC_PROTOBUF_PLUGIN grpc_cpp_plugin)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS log log_setup REQUIRED)
+find_package(Boost COMPONENTS log log_setup program_options REQUIRED)
 
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/protobuf)
 set(PROTOBUF_CPP_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
@@ -69,7 +69,7 @@ add_library(TaskManager
 )
 target_link_libraries(TaskManager PUBLIC
     protobuf::libprotobuf
-    gRPC::grpc++ gRPC::grpc++_reflection Boost::log Boost::log_setup)
+    gRPC::grpc++ gRPC::grpc++_reflection Boost::log Boost::log_setup Boost::program_options)
 target_include_directories(TaskManager PUBLIC ${Boost_INCLUDE_DIRS})
 
 add_executable(main

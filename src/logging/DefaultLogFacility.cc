@@ -45,5 +45,14 @@ void SetUp() {
   boost::log::add_common_attributes();
   GetDefaultLogger().add_attribute("Scope", attributes::named_scope());
 }
+
+std::optional<severinity> ConvertStringToLogLevel(const std::string& str) {
+  severinity sev;
+  auto result = boost::log::trivial::from_string(str.c_str(), str.size(), sev);
+  if (result) {
+    return sev;
+  }
+  return {};
+}
 }  // namespace logging
 }  // namespace task_manager

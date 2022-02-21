@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-language-extension-token)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-language-extension-token -fvisibility=hidden)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=nullability")
 
@@ -17,6 +17,9 @@ find_program(PROTOBUF_EXECUTABLE protoc)
 
 find_package(gRPC REQUIRED)
 find_program(GRPC_PROTOBUF_PLUGIN grpc_cpp_plugin)
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS log log_setup REQUIRED)
 
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/protobuf)
 set(PROTOBUF_CPP_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
@@ -64,7 +67,10 @@ file(GLOB_RECURSE TaskManager_SRCS CONFIGURE_DEPENDS
 add_library(TaskManager
   STATIC ${TaskManager_SRCS} ${PROTOBUF_GENERATED_SRCS}
 )
-target_link_libraries(TaskManager PUBLIC protobuf::libprotobuf gRPC::grpc++ gRPC::grpc++_reflection)
+target_link_libraries(TaskManager PUBLIC
+    protobuf::libprotobuf
+    gRPC::grpc++ gRPC::grpc++_reflection Boost::log Boost::log_setup)
+target_include_directories(TaskManager PUBLIC ${Boost_INCLUDE_DIRS})
 
 add_executable(main
         src/main.cc)

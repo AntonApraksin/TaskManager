@@ -3,9 +3,17 @@
 #include "interactor/small_steps/default/DefaultSmallStepFactory.h"
 #include "interactor/state_machine/StateMachineController.h"
 #include "interactor/validator/DefaultValidator.h"
+#include "logging/DefaultLogFacility.h"
 
 int main() {
   using namespace task_manager;
+
+  {
+    auto format = "[%TimeStamp%][%Severity%](%Scope%): %Message%";
+    logging::SetUp();
+    logging::CreateFileLog("client", format, logging::severinity::debug);
+  }
+
   auto validator = std::make_shared<DefaultValidator>();
   auto io_facility = std::make_shared<IostreamIoFacility>();
   auto small_step_factory =

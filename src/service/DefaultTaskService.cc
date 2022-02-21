@@ -1,5 +1,12 @@
 #include "DefaultTaskService.h"
 
+#include <google/protobuf/util/time_util.h>
+
+#include <boost/log/attributes/named_scope.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+
+#include "logging/DefaultLogFacility.h"
 #include "model/ModelController.h"
 
 namespace task_manager {
@@ -7,11 +14,11 @@ namespace task_manager {
 TaskServiceStatus ConvertModelControllerStatusToTaskServiceStatus(
     ModelController::Status status) {
     switch (status) {
-        case ModelController::Status::kNotPresentId:return TaskServiceStatus::kNotPresentId;
-        case ModelController::Status::kOk:return TaskServiceStatus::kOk;
-        case ModelController::Status::kLoadFailure:return TaskServiceStatus::kLoadFailure;
-        case ModelController::Status::kSaveFailure:return TaskServiceStatus::kSaveFailure;
-        case ModelController::Status::kNotPresentLabel:return TaskServiceStatus::kNotPresentLabel;
+        case ModelController::Status::kNotPresentId: { return TaskServiceStatus::kNotPresentId; }
+        case ModelController::Status::kOk: { return TaskServiceStatus::kOk; }
+        case ModelController::Status::kLoadFailure: { return TaskServiceStatus::kLoadFailure; }
+        case ModelController::Status::kSaveFailure: { return TaskServiceStatus::kSaveFailure; }
+        case ModelController::Status::kNotPresentLabel: { return TaskServiceStatus::kNotPresentLabel; }
     }
 }
 
@@ -22,12 +29,21 @@ DefaultTaskService::DefaultTaskService(
 grpc::Status DefaultTaskService::AddTask(::grpc::ServerContext *,
                                          const ::task_manager::Task *request,
                                          ::task_manager::TaskIdResponse *response) {
+    BOOST_LOG_NAMED_SCOPE("DefaultTaskService::AddTask");
+    auto &logger = logging::GetDefaultLogger();
+
+    BOOST_LOG_SEV(logger, logging::severinity::debug)
+        << "request: " << request->DebugString();
+
     auto result = model_controller_->Add(*request);
     if (result) {
         response->set_allocated_task_id(new TaskId(result.AccessResult()));
     }
     response->set_status(
         ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+
+    BOOST_LOG_SEV(logger, logging::severinity::debug) << response->DebugString();
+
     return grpc::Status::OK;
 }
 
@@ -87,6 +103,12 @@ grpc::Status DefaultTaskService::GetAllSolidTasks(::grpc::ServerContext *,
 grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(::grpc::ServerContext *,
                                                         const TaskIdsRequest *request,
                                                         ::task_manager::SolidTasksResponse *response) {
+    BOOST_LOG_NAMED_SCOPE("DefaultTaskService::GetSpecifiedSolidTasks");
+    auto &logger = logging::GetDefaultLogger();
+
+    BOOST_LOG_SEV(logger, logging::severinity::debug)
+        << "request: " << request->DebugString();
+
     std::vector<TaskId> ids;
     std::copy(request->task_ids().cbegin(), request->task_ids().cend(),
               std::back_inserter(ids));
@@ -98,6 +120,9 @@ grpc::Status DefaultTaskService::GetSpecifiedSolidTasks(::grpc::ServerContext *,
     }
     response->set_status(
         ConvertModelControllerStatusToTaskServiceStatus(result.GetStatus()));
+
+    BOOST_LOG_SEV(logger, logging::severinity::debug)
+        << "response: " << TaskServiceStatus_Name(response->status());
     return grpc::Status::OK;
 }
 

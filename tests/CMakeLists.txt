@@ -1,7 +1,7 @@
 Find_Package(GTest REQUIRED)
 
 set(TASK_MANAGER_LINK_GTEST
-  GTest::gtest GTest::gtest_main GTest::gmock)
+  GTest::gtest GTest::gmock)
 
 file(GLOB_RECURSE Tests_SRCS CONFIGURE_DEPENDS
     "*.h"
@@ -19,5 +19,7 @@ target_link_libraries(
   ${TASK_MANAGER_LINK_GTEST}
   TaskManager
 )
+
+add_executable(test_main main.cc ModelTest)
 
 gtest_discover_tests(ModelTest)

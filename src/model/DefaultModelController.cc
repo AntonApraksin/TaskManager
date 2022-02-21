@@ -1,5 +1,10 @@
 #include "DefaultModelController.h"
 
+#include <google/protobuf/util/time_util.h>
+
+#include <boost/log/attributes/named_scope.hpp>
+
+#include "logging/DefaultLogFacility.h"
 #include "model/task_manager/TaskManager.h"
 #include "persistence/Persistence.h"
 #include "utils/TaskIdUtils.h"
@@ -27,10 +32,27 @@ DefaultModelController::DefaultModelController(
       persistence_(std::move(persistence)) {}
 
 OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task) {
+  BOOST_LOG_NAMED_SCOPE("DefaultModelController::Add(Task task)");
+  auto& logger = logging::GetDefaultLogger();
+
+  auto to_log = task;
   auto result = task_manager_->Add(std::move(task));
   if (result) {
+    BOOST_LOG_SEV(logger, logging::severinity::info)
+        << "Added task: "
+        << "TITLE:'" << to_log.title() << "' DUEDATE:" << to_log.due_date()
+        << " PRIORITY:" << Task_Priority_Name(to_log.priority())
+        << " PROGRESS:" << Task_Progress_Name(to_log.progress())
+        << " with id:" << result.AccessResult().id();
     return OperationResult<Status, TaskId>::Ok(result.AccessResult());
   }
+
+  BOOST_LOG_SEV(logger, logging::severinity::info)
+      << "Failed to add task: "
+      << "TITLE:'" << to_log.title() << "' DUEDATE:" << to_log.due_date()
+      << " PRIORITY:" << Task_Priority_Name(to_log.priority())
+      << " PROGRESS:" << Task_Progress_Name(to_log.progress());
+
   return OperationResult<Status, TaskId>::Error(
       TMStatusToMCStatus(result.GetStatus()));
 }
@@ -125,9 +147,29 @@ DefaultModelController::GetAllSolidTasks() {
 
 OperationResult<MCStatus, SolidTasks>
 DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids) {
+  BOOST_LOG_NAMED_SCOPE("DefaultModelController::GetSpecificSolidTasks");
+
+  auto& logger = logging::GetDefaultLogger();
+
+  {
+    boost::log::record rec = logger.open_record(boost::log::keywords::severity =
+                                                    logging::severinity::info);
+    if (rec) {
+      boost::log::record_ostream strm(rec);
+      strm << "getting tasks with ids: ";
+      for (const auto& i : ids) {
+        strm << i.id() << " ";
+      }
+      strm.flush();
+      logger.push_record(std::move(rec));
+    }
+  }
+
   auto storage = task_manager_->Show().AccessResult();
   for (const auto& i : ids) {
     if (storage.tasks.find(i) == storage.tasks.end()) {
+      BOOST_LOG_SEV(logger, logging::severinity::info)
+          << "id " << i.id() << " was not found";
       return OperationResult<Status, SolidTasks>::Error(Status::kNotPresentId);
     }
   }

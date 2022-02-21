@@ -5,13 +5,13 @@ class GetSpecifiedTasksCommandTest : public CommandTest {};
 
 TEST_F(GetSpecifiedTasksCommandTest, MustReturnAllTasks)
 {
-    auto _0 = task_factory_.GetNextTask();
-    auto __1 = task_factory_.GetNextTask();
-    auto __2 = task_factory_.GetNextTask();
-    auto ___4 = task_factory_.GetNextTask();
-    auto ___5 = task_factory_.GetNextTask();
-    auto ____6 = task_factory_.GetNextTask();
-    auto _3 = task_factory_.GetNextTask();
+    auto _0 = task_factory_.GetNextTask(); // NOLINT
+    auto __1 = task_factory_.GetNextTask(); // NOLINT;
+    auto __2 = task_factory_.GetNextTask(); // NOLINT
+    auto ___4 = task_factory_.GetNextTask(); // NOLINT
+    auto ___5 = task_factory_.GetNextTask(); // NOLINT
+    auto ____6 = task_factory_.GetNextTask(); // NOLINT
+    auto _3 = task_factory_.GetNextTask(); // NOLINT
     model_controller_->AddTask(_0);
     model_controller_->AddSubtask(CreateTaskId(0), __1);
     model_controller_->AddSubtask(CreateTaskId(0), __2);

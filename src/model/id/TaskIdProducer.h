@@ -13,7 +13,6 @@ public:
     explicit TaskIdProducer(TaskId);
 
     task_manager::TaskId GetNextId() override;
-    task_manager::TaskId GetCurrentId() override;
 
 private:
     google::protobuf::int32 current_id_;

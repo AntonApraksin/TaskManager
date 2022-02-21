@@ -2,7 +2,6 @@
 
 #include "StepTest.h"
 #include "test_utils/TaskFactory.h"
-#include "test_utils/utils.h"
 
 class CompleteStepTest : public StepTest
 {

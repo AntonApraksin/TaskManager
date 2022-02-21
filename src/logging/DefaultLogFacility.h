@@ -15,8 +15,6 @@ GetDefaultLogger();
 
 void SetUp();
 
-void CreateConsoleLog(const std::string& format, severinity level);
-
 void CreateFileLog(const std::string& filename, const std::string& format,
                    severinity level);
 

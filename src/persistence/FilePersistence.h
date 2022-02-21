@@ -8,7 +8,7 @@ namespace task_manager
 class FilePersistence : public Persistence
 {
 public:
-    FilePersistence(std::string filename);
+    explicit FilePersistence(std::string filename);
 
     OperationResult<Status> Save(SolidTasks) const override;
     OperationResult<Status, SolidTasks> Load() const override;

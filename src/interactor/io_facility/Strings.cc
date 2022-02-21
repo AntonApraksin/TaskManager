@@ -42,13 +42,6 @@ const char* Strings::to_string(Task::Progress state)
     std::terminate();  // Must be unreachable
 }
 
-std::string Strings::NotPresentId(const std::string& id)
-{
-    std::stringstream ss;
-    ss << "Task '" << id << "' not present in store.\n";
-    return ss.str();
-}
-
 std::string Strings::ShowId(const std::string& id)
 {
     std::stringstream ss;
@@ -97,13 +90,6 @@ std::string Strings::ProceedTo(const std::string& str)
 {
     std::stringstream ss;
     ss << "Proceed to " << str << "? [Y/n]: ";
-    return ss.str();
-}
-
-std::string Strings::InvalidId(const std::string& str)
-{
-    std::stringstream ss;
-    ss << "Value '" << str << "' is expected to be numeric.\n";
     return ss.str();
 }
 
@@ -176,35 +162,4 @@ std::string Strings::ShowSolidTasks(SolidTasks solid_tasks)
     return ss.str();
 }
 
-std::string Strings::IdIsSubIdOf(const std::string& parent,
-                                 const std::string& child)
-{
-    std::stringstream ss;
-    ss << "Task '" << child << "' is a subtask of task '" << parent << "'.\n";
-    return ss.str();
-}
-std::string Strings::FilenameDoesNotExist(const std::string& filename)
-{
-    std::stringstream ss;
-    ss << "File '" << filename << "' does not exists.\n";
-    return ss.str();
-}
-std::string Strings::ErrorDuringOpeningFile(const std::string& filename)
-{
-    std::stringstream ss;
-    ss << "An error occurred when opening '" << filename << "'.\n";
-    return ss.str();
-}
-std::string Strings::FailureDuringSaving(const std::string& filename)
-{
-    std::stringstream ss;
-    ss << "An error occurred while was saving to '" << filename << "'.\n";
-    return ss.str();
-}
-std::string Strings::FailureDuringLoading(const std::string& filename)
-{
-    std::stringstream ss;
-    ss << "An error occurred while was loading from '" << filename << "'.\n";
-    return ss.str();
-}
 }  // namespace task_manager

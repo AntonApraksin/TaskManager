@@ -10,8 +10,6 @@
 #include "test_utils/operators.h"
 #include "test_utils/utils.h"
 
-using namespace task_manager;
-
 class DefaultModelControllerTest : public ::testing::Test
 {
 protected:

@@ -9,7 +9,6 @@ class ITaskIdProducer
 {
 public:
     virtual TaskId GetNextId() = 0;
-    virtual TaskId GetCurrentId() = 0;
 
     virtual ~ITaskIdProducer() {};
 };

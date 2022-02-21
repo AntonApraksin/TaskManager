@@ -1,9 +1,7 @@
 #include "interactor/state_machine/interactor_steps/EditStep.h"
 
 #include "StepTest.h"
-#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 #include "test_utils/TaskFactory.h"
-#include "test_utils/utils.h"
 
 class EditStepTest : public StepTest
 {

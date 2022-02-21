@@ -345,35 +345,4 @@ OperationResult<MCStatus> DefaultModelController::DeleteLabel(TaskId task_id,
         TMStatusToMCStatus(result.GetStatus()));
 }
 
-std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
-    const SolidTasks& tasks, const std::vector<TaskId>& ids)
-{
-    std::unordered_map<TaskId, std::vector<TaskId>> visited;
-    TaskId current_root_id;
-    for (const auto& i : tasks)
-    {
-        if (i.has_parent_id())
-        {
-            visited[current_root_id].push_back(i.task_id());
-        }
-        else
-        {
-            current_root_id = i.task_id();
-        }
-    }
-    for (const auto& i : ids)
-    {
-        auto it = std::find_if(visited.begin(), visited.end(), [&i](auto it)
-        {
-            return std::find(it.second.begin(), it.second.end(), i) !=
-                it.second.end();
-        });
-        if (it != visited.end())
-        {
-            return std::make_pair(it->first, i);
-        }
-    }
-    return {};
-}
-
 }  // namespace task_manager

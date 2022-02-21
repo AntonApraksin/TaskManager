@@ -8,7 +8,7 @@
 
 int main()
 {
-    using namespace task_manager;
+    using namespace task_manager; // NOLINT
     auto id_producer = std::make_unique<TaskIdProducer>();
     auto task_manager = std::make_unique<TaskManager>(std::move(id_producer));
 

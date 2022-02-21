@@ -38,8 +38,6 @@ public:
     virtual ~ModelController() {}
 };
 
-std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
-    const SolidTasks& tasks, const std::vector<TaskId>& ids);
 }  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_MODELCONTROLLER_H_

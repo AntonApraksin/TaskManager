@@ -13,7 +13,7 @@ namespace task_manager
 class TaskServiceModelController : public ModelController
 {
 public:
-    TaskServiceModelController(
+    explicit TaskServiceModelController(
         std::unique_ptr<task_manager::TaskService::StubInterface> stub);
 
     OperationResult<Status, TaskId> AddTask(Task task) override;

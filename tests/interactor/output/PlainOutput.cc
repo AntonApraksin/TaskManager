@@ -45,7 +45,6 @@ TEST_F(PlainOutputTest, InvalidIdMustAppear)
 
 TEST_F(PlainOutputTest, MultipleIdMustAppear)
 {
-    std::string date = "11:38 17/09/2019";
     std::stringstream ss;
     auto time =
         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -83,7 +82,6 @@ TEST_F(PlainOutputTest, MultipleIdMustAppear)
 
 TEST_F(PlainOutputTest, UnknownCommandMustAppear)
 {
-    std::string date = "11:38 17/09/2019";
     std::stringstream ss;
     auto time =
         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -107,8 +105,7 @@ TEST_F(PlainOutputTest, UnknownCommandMustAppear)
 }
 
 TEST_F(PlainOutputTest, NotPresentIdMustAppear)
-{  // TODO: fix this
-    std::string date = "11:38 17/09/2019";
+{
     std::stringstream ss;
     auto time =
         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -143,7 +140,6 @@ TEST_F(PlainOutputTest, NotPresentIdMustAppear)
 
 TEST_F(PlainOutputTest, RequiredIdMustAppear)
 {
-    std::string date = "11:38 17/09/2019";
     std::stringstream ss;
     auto time =
         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

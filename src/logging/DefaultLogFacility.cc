@@ -39,13 +39,6 @@ void CreateFileLog(const std::string& filename, const std::string& format,
         keywords::format = format);
 }
 
-void CreateConsoleLog(const std::string& format, severinity level)
-{
-    boost::log::add_console_log(
-        std::clog, boost::log::keywords::format = format,
-        keywords::filter = logging::trivial::severity >= level);
-}
-
 void SetUp()
 {
     boost::log::add_common_attributes();

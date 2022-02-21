@@ -42,9 +42,6 @@ private:
     std::mutex task_manager_mutex_;
     std::mutex persistence_mutex_;
 };
-
-std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(
-    const SolidTasks& tasks, const std::vector<TaskId>& ids);
 }  // namespace task_manager
 
 #endif  // TASKMANAGER_SRC_MODEL_DEFAULTMODELCONTROLLER_H_

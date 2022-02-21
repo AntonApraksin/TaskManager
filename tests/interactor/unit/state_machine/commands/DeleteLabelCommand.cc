@@ -1,6 +1,5 @@
 #include "interactor/state_machine/commands/Commands.h"
 #include "interactor/unit/state_machine/commands/CommandTest.h"
-#include "test_utils/operators.h"
 
 class DeleteLabelCommandTest : public CommandTest {};
 

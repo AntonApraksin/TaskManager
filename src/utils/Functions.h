@@ -1,6 +1,8 @@
 #ifndef TASKMANAGER_SRC_UTILS_FUNCTIONS_H_
 #define TASKMANAGER_SRC_UTILS_FUNCTIONS_H_
 
+#include <optional>
+
 #include "model/SolidTask.h"
 
 namespace task_manager {

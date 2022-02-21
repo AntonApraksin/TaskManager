@@ -1,0 +1,28 @@
+set(UBSAN_FLAGS -fsanitize=undefined)
+set(ASAN_FLAGS -fsanitize=address)
+set(MSAN_FLAGS -fsanitize=memory)
+set(LSAN_FLAGS -fsanitize=leak)
+
+if(UBSAN)
+  message("UBSAN enabled")
+  add_compile_options(${UBSAN_FLAGS})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${UBSAN_FLAGS}")
+endif()
+
+if(ASAN)
+  message("ASAN enabled")
+  add_compile_options(${ASAN_FLAGS})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${ASAN_FLAGS}")
+endif()
+
+if(MSAN)
+  message("MSAN enabled")
+  add_compile_options(${MSAN_FLAGS})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MSAN_FLAGS}")
+endif()
+
+if(LSAN)
+  message("LSAN enabled")
+  add_compile_options(${LSAN_FLAGS})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LSAN_FLAGS}")
+endif()

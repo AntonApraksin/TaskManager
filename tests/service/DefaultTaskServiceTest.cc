@@ -121,7 +121,7 @@ TEST_F(DefaultTaskServiceTest, MustGetSpecificTasks)
 }
 
 TEST_F(DefaultTaskServiceTest,
-       MustCallSaveOnPersistenceIndirectly)  // TODO: Fix this test
+       MustCallSaveOnPersistenceIndirectly)
 {
     auto task = task_factory.GetNextTask();
     auto id = model_controller->AddTask(std::move(task)).AccessResult();
@@ -132,7 +132,7 @@ TEST_F(DefaultTaskServiceTest,
 }
 
 TEST_F(DefaultTaskServiceTest,
-       MustCallLoadOnPersistenceIndirectly)  // TODO: Fix this test
+       MustCallLoadOnPersistenceIndirectly)
 {
     auto task = task_factory.GetNextTask();
     auto id = model_controller->AddTask(std::move(task)).AccessResult();

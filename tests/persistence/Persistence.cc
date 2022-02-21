@@ -33,11 +33,6 @@ TEST_F(DISABLED_PersistenceTest, SaveAndLoadMustBePerformedInSameOrder)
     }
 }
 
-/*
-TEST_F(PersistenceTest, SaveMustFail){} // TODO: find a way to check this.
-Modify the std::stringstream so it will randomly fail.
-*/
-
 TEST_F(DISABLED_PersistenceTest, LoadOnCorruptedDataMustFail)
 {
     TaskFactory tf;

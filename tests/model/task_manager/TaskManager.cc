@@ -247,4 +247,3 @@ TEST_F(TaskManagerTest,
     auto result = tm.DeleteLabel(id, label);
     ASSERT_EQ(result.GetStatus(), TaskManager::Status::kNotPresentLabel);
 }
-// TODO: Add tests for nested things

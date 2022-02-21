@@ -8,7 +8,7 @@ TEST_F(AddSubtaskCommandTest, MustAddSubtask)
 {
     auto parent_task = task_factory_.GetNextTask();
     auto child_task = task_factory_.GetNextTask();
-    model_controller_->Add(parent_task);
+    model_controller_->AddTask(parent_task);
     AddSubtaskCommand command(CreateTaskId(0), child_task);
     auto ctx = command.execute(*model_controller_);
     ASSERT_EQ(ctx.status, ModelController::Status::kOk);

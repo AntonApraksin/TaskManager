@@ -32,7 +32,7 @@ protected:
 TEST_F(DefaultModelControllerTest, AddMustBePerformed)
 {
     auto to_add = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(to_add).GetStatus(),
               ModelController::Status::kOk);
     auto solid_tasks = model_controller_->GetAllSolidTasks();
     ASSERT_EQ(solid_tasks.GetStatus(), ModelController::Status::kOk);
@@ -44,7 +44,7 @@ TEST_F(DefaultModelControllerTest, EditMustBePerformed)
 {
     auto to_add = task_factory_.GetNextTask();
     auto edited = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(to_add).GetStatus(),
               ModelController::Status::kOk);
     ASSERT_EQ(model_controller_->Edit(CreateTaskId(0), edited).GetStatus(),
               ModelController::Status::kOk);
@@ -57,7 +57,7 @@ TEST_F(DefaultModelControllerTest, EditMustBePerformed)
 TEST_F(DefaultModelControllerTest, CompleteMustBePerformed)
 {
     auto to_add = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(to_add).GetStatus(),
               ModelController::Status::kOk);
     ASSERT_EQ(model_controller_->Complete(CreateTaskId(0)).GetStatus(),
               ModelController::Status::kOk);
@@ -70,7 +70,7 @@ TEST_F(DefaultModelControllerTest, CompleteMustBePerformed)
 TEST_F(DefaultModelControllerTest, DeleteMustBePerformed)
 {
     auto to_add = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(to_add).GetStatus(),
               ModelController::Status::kOk);
     ASSERT_EQ(model_controller_->Delete(CreateTaskId(0)).GetStatus(),
               ModelController::Status::kOk);
@@ -83,9 +83,9 @@ TEST_F(DefaultModelControllerTest, AddSubtaskMustBePerformed)
 {
     auto to_add = task_factory_.GetNextTask();
     auto to_sub_add = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(to_add).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), to_sub_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), to_sub_add).GetStatus(),
               ModelController::Status::kOk);
 
     auto solid_tasks = model_controller_->GetAllSolidTasks();
@@ -123,7 +123,7 @@ TEST_F(DefaultModelControllerTest,
        NestedAddOnUnexistingIdMustResultInNotPresentId)
 {
     auto to_add = task_factory_.GetNextTask();
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), to_add).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), to_add).GetStatus(),
               ModelController::Status::kNotPresentId);
     ASSERT_EQ(model_controller_->GetAllSolidTasks().AccessResult().size(), 0);
 }
@@ -136,17 +136,17 @@ TEST_F(DefaultModelControllerTest, CompleteMustCompleteNestedTasks)
     auto ____5 = task_factory_.GetNextTask();  // NOLINT
     auto ___4 = task_factory_.GetNextTask();   // NOLINT
     auto __2 = task_factory_.GetNextTask();    // NOLINT
-    ASSERT_EQ(model_controller_->Add(_0).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_0).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __1).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __1).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __2).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __2).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___3).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___3).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___4).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___4).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(3), ____5).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(3), ____5).GetStatus(),
               ModelController::Status::kOk);
     ASSERT_EQ(model_controller_->Complete(CreateTaskId(0)).GetStatus(),
               ModelController::Status::kOk);
@@ -168,19 +168,19 @@ TEST_F(DefaultModelControllerTest, DeleteMustDeleteNestedTasks)
     auto ___4 = task_factory_.GetNextTask();   // NOLINT
     auto __2 = task_factory_.GetNextTask();    // NOLINT
     auto _6 = task_factory_.GetNextTask();     // NOLINT
-    ASSERT_EQ(model_controller_->Add(_0).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_0).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __1).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __1).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __2).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __2).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___3).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___3).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___4).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___4).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(3), ____5).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(3), ____5).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(_6).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_6).GetStatus(),
               ModelController::Status::kOk);
     ASSERT_EQ(model_controller_->Delete(CreateTaskId(0)).GetStatus(),
               ModelController::Status::kOk);
@@ -202,23 +202,23 @@ TEST_F(DefaultModelControllerTest,
     auto _4 = task_factory_.GetNextTask();     // NOLINT
     auto __5 = task_factory_.GetNextTask();    // NOLINT
     auto _8 = task_factory_.GetNextTask();     // NOLINT
-    ASSERT_EQ(model_controller_->Add(_0).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_0).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __1).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __1).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __2).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __2).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___3).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___3).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(_4).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_4).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(4), __5).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(4), __5).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___6).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___6).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(3), ____7).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(3), ____7).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(_8).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_8).GetStatus(),
               ModelController::Status::kOk);
 
     SolidTasks expected{
@@ -248,23 +248,23 @@ TEST_F(DefaultModelControllerTest, GetSpecificSolidTasks)
     auto _4 = task_factory_.GetNextTask();     // NOLINT
     auto __5 = task_factory_.GetNextTask();    // NOLINT
     auto _8 = task_factory_.GetNextTask();     // NOLINT
-    ASSERT_EQ(model_controller_->Add(_0).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_0).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __1).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __1).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(0), __2).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(0), __2).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___3).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___3).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(_4).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_4).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(4), __5).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(4), __5).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(1), ___6).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(1), ___6).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(CreateTaskId(3), ____7).GetStatus(),
+    ASSERT_EQ(model_controller_->AddSubtask(CreateTaskId(3), ____7).GetStatus(),
               ModelController::Status::kOk);
-    ASSERT_EQ(model_controller_->Add(_8).GetStatus(),
+    ASSERT_EQ(model_controller_->AddTask(_8).GetStatus(),
               ModelController::Status::kOk);
 
     SolidTasks expected{
@@ -295,15 +295,15 @@ TEST_F(DefaultModelControllerTest, MustCallSaveOnPersistence)
     auto _4 = task_factory_.GetNextTask();     // NOLINT
     auto __5 = task_factory_.GetNextTask();    // NOLINT
     auto _8 = task_factory_.GetNextTask();     // NOLINT
-    model_controller_->Add(_0);
-    model_controller_->Add(CreateTaskId(0), __1);
-    model_controller_->Add(CreateTaskId(0), __2);
-    model_controller_->Add(CreateTaskId(1), ___3);
-    model_controller_->Add(_4);
-    model_controller_->Add(CreateTaskId(4), __5);
-    model_controller_->Add(CreateTaskId(1), ___6);
-    model_controller_->Add(CreateTaskId(3), ____7);
-    model_controller_->Add(_8);
+    model_controller_->AddTask(_0);
+    model_controller_->AddSubtask(CreateTaskId(0), __1);
+    model_controller_->AddSubtask(CreateTaskId(0), __2);
+    model_controller_->AddSubtask(CreateTaskId(1), ___3);
+    model_controller_->AddTask(_4);
+    model_controller_->AddSubtask(CreateTaskId(4), __5);
+    model_controller_->AddSubtask(CreateTaskId(1), ___6);
+    model_controller_->AddSubtask(CreateTaskId(3), ____7);
+    model_controller_->AddTask(_8);
 
     auto expected = model_controller_->GetAllSolidTasks().AccessResult();
 
@@ -323,15 +323,15 @@ TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence)
     auto _4 = task_factory_.GetNextTask();     // NOLINT
     auto __5 = task_factory_.GetNextTask();    // NOLINT
     auto _8 = task_factory_.GetNextTask();     // NOLINT
-    model_controller_->Add(_0);
-    model_controller_->Add(CreateTaskId(0), __1);
-    model_controller_->Add(CreateTaskId(0), __2);
-    model_controller_->Add(CreateTaskId(1), ___3);
-    model_controller_->Add(_4);
-    model_controller_->Add(CreateTaskId(4), __5);
-    model_controller_->Add(CreateTaskId(1), ___6);
-    model_controller_->Add(CreateTaskId(3), ____7);
-    model_controller_->Add(_8);
+    model_controller_->AddTask(_0);
+    model_controller_->AddSubtask(CreateTaskId(0), __1);
+    model_controller_->AddSubtask(CreateTaskId(0), __2);
+    model_controller_->AddSubtask(CreateTaskId(1), ___3);
+    model_controller_->AddTask(_4);
+    model_controller_->AddSubtask(CreateTaskId(4), __5);
+    model_controller_->AddSubtask(CreateTaskId(1), ___6);
+    model_controller_->AddSubtask(CreateTaskId(3), ____7);
+    model_controller_->AddTask(_8);
 
     auto to_load = OperationResult<Persistence::Status, SolidTasks>::Ok(
         model_controller_->GetAllSolidTasks().AccessResult());
@@ -360,7 +360,7 @@ TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence)
 TEST_F(DefaultModelControllerTest, MustAddLabel)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = model_controller_->AddLabel(id, label);
@@ -374,7 +374,7 @@ TEST_F(DefaultModelControllerTest, MustAddLabel)
 TEST_F(DefaultModelControllerTest, MustDeleteLabel)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = model_controller_->AddLabel(id, label);
@@ -390,7 +390,7 @@ TEST_F(DefaultModelControllerTest,
        AddLabelWithNotPresentIdMustResultInkNotPresentId)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     model_controller_->Delete(id);
     Label label;
     label.set_name("label1");
@@ -402,7 +402,7 @@ TEST_F(DefaultModelControllerTest,
        AddLabelWithRepeatedLabelMustNotAddItAndReturnkOk)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = model_controller_->AddLabel(id, label);
@@ -419,7 +419,7 @@ TEST_F(DefaultModelControllerTest,
        DeleteLabelWithNotPresentIdMustResultInkNotPresentId)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     model_controller_->Delete(id);
     Label label;
     label.set_name("label1");
@@ -431,7 +431,7 @@ TEST_F(DefaultModelControllerTest,
        DeleteLabelWithNotPresentLabelMustResultInkNotPresentLabel)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = model_controller_->DeleteLabel(id, label);

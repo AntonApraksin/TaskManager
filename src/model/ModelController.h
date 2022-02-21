@@ -22,14 +22,13 @@ public:
     };
 
 public:
-    virtual OperationResult<Status, TaskId> Add(Task task) = 0;
-    virtual OperationResult<Status, TaskId> Add(TaskId task_id, Task task) = 0;
+    virtual OperationResult<Status, TaskId> AddTask(Task task) = 0;
+    virtual OperationResult<Status, TaskId> AddSubtask(TaskId task_id, Task task) = 0;
     virtual OperationResult<Status> Edit(TaskId id, Task task) = 0;
     virtual OperationResult<Status> Complete(TaskId id) = 0;
     virtual OperationResult<Status> Delete(TaskId id) = 0;
     virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
-    virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
-        std::vector<TaskId>) = 0;
+    virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(std::vector<TaskId>) = 0;
     virtual OperationResult<Status> Load() = 0;
     virtual OperationResult<Status> Save() = 0;
 

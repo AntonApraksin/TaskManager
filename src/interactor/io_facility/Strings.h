@@ -17,7 +17,7 @@ constexpr ccp kStateShouldBe =
     "State should be '+' for completed or '-' for uncompleted\n";
 constexpr ccp kPriorityShouldBe = "Priority should be: low, medium, high.\n";
 constexpr ccp kWrongDateFormat = "Wrong date format.\n";
-constexpr ccp kAddSubtaskTo = "Add subtask to:\n";
+constexpr ccp kAddSubtaskTo = "AddSubtask subtask to:\n";
 constexpr ccp kOkayITreatItAsNo = "Okay, i treat it as no\n";
 constexpr ccp kYouAreGoingToEdit = "You are going to edit:\n";
 constexpr ccp kUnknownCommand =
@@ -33,7 +33,7 @@ constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"
     "  add(a) [id]\n"
-    "    Add a new task.\n"
+    "    AddSubtask a new task.\n"
     "  edit(e) id\n"
     "    Edit a task with given id.\n"
     "  delete(d) id\n"

@@ -44,7 +44,7 @@ TEST_F(DefaultTaskServiceTest, MustAddTask)
 TEST_F(DefaultTaskServiceTest, MustAddSubtask)
 {
     auto first = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(first)).AccessResult();
+    auto id = model_controller->AddTask(std::move(first)).AccessResult();
     auto second = task_factory.GetNextTask();
     TaskAndTaskIdRequest request;
     request.set_allocated_task(new Task(second));
@@ -59,7 +59,7 @@ TEST_F(DefaultTaskServiceTest, MustAddSubtask)
 TEST_F(DefaultTaskServiceTest, MustEditTask)
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     auto new_task = task_factory.GetNextTask();
     TaskAndTaskIdRequest request;
     request.set_allocated_task(new Task(new_task));
@@ -74,7 +74,7 @@ TEST_F(DefaultTaskServiceTest, MustEditTask)
 TEST_F(DefaultTaskServiceTest, MustCompleteTask)
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     PlainResponse response;
     task_service->Complete(nullptr, &id, &response);
     auto storage = model_controller->GetAllSolidTasks().AccessResult();
@@ -85,7 +85,7 @@ TEST_F(DefaultTaskServiceTest, MustCompleteTask)
 TEST_F(DefaultTaskServiceTest, MustDeleteTask)
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     PlainResponse response;
     task_service->Delete(nullptr, &id, &response);
     auto storage = model_controller->GetAllSolidTasks().AccessResult();
@@ -96,8 +96,8 @@ TEST_F(DefaultTaskServiceTest, MustGetAllTasks)
 {
     auto task1 = task_factory.GetNextTask();
     auto task2 = task_factory.GetNextTask();
-    auto id1 = model_controller->Add(task1).AccessResult();
-    auto id2 = model_controller->Add(id1, task1).AccessResult();
+    auto id1 = model_controller->AddTask(task1).AccessResult();
+    auto id2 = model_controller->AddSubtask(id1, task1).AccessResult();
     google::protobuf::Empty request;
     SolidTasksResponse response;
     task_service->GetAllSolidTasks(nullptr, &request, &response);
@@ -111,8 +111,8 @@ TEST_F(DefaultTaskServiceTest, MustGetSpecificTasks)
 {
     auto task1 = task_factory.GetNextTask();
     auto task2 = task_factory.GetNextTask();
-    auto id1 = model_controller->Add(task1).AccessResult();
-    auto id2 = model_controller->Add(id1, task1).AccessResult();
+    auto id1 = model_controller->AddTask(task1).AccessResult();
+    auto id2 = model_controller->AddSubtask(id1, task1).AccessResult();
     TaskIdsRequest request;
     request.add_task_ids()->CopyFrom(id1);
     SolidTasksResponse response;
@@ -124,7 +124,7 @@ TEST_F(DefaultTaskServiceTest,
        MustCallSaveOnPersistenceIndirectly)  // TODO: Fix this test
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     EXPECT_CALL(*persistence, Save(testing::_)).Times(1);
     google::protobuf::Empty request;
     PlainResponse response;
@@ -135,7 +135,7 @@ TEST_F(DefaultTaskServiceTest,
        MustCallLoadOnPersistenceIndirectly)  // TODO: Fix this test
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     auto solid_tasks = model_controller->GetAllSolidTasks().AccessResult();
     EXPECT_CALL(*persistence, Load())
         .WillOnce(testing::Return(
@@ -148,7 +148,7 @@ TEST_F(DefaultTaskServiceTest,
 TEST_F(DefaultTaskServiceTest, MustAddLabelToTask)
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     Label label;
     label.set_name("label");
     TaskIdAndLabelRequest request;
@@ -165,7 +165,7 @@ TEST_F(DefaultTaskServiceTest, MustAddLabelToTask)
 TEST_F(DefaultTaskServiceTest, MustDeleteLabelFromTask)
 {
     auto task = task_factory.GetNextTask();
-    auto id = model_controller->Add(std::move(task)).AccessResult();
+    auto id = model_controller->AddTask(std::move(task)).AccessResult();
     Label label;
     label.set_name("label");
     model_controller->AddLabel(id, label);

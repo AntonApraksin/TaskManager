@@ -31,9 +31,9 @@ DefaultModelController::DefaultModelController(
     : task_manager_(std::move(task_manager)),
       persistence_(std::move(persistence)) {}
 
-OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task)
+OperationResult<MCStatus, TaskId> DefaultModelController::AddTask(Task task)
 {
-    BOOST_LOG_NAMED_SCOPE("DefaultModelController::Add(Task task)");
+    BOOST_LOG_NAMED_SCOPE("DefaultModelController::AddSubtask(Task task)");
     auto& logger = logging::GetDefaultLogger();
 
     auto to_log = task;
@@ -41,7 +41,7 @@ OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task)
     OperationResult<TaskManager::Status, TaskId> result;
     {
         std::lock_guard<std::mutex> lock(task_manager_mutex_);
-        result = task_manager_->Add(std::move(task));
+        result = task_manager_->AddTask(std::move(task));
     }
 
     if (result)
@@ -65,13 +65,13 @@ OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task)
         TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus, TaskId> DefaultModelController::Add(TaskId id,
-                                                              Task task)
+OperationResult<MCStatus, TaskId> DefaultModelController::AddSubtask(TaskId id,
+                                                                     Task task)
 {
     OperationResult<TaskManager::Status, TaskId> result;
     {
         std::lock_guard<std::mutex> lock(task_manager_mutex_);
-        result = task_manager_->Add(std::move(id), std::move(task));
+        result = task_manager_->AddSubtask(std::move(id), std::move(task));
     }
 
     if (result)

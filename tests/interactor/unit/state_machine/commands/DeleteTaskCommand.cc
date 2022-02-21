@@ -12,13 +12,13 @@ TEST_F(DeleteTaskCommandTest, MustDeleteNTasks)
     auto ___5 = task_factory_.GetNextTask();
     auto ____6 = task_factory_.GetNextTask();
     auto _3 = task_factory_.GetNextTask();
-    model_controller_->Add(_0);
-    model_controller_->Add(CreateTaskId(0), __1);
-    model_controller_->Add(CreateTaskId(0), __2);
-    model_controller_->Add(_3);
-    model_controller_->Add(CreateTaskId(2), ___4);
-    model_controller_->Add(CreateTaskId(2), ___5);
-    model_controller_->Add(CreateTaskId(5), ____6);
+    model_controller_->AddTask(_0);
+    model_controller_->AddSubtask(CreateTaskId(0), __1);
+    model_controller_->AddSubtask(CreateTaskId(0), __2);
+    model_controller_->AddTask(_3);
+    model_controller_->AddSubtask(CreateTaskId(2), ___4);
+    model_controller_->AddSubtask(CreateTaskId(2), ___5);
+    model_controller_->AddSubtask(CreateTaskId(5), ____6);
 
     DeleteTasksCommand command{{CreateTaskId(2), CreateTaskId(3)}};
     auto ctx = command.execute(*model_controller_);
@@ -32,7 +32,7 @@ TEST_F(DeleteTaskCommandTest, MustDeleteNTasks)
 TEST_F(DeleteTaskCommandTest, MustSetStatusNotPresentId)
 {
     auto _0 = task_factory_.GetNextTask();
-    model_controller_->Add(_0);
+    model_controller_->AddTask(_0);
     DeleteTasksCommand command({CreateTaskId(0), CreateTaskId(2)});
     auto ctx = command.execute(*model_controller_);
     ASSERT_EQ(ctx.status, ModelController::Status::kNotPresentId);

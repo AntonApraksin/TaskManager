@@ -8,7 +8,7 @@ AddSubtaskCommand::AddSubtaskCommand(TaskId task_id, Task task)
 CommandResult AddSubtaskCommand::execute(ModelController& model_controller)
 {
     CommandResult command_result;
-    auto result = model_controller.Add(task_id_, std::move(task_));
+    auto result = model_controller.AddSubtask(task_id_, std::move(task_));
     if (result)
     {
         command_result.task_id = result.AccessResult();

@@ -25,7 +25,7 @@ TEST_F(TaskManagerTest, TaskAddedProperly)
     TaskFactory tf;
     TaskManager tm{std::move(id_producer)};
     auto task = tf.GetNextTask();
-    auto result = tm.Add(task);
+    auto result = tm.AddTask(task);
     ASSERT_EQ(result.GetStatus(), TaskManager::Status::kOk);
     auto storage = tm.Show().AccessResult();
     ASSERT_EQ(storage.tasks.size(), 1);
@@ -39,7 +39,7 @@ TEST_F(TaskManagerTest, InvalidIdResultOnDeleteWithUnexistingId)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto _ = tm.Add(task);
+    auto _ = tm.AddTask(task);
     auto storage = tm.Show().AccessResult();
     auto tmp_id = storage.roots[0];
     tm.Delete(tmp_id);
@@ -51,7 +51,7 @@ TEST_F(TaskManagerTest, InvalidIdResultOnCompleteWithUnexistingId)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    tm.Add(task);
+    tm.AddTask(task);
     auto storage = tm.Show().AccessResult();
     auto tmp_id = storage.roots[0];
     tm.Delete(tmp_id);
@@ -64,7 +64,7 @@ TEST_F(TaskManagerTest, InvalidIdResultOnEditWithUnexistingId)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    tm.Add(task);
+    tm.AddTask(task);
     auto storage = tm.Show().AccessResult();
     auto tmp_id = storage.roots[0];
     tm.Delete(tmp_id);
@@ -81,7 +81,7 @@ TEST_F(TaskManagerTest, ProperDeletion)
     for (int i = 0 ; i != kElems ; ++i)
     {
         auto task = tf.GetNextTask();
-        tm.Add(task);
+        tm.AddTask(task);
     }
     auto storage = tm.Show();
     ASSERT_EQ(storage.AccessResult().parents.size(), kElems);
@@ -108,7 +108,7 @@ TEST_F(TaskManagerTest, ProperCompletion)
     for (int i = 0 ; i != kElems ; ++i)
     {
         auto task = tf.GetNextTask();
-        tm.Add(task);
+        tm.AddTask(task);
     }
     auto storage = tm.Show().AccessResult();
 
@@ -135,7 +135,7 @@ TEST_F(TaskManagerTest, ProperEdition)
     {
         auto task = tf.GetNextTask();
         auto new_task = tf.GetNextTask();
-        tm.Add(task);
+        tm.AddTask(task);
         auto storage = tm.Show().AccessResult();
         auto res = std::find_if(storage.tasks.cbegin(), storage.tasks.cend(),
                                 [task](const auto& t) { return t.second == task; });
@@ -163,7 +163,7 @@ TEST_F(TaskManagerTest, MustAddLabel)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = tm.AddLabel(id, label);
@@ -179,7 +179,7 @@ TEST_F(TaskManagerTest, MustDeleteLabel)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = tm.AddLabel(id, label);
@@ -196,7 +196,7 @@ TEST_F(TaskManagerTest, AddLabelWithNotPresentIdMustResultInkNotPresentId)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     tm.Delete(id);
     Label label;
     label.set_name("label1");
@@ -209,7 +209,7 @@ TEST_F(TaskManagerTest, AddLabelWithRepeatedLabelMustNotAddItAndReturnkOk)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = tm.AddLabel(id, label);
@@ -227,7 +227,7 @@ TEST_F(TaskManagerTest, DeleteLabelWithNotPresentIdMustResultInkNotPresentId)
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     tm.Delete(id);
     Label label;
     label.set_name("label1");
@@ -241,7 +241,7 @@ TEST_F(TaskManagerTest,
     TaskManager tm{get_default_task_id_producer()};
     TaskFactory tf;
     auto task = tf.GetNextTask();
-    auto id = tm.Add(task).AccessResult();
+    auto id = tm.AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     auto result = tm.DeleteLabel(id, label);

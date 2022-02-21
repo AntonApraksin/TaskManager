@@ -7,7 +7,7 @@ TEST_F(EditTaskCommandTest, MustEditTask)
 {
     auto task = task_factory_.GetNextTask();
     auto edited_task = task_factory_.GetNextTask();
-    model_controller_->Add(task);
+    model_controller_->AddTask(task);
     EditTaskCommand command{CreateTaskId(0), edited_task};
     auto ctx = command.execute(*model_controller_);
     ASSERT_EQ(ctx.status, ModelController::Status::kOk);
@@ -19,7 +19,7 @@ TEST_F(EditTaskCommandTest, MustSetStatusNotPresentId)
 {
     auto task = task_factory_.GetNextTask();
     auto edited_task = task_factory_.GetNextTask();
-    model_controller_->Add(task);
+    model_controller_->AddTask(task);
     EditTaskCommand command{CreateTaskId(2), edited_task};
     auto ctx = command.execute(*model_controller_);
     ASSERT_EQ(ctx.status, ModelController::Status::kNotPresentId);

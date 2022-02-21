@@ -23,7 +23,7 @@ TaskManager::TaskManager(std::unique_ptr<ITaskIdProducer> id_producer,
                          TaskManager::Storage storage)
     : storage_(std::move(storage)), id_producer_(std::move(id_producer)) {}
 
-OperationResult<TMStatus, TaskId> TaskManager::Add(Task task)
+OperationResult<TMStatus, TaskId> TaskManager::AddTask(Task task)
 {
     auto next_id = id_producer_->GetNextId();
     storage_.tasks.insert({next_id, std::move(task)});
@@ -32,9 +32,9 @@ OperationResult<TMStatus, TaskId> TaskManager::Add(Task task)
     return OperationResult<Status, TaskId>::Ok(next_id);
 }
 
-OperationResult<TMStatus, TaskId> TaskManager::Add(TaskId id, Task task)
+OperationResult<TMStatus, TaskId> TaskManager::AddSubtask(TaskId task_id, Task task)
 {
-    if (auto it = storage_.parents.find(id); it != storage_.parents.end())
+    if (auto it = storage_.parents.find(task_id); it != storage_.parents.end())
     {
         auto next_id = id_producer_->GetNextId();
         storage_.tasks.insert({next_id, std::move(task)});

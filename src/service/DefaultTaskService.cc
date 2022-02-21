@@ -51,7 +51,7 @@ grpc::Status DefaultTaskService::AddTask(::grpc::ServerContext*, const Task* req
     BOOST_LOG_SEV(logger, logging::severinity::debug)
         << "request: " << request->DebugString();
 
-    auto result = model_controller_->Add(*request);
+    auto result = model_controller_->AddTask(*request);
     if (result)
     {
         response->set_allocated_task_id(new TaskId(result.AccessResult()));
@@ -68,7 +68,7 @@ grpc::Status DefaultTaskService::AddSubtask(::grpc::ServerContext*,
                                             const TaskAndTaskIdRequest* request,
                                             TaskIdResponse* response)
 {
-    auto result = model_controller_->Add(request->task_id(), request->task());
+    auto result = model_controller_->AddSubtask(request->task_id(), request->task());
     if (result)
     {
         response->set_allocated_task_id(new TaskId(result.AccessResult()));

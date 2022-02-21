@@ -7,7 +7,7 @@ class AddLabelCommandTest : public CommandTest {};
 TEST_F(AddLabelCommandTest, MustAddLabel)
 {
     auto task = task_factory_.GetNextTask();
-    auto id = model_controller_->Add(task).AccessResult();
+    auto id = model_controller_->AddTask(task).AccessResult();
     Label label;
     label.set_name("label1");
     AddLabelCommand add_label_command{id, label};

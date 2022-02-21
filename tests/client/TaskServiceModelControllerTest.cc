@@ -80,7 +80,7 @@ TEST_F(TaskServiceModelControllerTest, MustAddTask)
         .WillOnce(testing::Invoke(InvokeResultFactory<Task, TaskIdResponse>(
             CreateTaskIdResponseWithOk(0))));
 
-    auto result = task_service_model_controller->Add(task);
+    auto result = task_service_model_controller->AddTask(task);
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
     EXPECT_EQ(result.AccessResult().id(), 0);
 }
@@ -94,7 +94,7 @@ TEST_F(TaskServiceModelControllerTest, FaultyAddTask)
         .WillOnce(testing::Invoke(InvokeResultFactory<Task, TaskIdResponse>(
             CreateFaultyResponse<TaskIdResponse>(task_manager::kNotPresentId))));
 
-    auto result = task_service_model_controller->Add(task);
+    auto result = task_service_model_controller->AddTask(task);
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
 }
 
@@ -112,7 +112,7 @@ TEST_F(TaskServiceModelControllerTest, MustAddSubtask)
             InvokeResultFactory<TaskAndTaskIdRequest, TaskIdResponse>(
                 CreateTaskIdResponseWithOk(1))));
 
-    auto result = task_service_model_controller->Add(id, task);
+    auto result = task_service_model_controller->AddSubtask(id, task);
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
     EXPECT_EQ(result.AccessResult().id(), 1);
 }
@@ -132,7 +132,7 @@ TEST_F(TaskServiceModelControllerTest, FaultyAddSubtask)
                 CreateFaultyResponse<TaskIdResponse>(
                     task_manager::kNotPresentId))));
 
-    auto result = task_service_model_controller->Add(id, task);
+    auto result = task_service_model_controller->AddSubtask(id, task);
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kNotPresentId);
 }
 

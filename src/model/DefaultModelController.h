@@ -20,16 +20,15 @@ public:
     explicit DefaultModelController(std::unique_ptr<TaskManager> task_manager,
                                     std::unique_ptr<Persistence> persistence);
 
-    OperationResult<Status, TaskId> Add(Task task) override;
-    OperationResult<Status, TaskId> Add(TaskId task_id, Task task) override;
+    OperationResult<Status, TaskId> AddTask(Task task) override;
+    OperationResult<Status, TaskId> AddSubtask(TaskId task_id, Task task) override;
 
     OperationResult<Status> Edit(TaskId id, Task task) override;
     OperationResult<Status> Complete(TaskId id) override;
     OperationResult<Status> Delete(TaskId id) override;
 
     OperationResult<Status, SolidTasks> GetAllSolidTasks() override;
-    OperationResult<Status, SolidTasks> GetSpecificSolidTasks(
-        std::vector<TaskId>) override;
+    OperationResult<Status, SolidTasks> GetSpecificSolidTasks(std::vector<TaskId>) override;
 
     OperationResult<Status> Load() override;
     OperationResult<Status> Save() override;

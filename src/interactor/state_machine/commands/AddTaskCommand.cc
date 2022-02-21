@@ -16,7 +16,7 @@ CommandResult AddTaskCommand::execute(ModelController& model_controller)
         << "Adding task: " << task_.DebugString();
 
     CommandResult command_result;
-    auto result = model_controller.Add(task_);
+    auto result = model_controller.AddTask(task_);
     if (result)
     {
         command_result.task_id = result.AccessResult();

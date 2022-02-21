@@ -43,7 +43,7 @@ MCStatus ConvertTaskServiceStatusToModelControllerStatus(
 TaskServiceModelController::TaskServiceModelController(std::unique_ptr<TaskService::StubInterface> stub)
     : stub_(std::move(stub)) {}
 
-OperationResult<MCStatus, TaskId> TaskServiceModelController::Add(Task task)
+OperationResult<MCStatus, TaskId> TaskServiceModelController::AddTask(Task task)
 {
     grpc::ClientContext ctx;
     TaskIdResponse response;
@@ -56,7 +56,7 @@ OperationResult<MCStatus, TaskId> TaskServiceModelController::Add(Task task)
         ConvertTaskServiceStatusToModelControllerStatus(response.status()));
 }
 
-OperationResult<MCStatus, TaskId> TaskServiceModelController::Add(TaskId task_id, Task task)
+OperationResult<MCStatus, TaskId> TaskServiceModelController::AddSubtask(TaskId task_id, Task task)
 {
     grpc::ClientContext ctx;
     TaskIdResponse response;

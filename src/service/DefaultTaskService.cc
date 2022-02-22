@@ -190,8 +190,8 @@ grpc::Status DefaultTaskService::DeleteLabel(::grpc::ServerContext*,
     return grpc::Status::OK;
 }
 grpc::Status DefaultTaskService::GetTasksByLabel(::grpc::ServerContext*,
-                                                 const ::task_manager::Label* request,
-                                                 ::task_manager::SolidTasksResponse* response)
+                                                 const Label* request,
+                                                 SolidTasksResponse* response)
 {
     auto result = model_controller_->GetTasksByLabel(*request);
     if (result)

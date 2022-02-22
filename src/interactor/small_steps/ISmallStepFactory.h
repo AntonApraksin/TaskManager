@@ -4,15 +4,17 @@
 #include "ISmallStep.h"
 #include "interactor/validator/IValidator.h"
 
-namespace task_manager {
-class ISmallStepFactory {
- public:
-  virtual std::shared_ptr<ISmallStep> GetReadTitleSmallStep() = 0;
-  virtual std::shared_ptr<ISmallStep> GetReadDateSmallStep() = 0;
-  virtual std::shared_ptr<ISmallStep> GetReadPrioritySmallStep() = 0;
-  virtual std::shared_ptr<ISmallStep> GetReadStateSmallStep() = 0;
+namespace task_manager
+{
+class ISmallStepFactory
+{
+public:
+    virtual std::shared_ptr<ISmallStep> GetReadTitleSmallStep() = 0;
+    virtual std::shared_ptr<ISmallStep> GetReadDateSmallStep() = 0;
+    virtual std::shared_ptr<ISmallStep> GetReadPrioritySmallStep() = 0;
+    virtual std::shared_ptr<ISmallStep> GetReadStateSmallStep() = 0;
 
-  virtual ~ISmallStepFactory() {}
+    virtual ~ISmallStepFactory() {}
 };
 }  // namespace task_manager
 

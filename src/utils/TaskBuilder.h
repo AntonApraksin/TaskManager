@@ -1,19 +1,21 @@
 #ifndef TASKMANAGER_SRC_REPL_TASKBUILDER_H_
 #define TASKMANAGER_SRC_REPL_TASKBUILDER_H_
 
+#include <optional>
+
 #include "Task.pb.h"
 #include "utils/TaskUtils.h"
 
-#include <optional>
+namespace task_manager
+{
+struct TaskBuilder
+{
+    Task GetTask();
 
-namespace task_manager {
-struct TaskBuilder {
-  Task GetTask();
-
-  std::optional<std::string> title_;
-  std::optional<TaskDate_t> date_;
-  std::optional<Task::Priority> priority_;
-  std::optional<Task::Progress> progress_;
+    std::optional<std::string> title_;
+    std::optional<TaskDate_t> date_;
+    std::optional<Task::Priority> priority_;
+    std::optional<Task::Progress> progress_;
 };
 }  // namespace task_manager
 

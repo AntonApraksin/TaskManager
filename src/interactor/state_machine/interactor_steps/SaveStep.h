@@ -3,16 +3,18 @@
 
 #include "interactor/state_machine/interactor_steps/Step.h"
 
-namespace task_manager {
-class SaveStep : public Step, public ArgumentMixin {
- public:
-  using ArgumentMixin::ArgumentMixin;
+namespace task_manager
+{
+class SaveStep : public Step, public ArgumentMixin
+{
+public:
+    using ArgumentMixin::ArgumentMixin;
 
-  std::unique_ptr<Command> execute(StepParameter &param) override;
-  std::shared_ptr<Step> ChangeStep() override;
+    std::unique_ptr<Command> execute(StepParameter& param) override;
+    std::shared_ptr<Step> ChangeStep() override;
 
- private:
-  std::unique_ptr<Command> ReportError(std::string);
+private:
+    std::unique_ptr<Command> ReportError(std::string);
 };
 }  // namespace task_manager
 

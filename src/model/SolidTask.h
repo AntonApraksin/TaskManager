@@ -3,7 +3,8 @@
 
 #include "SolidTask.pb.h"
 
-namespace task_manager {
+namespace task_manager
+{
 using SolidTasks = std::vector<SolidTask>;
 }
 

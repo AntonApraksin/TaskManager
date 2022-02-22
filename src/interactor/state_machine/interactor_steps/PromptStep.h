@@ -4,13 +4,15 @@
 #include "interactor/state_machine/interactor_steps/Step.h"
 #include "interactor/state_machine/interactor_steps/StepParameter.h"
 
-namespace task_manager {
-class PromptStep : public Step, public DependenciesMixin {
- public:
-  using DependenciesMixin::DependenciesMixin;
+namespace task_manager
+{
+class PromptStep : public Step, public DependenciesMixin
+{
+public:
+    using DependenciesMixin::DependenciesMixin;
 
-  std::unique_ptr<Command> execute(StepParameter &param) override;
-  std::shared_ptr<Step> ChangeStep() override;
+    std::unique_ptr<Command> execute(StepParameter& param) override;
+    std::shared_ptr<Step> ChangeStep() override;
 };
 }  // namespace task_manager
 

@@ -3,7 +3,8 @@
 
 #include "interactor/validator/IValidator.h"
 
-namespace task_manager {
+namespace task_manager
+{
 class IIoFacility;
 
 std::optional<ConfirmationResult> ReadConfirmation(

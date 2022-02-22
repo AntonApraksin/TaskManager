@@ -6,48 +6,52 @@
 #include "interactor/state_machine/interactor_steps/StepParameter.h"
 #include "interactor/validator/IValidator.h"
 
-namespace task_manager {
+namespace task_manager
+{
 
 class ISmallStepFactory;
 
-class Step {
- public:
-  virtual std::unique_ptr<Command> execute(StepParameter &param) = 0;
-  virtual std::shared_ptr<Step> ChangeStep() = 0;
-  virtual ~Step() {}
+class Step
+{
+public:
+    virtual std::unique_ptr<Command> execute(StepParameter& param) = 0;
+    virtual std::shared_ptr<Step> ChangeStep() = 0;
+    virtual ~Step() {}
 };
 
-class DependenciesMixin {
- public:
-  DependenciesMixin(std::shared_ptr<IValidator> validator,
-                    std::shared_ptr<IIoFacility> io_facility,
-                    std::shared_ptr<ISmallStepFactory> small_step_factory)
-      : validator_(std::move(validator)),
-        io_facility_(std::move(io_facility)),
-        small_step_factory_(std::move(small_step_factory)) {}
+class DependenciesMixin
+{
+public:
+    DependenciesMixin(std::shared_ptr<IValidator> validator,
+                      std::shared_ptr<IIoFacility> io_facility,
+                      std::shared_ptr<ISmallStepFactory> small_step_factory)
+        : validator_(std::move(validator)),
+          io_facility_(std::move(io_facility)),
+          small_step_factory_(std::move(small_step_factory)) {}
 
- protected:
-  ~DependenciesMixin() {}
+protected:
+    ~DependenciesMixin() {}
 
-  std::shared_ptr<IValidator> validator_;
-  std::shared_ptr<IIoFacility> io_facility_;
-  std::shared_ptr<ISmallStepFactory> small_step_factory_;
+    std::shared_ptr<IValidator> validator_;
+    std::shared_ptr<IIoFacility> io_facility_;
+    std::shared_ptr<ISmallStepFactory> small_step_factory_;
 };
 
-class ArgumentMixin : public DependenciesMixin {
- public:
-  ArgumentMixin(std::shared_ptr<IValidator> validator,
-                std::shared_ptr<IIoFacility> io_facility,
-                std::shared_ptr<ISmallStepFactory> small_step_factory,
-                std::string arg)
-      : DependenciesMixin(std::move(validator), std::move(io_facility),
-                          std::move(small_step_factory)),
-        arg_(std::move(arg)) {}
+class ArgumentMixin : public DependenciesMixin
+{
+public:
+    ArgumentMixin(std::shared_ptr<IValidator> validator,
+                  std::shared_ptr<IIoFacility> io_facility,
+                  std::shared_ptr<ISmallStepFactory> small_step_factory,
+                  std::string arg)
+        : DependenciesMixin(std::move(validator), std::move(io_facility),
+                            std::move(small_step_factory)),
+          arg_(std::move(arg)) {}
 
- protected:
-  ~ArgumentMixin() {}
+protected:
+    ~ArgumentMixin() {}
 
-  std::string arg_;
+    std::string arg_;
 };
 
 }  // namespace task_manager

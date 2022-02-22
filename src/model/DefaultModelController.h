@@ -7,6 +7,7 @@
 #include "OperationResult.h"
 #include "model/ModelController.h"
 #include "model/SolidTask.h"
+#include <mutex>
 
 namespace task_manager {
 class TaskManager;
@@ -37,6 +38,8 @@ class DefaultModelController : public ModelController {
  private:
   std::unique_ptr<TaskManager> task_manager_;
   std::unique_ptr<Persistence> persistence_;
+  std::mutex task_manager_mutex_;
+  std::mutex persistence_mutex_;
 };
 
 std::optional<std::pair<TaskId, TaskId>> HasParentChildRelationship(

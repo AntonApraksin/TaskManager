@@ -17,9 +17,9 @@ namespace sinks = boost::log::sinks;
 namespace expressions = boost::log::expressions;
 namespace keywords = boost::log::keywords;
 
-static sources::severity_logger<trivial::severity_level> default_logger;
+static sources::severity_logger_mt<trivial::severity_level> default_logger;
 
-sources::severity_logger<trivial::severity_level>& GetDefaultLogger() {
+sources::severity_logger_mt<trivial::severity_level>& GetDefaultLogger() {
   return default_logger;
 }
 

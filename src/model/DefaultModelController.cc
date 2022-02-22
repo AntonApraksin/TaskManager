@@ -36,7 +36,13 @@ OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task) {
   auto& logger = logging::GetDefaultLogger();
 
   auto to_log = task;
-  auto result = task_manager_->Add(std::move(task));
+
+  OperationResult<TaskManager::Status, TaskId> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Add(std::move(task));
+  }
+
   if (result) {
     BOOST_LOG_SEV(logger, logging::severinity::info)
         << "Added task: "
@@ -59,7 +65,12 @@ OperationResult<MCStatus, TaskId> DefaultModelController::Add(Task task) {
 
 OperationResult<MCStatus, TaskId> DefaultModelController::Add(TaskId id,
                                                               Task task) {
-  auto result = task_manager_->Add(std::move(id), std::move(task));
+  OperationResult<TaskManager::Status, TaskId> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Add(std::move(id), std::move(task));
+  }
+
   if (result) {
     return OperationResult<Status, TaskId>::Ok(result.AccessResult());
   }
@@ -68,7 +79,12 @@ OperationResult<MCStatus, TaskId> DefaultModelController::Add(TaskId id,
 }
 
 OperationResult<MCStatus> DefaultModelController::Edit(TaskId id, Task task) {
-  auto result = task_manager_->Edit(std::move(id), std::move(task));
+  OperationResult<TaskManager::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Edit(std::move(id), std::move(task));
+  }
+
   if (result) {
     return OperationResult<Status>::Ok();
   }
@@ -76,7 +92,12 @@ OperationResult<MCStatus> DefaultModelController::Edit(TaskId id, Task task) {
 }
 
 OperationResult<MCStatus> DefaultModelController::Complete(TaskId id) {
-  auto result = task_manager_->Complete(std::move(id));
+  OperationResult<TaskManager::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Complete(std::move(id));
+  }
+
   if (result) {
     return OperationResult<Status>::Ok();
   }
@@ -84,7 +105,12 @@ OperationResult<MCStatus> DefaultModelController::Complete(TaskId id) {
 }
 
 OperationResult<MCStatus> DefaultModelController::Delete(TaskId id) {
-  auto result = task_manager_->Delete(std::move(id));
+  OperationResult<TaskManager::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Delete(std::move(id));
+  }
+
   if (result) {
     return OperationResult<Status>::Ok();
   }
@@ -141,8 +167,13 @@ SolidTasks GetSolidTasksSorted(TaskManager::Storage storage) {
 
 OperationResult<MCStatus, SolidTasks>
 DefaultModelController::GetAllSolidTasks() {
+  OperationResult<TaskManager::Status, TaskManager::Storage> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->Show();
+  }
   return OperationResult<Status, SolidTasks>::Ok(
-      GetSolidTasksSorted(task_manager_->Show().AccessResult()));
+      GetSolidTasksSorted(result.AccessResult()));
 }
 
 OperationResult<MCStatus, SolidTasks>
@@ -165,7 +196,12 @@ DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids) {
     }
   }
 
-  auto storage = task_manager_->Show().AccessResult();
+  TaskManager::Storage storage;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    storage = task_manager_->Show().AccessResult();
+  }
+
   for (const auto& i : ids) {
     if (storage.tasks.find(i) == storage.tasks.end()) {
       BOOST_LOG_SEV(logger, logging::severinity::info)
@@ -180,9 +216,19 @@ DefaultModelController::GetSpecificSolidTasks(std::vector<TaskId> ids) {
 }
 
 OperationResult<MCStatus> DefaultModelController::Load() {
-  auto result = persistence_->Load();
+  OperationResult<Persistence::Status, SolidTasks> result;
+  {
+    std::lock_guard<std::mutex> lock(persistence_mutex_);
+    result = persistence_->Load();
+  }
   if (!result) {
     return OperationResult<Status>::Error(Status::kLoadFailure);
+  }
+  if (result.AccessResult().empty()) {
+    auto task_id_producer = std::make_unique<TaskIdProducer>();
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    task_manager_ = std::make_unique<TaskManager>(std::move(task_id_producer));
+    return OperationResult<Status>::Ok();
   }
   TaskManager::Parents parents;
   TaskManager::Tasks tasks;
@@ -195,9 +241,10 @@ OperationResult<MCStatus> DefaultModelController::Load() {
     if (!i.has_parent_id()) {
       roots.push_back(i.task_id());
       tasks.insert({i.task_id(), i.task()});
-      parents[i.task_id()];
+      parents.insert({i.task_id(), {}});
     } else {
       parents[i.parent_id()].push_back(i.task_id());
+      parents.insert({i.task_id(), {}});
       tasks.insert({i.task_id(), i.task()});
     }
   }
@@ -208,6 +255,8 @@ OperationResult<MCStatus> DefaultModelController::Load() {
   auto task_id_producer =
       std::make_unique<TaskIdProducer>(std::move(max_task_id));
   task_id_producer->GetNextId();
+
+  std::lock_guard<std::mutex> lock(task_manager_mutex_);
   task_manager_ = std::make_unique<TaskManager>(std::move(task_id_producer),
                                                 std::move(storage));
   return OperationResult<Status>::Ok();
@@ -215,7 +264,12 @@ OperationResult<MCStatus> DefaultModelController::Load() {
 
 OperationResult<MCStatus> DefaultModelController::Save() {
   auto solid_tasks = GetAllSolidTasks();
-  auto result = persistence_->Save(std::move(solid_tasks.AccessResult()));
+
+  OperationResult<Persistence::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(persistence_mutex_);
+    result = persistence_->Save(solid_tasks.AccessResult());
+  }
   if (!result) {
     return OperationResult<MCStatus>::Error(Status::kSaveFailure);
   }
@@ -224,7 +278,12 @@ OperationResult<MCStatus> DefaultModelController::Save() {
 
 OperationResult<MCStatus> DefaultModelController::AddLabel(TaskId task_id,
                                                            Label label) {
-  auto result = task_manager_->AddLabel(std::move(task_id), std::move(label));
+  OperationResult<TaskManager::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->AddLabel(std::move(task_id), std::move(label));
+  }
+
   if (result) {
     return OperationResult<Status>::Ok();
   }
@@ -233,8 +292,12 @@ OperationResult<MCStatus> DefaultModelController::AddLabel(TaskId task_id,
 }
 OperationResult<MCStatus> DefaultModelController::DeleteLabel(TaskId task_id,
                                                               Label label) {
-  auto result =
-      task_manager_->DeleteLabel(std::move(task_id), std::move(label));
+  OperationResult<TaskManager::Status> result;
+  {
+    std::lock_guard<std::mutex> lock(task_manager_mutex_);
+    result = task_manager_->DeleteLabel(std::move(task_id), std::move(label));
+  }
+
   if (result) {
     return OperationResult<Status>::Ok();
   }

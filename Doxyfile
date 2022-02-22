@@ -1,0 +1,7 @@
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "TaskManager"
+OUTPUT_DIRECTORY       = "./docs"
+EXTRACT_ALL            = YES
+FILE_PATTERNS          = *.cc *.h
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = */docs/* cmake-* build* .idea/ .cache

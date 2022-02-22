@@ -345,8 +345,7 @@ OperationResult<MCStatus> DefaultModelController::DeleteLabel(TaskId task_id,
         TMStatusToMCStatus(result.GetStatus()));
 }
 
-OperationResult<MCStatus, SolidTasks> DefaultModelController::GetTasksByLabel(
-    Label label)
+OperationResult<MCStatus, SolidTasks> DefaultModelController::GetTasksByLabel(Label label)
 {
     TaskManager::Storage storage;
     {

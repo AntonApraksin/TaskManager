@@ -68,11 +68,11 @@ std::string GetPrompt(const std::string&, const std::string&);
 
 std::string ProceedTo(const std::string&);
 
-std::string ShowSolidTask(SolidTask);
+std::string ShowSolidTask(const SolidTask&);
 
-std::string ShowSolidTasks(SolidTasks);
+std::string ShowSolidTasks(const SolidTasks&);
 
-std::string ShowSolidTasksWithoutNest(SolidTasks);
+std::string ShowSolidTasksWithoutNest(const SolidTasks&);
 
 const char* to_string(Task::Priority);
 const char* to_string(Task::Progress);

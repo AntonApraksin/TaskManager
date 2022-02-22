@@ -4,6 +4,7 @@
 #include "client/TaskServiceModelController.h"
 #include "test_utils/TaskFactory.h"
 #include "test_utils/operators.h"
+#include "test_utils/utils.h"
 
 namespace task_manager
 {
@@ -456,18 +457,17 @@ TEST_F(TaskServiceModelControllerTest, MustShowByLabel)
     using testing::_;
 
     SolidTasksResponse response;
-    SolidTask solid_task;
     SolidTasks solid_tasks;
-    solid_task.set_allocated_task(new Task(task_factory.GetNextTask()));
-    solid_task.set_allocated_task_id(new TaskId(CreateTaskId(0)));
-    solid_task.mutable_task()->add_labels()->set_name("label");
-    solid_tasks.push_back(solid_task);
-    response.add_solid_tasks()->CopyFrom(solid_task);
-    solid_task.set_allocated_task(new Task(task_factory.GetNextTask()));
-    solid_task.set_allocated_task_id(new TaskId(CreateTaskId(1)));
-    solid_task.mutable_task()->add_labels()->set_name("label");
-    response.add_solid_tasks()->CopyFrom(solid_task);
-    solid_tasks.push_back(solid_task);
+    auto solid_task1 = TaskToSolidTask(task_factory.GetNextTask(), 0);
+    solid_task1.mutable_task()->add_labels()->set_name("label");
+    auto solid_task2 = TaskToSolidTask(task_factory.GetNextTask(), 1);
+    solid_task2.mutable_task()->add_labels()->set_name("label");
+
+    response.add_solid_tasks()->CopyFrom(solid_task1);
+    response.add_solid_tasks()->CopyFrom(solid_task2);
+    solid_tasks.push_back(solid_task1);
+    solid_tasks.push_back(solid_task2);
+
     response.set_status(task_manager::kOk);
 
     Label label;

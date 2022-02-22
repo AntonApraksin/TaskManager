@@ -436,7 +436,8 @@ TEST_F(DefaultModelControllerTest,
     ASSERT_EQ(result.GetStatus(), ModelController::Status::kNotPresentLabel);
 }
 
-TEST_F(DefaultModelControllerTest, MustReturnTasksWithLabel) {
+TEST_F(DefaultModelControllerTest, MustReturnTasksWithLabel)
+{
     auto task1 = task_factory_.GetNextTask();
     task1.add_labels()->set_name("label1");
     task1.add_labels()->set_name("label2");
@@ -457,19 +458,21 @@ TEST_F(DefaultModelControllerTest, MustReturnTasksWithLabel) {
     auto& storage = result.AccessResult();
     EXPECT_EQ(storage.size(), 2);
     EXPECT_NE(std::find_if(storage.cbegin(), storage.cend(),
-                           [&task1](auto solid_task) {
+                           [&task1](auto solid_task)
+                           {
                                return solid_task.task() == task1;
                            }),
               storage.cend());
     EXPECT_NE(std::find_if(storage.cbegin(), storage.cend(),
-                           [&task2](auto solid_task) {
+                           [&task2](auto solid_task)
+                           {
                                return solid_task.task() == task2;
                            }),
               storage.cend());
 }
 
-TEST_F(DefaultModelControllerTest,
-       MustReturnEmptyArrayIfThereIsNotTasksWithSuchLabel) {
+TEST_F(DefaultModelControllerTest, MustReturnEmptyArrayIfThereIsNotTasksWithSuchLabel)
+{
     auto task1 = task_factory_.GetNextTask();
     task1.add_labels()->set_name("label1");
     task1.add_labels()->set_name("label2");

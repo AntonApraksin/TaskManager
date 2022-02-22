@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv)
 {
-    using namespace task_manager;
+    using namespace task_manager; // NOLINT
     namespace po = boost::program_options;
 
     std::string log_level_str;

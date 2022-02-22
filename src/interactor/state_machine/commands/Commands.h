@@ -127,7 +127,7 @@ private:
 class GetTasksByLabelCommand : public Command
 {
 public:
-    GetTasksByLabelCommand(Label);
+    explicit GetTasksByLabelCommand(Label);
     CommandResult execute(ModelController&) override;
 
 private:

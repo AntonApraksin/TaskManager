@@ -9,25 +9,39 @@ std::unique_ptr<Command> FinalizeStep::execute(StepParameter& param)
 {
     switch (param.ctx.event)
     {
-        case StepEvent::kShowId:return ShowId(param);
+        case StepEvent::kShowId: { return ShowId(param); }
 
-        case StepEvent::kNotPresentLabel:io_facility_->Print(Strings::kNotPresentLabel);
+        case StepEvent::kNotPresentLabel:
+        {
+            io_facility_->Print(Strings::kNotPresentLabel);
             return std::make_unique<VoidCommand>();
+        }
 
-        case StepEvent::kNotPresentId:io_facility_->Print(Strings::kNotPresentId);
+        case StepEvent::kNotPresentId:
+        {
+            io_facility_->Print(Strings::kNotPresentId);
             return std::make_unique<VoidCommand>();
+        }
 
-        case StepEvent::kLoadFailure:io_facility_->Print(Strings::kLoadFailure);
+        case StepEvent::kLoadFailure:
+        {
+            io_facility_->Print(Strings::kLoadFailure);
             return std::make_unique<VoidCommand>();
+        }
 
-        case StepEvent::kSaveFailure:io_facility_->Print(Strings::kSaveFailure);
+        case StepEvent::kSaveFailure:
+        {
+            io_facility_->Print(Strings::kSaveFailure);
             return std::make_unique<VoidCommand>();
+        }
 
-        case StepEvent::kShowAll:return ShowAll(param);
+        case StepEvent::kShowAll: { return ShowAll(param); }
 
-        case StepEvent::kShowById:return ShowSpecificTasks(param);
+        case StepEvent::kShowById: { return ShowSpecificTasks(param); }
 
-        case StepEvent::kNothing:return std::make_unique<VoidCommand>();
+        case StepEvent::kShowWithoutNest: { return ShowWithoutNesting(param); }
+
+        case StepEvent::kNothing: { return std::make_unique<VoidCommand>(); }
     }
 }
 
@@ -56,5 +70,14 @@ std::shared_ptr<Step> FinalizeStep::ChangeStep()
 {
     return std::make_shared<PromptStep>(validator_, io_facility_,
                                         small_step_factory_);
+}
+
+std::unique_ptr<Command> FinalizeStep::ShowWithoutNesting(
+    StepParameter& param)
+{
+    io_facility_->Print(
+        Strings::ShowSolidTasksWithoutNest(*param.ctx.solid_tasks));
+    param.ctx.solid_tasks.reset();
+    return std::make_unique<VoidCommand>();
 }
 }  // namespace task_manager

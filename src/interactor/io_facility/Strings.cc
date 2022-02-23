@@ -100,7 +100,7 @@ std::string PrintAndGet(IIoFacility& io, const std::string& str)
     return input;
 }
 
-std::string Strings::ShowSolidTask(SolidTask solid_task)
+std::string Strings::ShowSolidTask(const SolidTask& solid_task)
 {
     std::stringstream ss;
     auto time = google::protobuf::util::TimeUtil::TimestampToTimeT(
@@ -124,7 +124,7 @@ std::string Strings::ShowSolidTask(SolidTask solid_task)
     return ss.str();
 }
 
-std::string Strings::ShowSolidTasks(SolidTasks solid_tasks)
+std::string Strings::ShowSolidTasks(const SolidTasks& solid_tasks)
 {
     std::stringstream ss;
     std::vector<TaskId> id_stack;
@@ -162,4 +162,14 @@ std::string Strings::ShowSolidTasks(SolidTasks solid_tasks)
     return ss.str();
 }
 
+std::string Strings::ShowSolidTasksWithoutNest(const SolidTasks& solid_tasks)
+{
+    std::stringstream ss;
+    std::vector<TaskId> id_stack;
+    for (const auto& i : solid_tasks)
+    {
+        ss << ' ' << ShowSolidTask(i);
+    }
+    return ss.str();
+}
 }  // namespace task_manager

@@ -1,13 +1,13 @@
 #include "DefaultModelController.h"
 
+#include "model/task_manager/TaskManager.h"
+#include "persistence/Persistence.h"
+#include "utils/TaskIdUtils.h"
 #include <google/protobuf/util/time_util.h>
 
 #include <boost/log/attributes/named_scope.hpp>
 
 #include "logging/DefaultLogFacility.h"
-#include "model/task_manager/TaskManager.h"
-#include "persistence/Persistence.h"
-#include "utils/TaskIdUtils.h"
 
 namespace task_manager
 {
@@ -343,6 +343,35 @@ OperationResult<MCStatus> DefaultModelController::DeleteLabel(TaskId task_id,
     }
     return OperationResult<MCStatus>::Error(
         TMStatusToMCStatus(result.GetStatus()));
+}
+
+OperationResult<MCStatus, SolidTasks> DefaultModelController::GetTasksByLabel(Label label)
+{
+    TaskManager::Storage storage;
+    {
+        std::lock_guard<std::mutex> lock(task_manager_mutex_);
+        storage = task_manager_->Show().AccessResult();
+    }
+    auto& tasks = storage.tasks;
+    SolidTasks ret;
+    for (const auto& i : tasks)
+    {
+        auto& task = i.second;
+        if (auto to_erase =
+                std::find_if(task.labels().cbegin(), task.labels().cend(),
+                             [&label](const auto& stored_label)
+                             {
+                                 return label.name() == stored_label.name();
+                             });
+            to_erase != task.labels().cend())
+        {
+            SolidTask solid_task;
+            solid_task.set_allocated_task(new Task(std::move(task)));
+            solid_task.set_allocated_task_id(new TaskId(std::move(i.first)));
+            ret.push_back(std::move(solid_task));
+        }
+    }
+    return OperationResult<Status, SolidTasks>::Ok(std::move(ret));
 }
 
 }  // namespace task_manager

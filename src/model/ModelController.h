@@ -29,6 +29,7 @@ public:
     virtual OperationResult<Status> Delete(TaskId id) = 0;
     virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
     virtual OperationResult<Status, SolidTasks> GetSpecificSolidTasks(std::vector<TaskId>) = 0;
+    virtual OperationResult<Status, SolidTasks> GetTasksByLabel(Label label) = 0;
     virtual OperationResult<Status> Load() = 0;
     virtual OperationResult<Status> Save() = 0;
 

@@ -15,7 +15,22 @@ std::unique_ptr<Command> ShowStep::execute(StepParameter& param)
         return std::make_unique<GetAllTasksCommand>();
     }
 
+    auto token = validator_->ConsumeOneTokenFrom(arg_);
+    auto possible_id = validator_->ParseInt(token);
+    if (!possible_id)
+    {
+        if (!arg_.empty())
+        {
+            return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        }
+        Label label;
+        label.set_name(token);
+        param.ctx.event = StepEvent::kShowWithoutNest;
+        return std::make_unique<GetTasksByLabelCommand>(std::move(label));
+    }
+
     std::set<TaskId> task_ids;
+    task_ids.insert(CreateTaskId(*possible_id));
     for (; !arg_.empty() ;)
     {
         auto task_id = ConsumeTaskIdFromString(*validator_, arg_);

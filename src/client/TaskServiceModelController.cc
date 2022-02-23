@@ -209,5 +209,18 @@ OperationResult<MCStatus> TaskServiceModelController::DeleteLabel(TaskId task_id
     return OperationResult<MCStatus>::Error(
         ConvertTaskServiceStatusToModelControllerStatus(response.status()));
 }
+OperationResult<MCStatus, SolidTasks> TaskServiceModelController::GetTasksByLabel(Label label)
+{
+    grpc::ClientContext ctx;
+    SolidTasksResponse response;
+    stub_->GetTasksByLabel(&ctx, label, &response);
+    if (response.status() == TaskServiceStatus::kOk)
+    {
+        return OperationResult<MCStatus, SolidTasks>::Ok(
+            {response.solid_tasks().cbegin(), response.solid_tasks().cend()});
+    }
+    return OperationResult<MCStatus, SolidTasks>::Error(
+        ConvertTaskServiceStatusToModelControllerStatus(response.status()));
+}
 
 }  // namespace task_manager

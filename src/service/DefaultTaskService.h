@@ -61,6 +61,10 @@ public:
                              const TaskIdAndLabelRequest* request,
                              PlainResponse* response) override;
 
+    grpc::Status GetTasksByLabel(::grpc::ServerContext* context,
+                                 const Label* request,
+                                 SolidTasksResponse* response) override;
+
 private:
     std::unique_ptr<ModelController> model_controller_;
 };

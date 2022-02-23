@@ -124,6 +124,16 @@ private:
     Label label_;
 };
 
+class GetTasksByLabelCommand : public Command
+{
+public:
+    explicit GetTasksByLabelCommand(Label);
+    CommandResult execute(ModelController&) override;
+
+private:
+    Label label_;
+};
+
 class VoidCommand : public Command
 {
 public:

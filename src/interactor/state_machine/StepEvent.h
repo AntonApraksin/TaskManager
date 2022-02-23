@@ -13,6 +13,7 @@ enum class StepEvent
 
     kShowAll,
     kShowById,
+    kShowWithoutNest,
     kShowId
 };
 }

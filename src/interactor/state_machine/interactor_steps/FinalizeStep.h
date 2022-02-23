@@ -17,6 +17,7 @@ private:
     std::unique_ptr<Command> ShowAll(StepParameter&);
     std::unique_ptr<Command> ShowId(StepParameter&);
     std::unique_ptr<Command> ShowSpecificTasks(StepParameter&);
+    std::unique_ptr<Command> ShowWithoutNesting(StepParameter&);
 };
 }  // namespace task_manager
 

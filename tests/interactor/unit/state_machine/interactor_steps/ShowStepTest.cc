@@ -39,3 +39,17 @@ TEST_F(ShowStepTest, ExecuteWithInvalidIdArgumentMustReturnVoidCommand)
     auto command{step_->execute(step_parameter_)};
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
+
+TEST_F(ShowStepTest, ExecuteWithStringedArgumentMustReturnGetTasksByLabelCommand)
+{
+    SetArg("foo");
+    auto command{step_->execute(step_parameter_)};
+    EXPECT_NE(dynamic_cast<GetTasksByLabelCommand*>(command.get()), nullptr);
+}
+
+TEST_F(ShowStepTest, ExecuteWithStringedArgumentAndOneMoreArgumentMustReturnVoidCommand)
+{
+    SetArg("foo bar");
+    auto command{step_->execute(step_parameter_)};
+    EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}

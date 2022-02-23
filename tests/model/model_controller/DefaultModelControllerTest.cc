@@ -435,3 +435,60 @@ TEST_F(DefaultModelControllerTest,
     auto result = model_controller_->DeleteLabel(id, label);
     ASSERT_EQ(result.GetStatus(), ModelController::Status::kNotPresentLabel);
 }
+
+TEST_F(DefaultModelControllerTest, MustReturnTasksWithLabel)
+{
+    auto task1 = task_factory_.GetNextTask();
+    task1.add_labels()->set_name("label1");
+    task1.add_labels()->set_name("label2");
+
+    auto task2 = task_factory_.GetNextTask();
+    task2.add_labels()->set_name("label1");
+
+    auto task3 = task_factory_.GetNextTask();
+    task2.add_labels()->set_name("label2");
+
+    Label label;
+    label.set_name("label1");
+    model_controller_->AddTask(task1);
+    model_controller_->AddTask(task2);
+    model_controller_->AddTask(task3);
+    auto result = model_controller_->GetTasksByLabel(label);
+    ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+    auto& storage = result.AccessResult();
+    EXPECT_EQ(storage.size(), 2);
+    EXPECT_NE(std::find_if(storage.cbegin(), storage.cend(),
+                           [&task1](auto solid_task)
+                           {
+                               return solid_task.task() == task1;
+                           }),
+              storage.cend());
+    EXPECT_NE(std::find_if(storage.cbegin(), storage.cend(),
+                           [&task2](auto solid_task)
+                           {
+                               return solid_task.task() == task2;
+                           }),
+              storage.cend());
+}
+
+TEST_F(DefaultModelControllerTest, MustReturnEmptyArrayIfThereIsNotTasksWithSuchLabel)
+{
+    auto task1 = task_factory_.GetNextTask();
+    task1.add_labels()->set_name("label1");
+    task1.add_labels()->set_name("label2");
+
+    auto task2 = task_factory_.GetNextTask();
+    task2.add_labels()->set_name("label1");
+
+    auto task3 = task_factory_.GetNextTask();
+    task2.add_labels()->set_name("label2");
+
+    Label label;
+    label.set_name("label3");
+    model_controller_->AddTask(task1);
+    model_controller_->AddTask(task2);
+    model_controller_->AddTask(task3);
+    auto result = model_controller_->GetTasksByLabel(label);
+    ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
+    EXPECT_TRUE(result.AccessResult().empty());
+}

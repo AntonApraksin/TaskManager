@@ -38,7 +38,11 @@ constexpr ccp kHelp =
     "    Delete a task with the given id.\n"
     "  complete(c) id\n"
     "    Complete a task with the given id.\n"
-    "  show(s)\n"
+    "  add_label(al) id label\n"
+    "    Add label to task with given id.\n"
+    "  delete_label(dl) id label\n"
+    "    Delete label from task with given id.\n"
+    "  show(s) label/id [id...]\n"
     "    Show all tasks.\n"
     "  save(sa)\n"
     "    Save current state.\n"
@@ -64,9 +68,11 @@ std::string GetPrompt(const std::string&, const std::string&);
 
 std::string ProceedTo(const std::string&);
 
-std::string ShowSolidTask(SolidTask);
+std::string ShowSolidTask(const SolidTask&);
 
-std::string ShowSolidTasks(SolidTasks);
+std::string ShowSolidTasks(const SolidTasks&);
+
+std::string ShowSolidTasksWithoutNest(const SolidTasks&);
 
 const char* to_string(Task::Priority);
 const char* to_string(Task::Progress);

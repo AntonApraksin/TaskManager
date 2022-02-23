@@ -45,7 +45,7 @@ SolidTasks GetTreeFromVector(const SolidTasks& solid_tasks, const TaskId& id)
     {
         ret.front().clear_parent_id();
     }
-    return SolidTasks(iters.first, iters.second);
+    return ret;
 }
 
 std::optional<SolidTask> FindSolidTaskById(const SolidTasks& solid_tasks,

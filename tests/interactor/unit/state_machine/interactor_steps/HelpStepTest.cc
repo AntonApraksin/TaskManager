@@ -1,4 +1,5 @@
 #include "interactor/state_machine/interactor_steps/HelpStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 #include "StepTest.h"
 #include "test_utils/TaskFactory.h"
@@ -30,4 +31,11 @@ TEST_F(HelpStepTest, ExecuteWithArgumentMustReturnVoidCommmand)
     SetArg("sfsad");
     auto command{step_->execute(step_parameter_)};
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
+TEST_F(HelpStepTest, ChangeStepMustChangeToFinalizeStep)
+{
+    SetArg("");
+    auto changed_step = step_->ChangeStep();
+    EXPECT_NE(dynamic_cast<FinalizeStep*>(changed_step.get()), nullptr);
 }

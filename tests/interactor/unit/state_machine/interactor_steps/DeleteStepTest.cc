@@ -1,4 +1,5 @@
 #include "interactor/state_machine/interactor_steps/DeleteStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 #include "StepTest.h"
 #include "test_utils/TaskFactory.h"
@@ -22,6 +23,13 @@ protected:
 TEST_F(DeleteStepTest, ExecuteWithoutArgumentMustReturnVoidCommand)
 {
     SetArg("");
+    auto command{step_->execute(step_parameter_)};
+    EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
+TEST_F(DeleteStepTest, ExecuteWithInvalidIdMustReturnVoidCommand)
+{
+    SetArg("foo");
     auto command{step_->execute(step_parameter_)};
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
@@ -62,4 +70,11 @@ TEST_F(DeleteStepTest, ExecuteTaskWithRandomConfirmationMustReturnVoidCommand)
     SetInput({"gdf"});
     auto command = step_->execute(step_parameter_);
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
+TEST_F(DeleteStepTest, ChangeStepMustChangeToFinalizeStep)
+{
+    SetArg("");
+    auto changed_step = step_->ChangeStep();
+    EXPECT_NE(dynamic_cast<FinalizeStep*>(changed_step.get()), nullptr);
 }

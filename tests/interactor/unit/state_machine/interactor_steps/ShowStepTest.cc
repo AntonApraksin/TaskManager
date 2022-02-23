@@ -1,4 +1,5 @@
 #include "interactor/state_machine/interactor_steps/ShowStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 #include "StepTest.h"
 #include "test_utils/TaskFactory.h"
@@ -52,4 +53,11 @@ TEST_F(ShowStepTest, ExecuteWithStringedArgumentAndOneMoreArgumentMustReturnVoid
     SetArg("foo bar");
     auto command{step_->execute(step_parameter_)};
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
+TEST_F(ShowStepTest, ChangeStepMustChangeToFinalizeStep)
+{
+    SetArg("");
+    auto changed_step = step_->ChangeStep();
+    EXPECT_NE(dynamic_cast<FinalizeStep*>(changed_step.get()), nullptr);
 }

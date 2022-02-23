@@ -1,4 +1,5 @@
 #include "interactor/state_machine/interactor_steps/CompleteStep.h"
+#include "interactor/state_machine/interactor_steps/FinalizeStep.h"
 
 #include "StepTest.h"
 #include "test_utils/TaskFactory.h"
@@ -24,6 +25,14 @@ TEST_F(CompleteStepTest, ExecuteWithoutArgumentMustReturnVoidCommand)
     auto command{step_->execute(step_parameter_)};
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
 }
+
+TEST_F(CompleteStepTest, ExecuteWithInvalidIdMustReturnVoidCommand)
+{
+    SetArg("foo");
+    auto command{step_->execute(step_parameter_)};
+    EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
 
 TEST_F(CompleteStepTest, ExecuteWithInvalidIdArgumentMustReturnVoidCommand)
 {
@@ -62,4 +71,11 @@ TEST_F(CompleteStepTest,
     SetInput({"gdf"});
     auto command = step_->execute(step_parameter_);
     EXPECT_NE(dynamic_cast<VoidCommand*>(command.get()), nullptr);
+}
+
+TEST_F(CompleteStepTest, ChangeStepMustChangeToFinalizeStep)
+{
+    SetArg("");
+    auto changed_step = step_->ChangeStep();
+    EXPECT_NE(dynamic_cast<FinalizeStep*>(changed_step.get()), nullptr);
 }

@@ -310,6 +310,14 @@ TEST_F(DefaultModelControllerTest, MustCallSaveOnPersistence)
     EXPECT_EQ(result.GetStatus(), ModelController::Status::kOk);
 }
 
+TEST_F(DefaultModelControllerTest, MustReturnErrorOnFaultySave)
+{
+    EXPECT_CALL(*persistence_, Save(testing::_)).WillOnce(testing::Return(OperationResult<Persistence::Status>::Error(
+        Persistence::Status::kFailureWriting)));
+    auto result = model_controller_->Save();
+    ASSERT_EQ(result.GetStatus(), ModelController::Status::kSaveFailure);
+}
+
 TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence)
 {
     auto _0 = task_factory_.GetNextTask();     // NOLINT
@@ -353,6 +361,22 @@ TEST_F(DefaultModelControllerTest, MustCallLoadOnPersistence)
 
     ASSERT_TRUE(std::equal(previous_state.cbegin(), previous_state.cend(),
                            loaded_state.cbegin()));
+}
+
+TEST_F(DefaultModelControllerTest, MustReturnErrorOnFaultyLoad)
+{
+    EXPECT_CALL(*persistence_, Load()).WillOnce(testing::Return(OperationResult<Persistence::Status, SolidTasks>::Error(
+        Persistence::Status::kFailureReading)));
+    auto result = model_controller_->Load();
+    ASSERT_EQ(result.GetStatus(), ModelController::Status::kLoadFailure);
+}
+
+TEST_F(DefaultModelControllerTest, MustBeOkOnLoadWithNoTasks)
+{
+    EXPECT_CALL(*persistence_, Load()).WillOnce(testing::Return(OperationResult<Persistence::Status, SolidTasks>::Ok(
+        {})));
+    auto result = model_controller_->Load();
+    ASSERT_EQ(result.GetStatus(), ModelController::Status::kOk);
 }
 
 TEST_F(DefaultModelControllerTest, MustAddLabel)

@@ -18,7 +18,7 @@ class ModelController
 {
 public:
     /**
-     * Represents a set of possible error states.
+     * Represents a set of possible error states
      * that can occur during execution of any method.
      */
     enum class Status
@@ -34,7 +34,7 @@ public:
     /**
      * Adds task to \b model.
      * @param task to add.
-     * @return Contains \b TaskId given to new task or \b error.
+     * @return \b TaskId given to new task or \b error.
      */
     virtual OperationResult<Status, TaskId> AddTask(Task task) = 0;
 
@@ -42,7 +42,7 @@ public:
      * Adds subtask to task with given \a id.
      * @param task_id of parent.
      * @param task to add.
-     * @return Contains \b TaskId given to new task or \b error.
+     * @return \b TaskId given to new task or \b error.
      */
     virtual OperationResult<Status, TaskId> AddSubtask(TaskId task_id, Task task) = 0;
 
@@ -75,7 +75,7 @@ public:
      * Formally, order of tasks represents in-depth
      * tree traversal.
      * Order of tasks in not guaranteed, so task with id \a k
-     * can be followed by task with id \a n so that <em>n < k</em>.
+     * can be followed by task with id \a n so that <em>k > n</em>.
      * @return \b Sorted vector of tasks or error.
      */
     virtual OperationResult<Status, SolidTasks> GetAllSolidTasks() = 0;
@@ -97,7 +97,7 @@ public:
 
     /**
      * Loads tasks from underlying storage.
-     * Tasks that are currently in storage are \b erased.
+     * Tasks that are currently in storage \b erased.
      * @return \b Status of operation.
      */
     virtual OperationResult<Status> Load() = 0;
@@ -109,7 +109,7 @@ public:
     virtual OperationResult<Status> Save() = 0;
 
     /**
-     * Adds \a label to given task.
+     * Adds \a label to task with given \a id.
      * @param task_id of task to add label to.
      * @param label to add.
      * @return \b Status of operation.
@@ -117,7 +117,7 @@ public:
     virtual OperationResult<Status> AddLabel(TaskId task_id, Label label) = 0;
 
     /**
-     * Deletes \a label from given task.
+     * Deletes \a label from task with given \a id.
      * @param task_id of task to delete label from.
      * @param label to delete.
      * @return Status of operation.

@@ -134,7 +134,7 @@ std::string Strings::ShowSolidTasks(const SolidTasks& solid_tasks)
         {
             if (i.has_parent_id())
             {
-                std::terminate();  // Ensure vector is sorted
+                return ""; // Ensure vector is sorted. Log here
             }
             id_stack.push_back(i.task_id());
             ss << ' ' << ShowSolidTask(i);

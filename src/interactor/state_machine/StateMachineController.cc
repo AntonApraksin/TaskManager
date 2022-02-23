@@ -30,6 +30,7 @@ StateMachineController::StateMachineController(
 void StateMachineController::Run()
 {
     Context ctx;
+    ctx.event = StepEvent::kNothing;
     CommandResult command_result;
     auto command = state_machine_->execute(ctx);
     for (; command ;)

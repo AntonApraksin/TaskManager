@@ -102,11 +102,11 @@ std::optional<Task::Progress> DefaultValidator::ParseTaskProgress(
 {
     std::string input(str);
     lower_string(input);
-    if (str == "+")
+    if (input == "+")
     {
         return Task::kCompleted;
     }
-    if (str == "-")
+    if (input == "-")
     {
         return Task::kUncompleted;
     }
@@ -146,11 +146,11 @@ std::optional<ConfirmationResult> DefaultValidator::ParseConfirmation(
 {
     std::string input(str);
     lower_string(input);
-    if (str == "y" || str == "yes")
+    if (input == "y" || input == "yes")
     {
         return ConfirmationResult::kYes;
     }
-    if (str == "n" || str == "no")
+    if (input == "n" || input == "no")
     {
         return ConfirmationResult::kNo;
     }

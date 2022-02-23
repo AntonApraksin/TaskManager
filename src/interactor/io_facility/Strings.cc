@@ -12,34 +12,34 @@ namespace task_manager
 {
 const char* Strings::to_string(Task::Priority priority)
 {
-    if (priority == Task::kLow)
+    switch(priority)
     {
-        return "low";
+        case Task::kLow:
+            return "low";
+        case Task::kMedium:
+            return "medium";
+        case Task::kHigh:
+            return "high";
+        case Task::Priority::Task_Priority_Task_Priority_INT_MAX_SENTINEL_DO_NOT_USE_:
+            assert(false);
+        case Task::Priority::Task_Priority_Task_Priority_INT_MIN_SENTINEL_DO_NOT_USE_:
+            assert(false);
     }
-    if (priority == Task::kMedium)
-    {
-        return "medium";
-    }
-    if (priority == Task::kHigh)
-    {
-        return "high";
-    }
-
-    std::terminate();  // Must be unreachable
 }
 
 const char* Strings::to_string(Task::Progress state)
 {
-    if (state == Task::kCompleted)
+    switch(state)
     {
-        return "+";
+        case Task::kCompleted:
+            return "+";
+        case Task::kUncompleted:
+            return "-";
+        case Task::Progress::Task_Progress_Task_Progress_INT_MAX_SENTINEL_DO_NOT_USE_:
+            assert(false);
+        case Task::Progress::Task_Progress_Task_Progress_INT_MIN_SENTINEL_DO_NOT_USE_:
+            assert(false);
     }
-    if (state == Task::kUncompleted)
-    {
-        return "-";
-    }
-
-    std::terminate();  // Must be unreachable
 }
 
 std::string Strings::ShowId(const std::string& id)
@@ -134,7 +134,7 @@ std::string Strings::ShowSolidTasks(const SolidTasks& solid_tasks)
         {
             if (i.has_parent_id())
             {
-                std::terminate();  // Ensure vector is sorted
+                return ""; // Ensure vector is sorted. Log here
             }
             id_stack.push_back(i.task_id());
             ss << ' ' << ShowSolidTask(i);

@@ -31,7 +31,7 @@ std::unique_ptr<Command> DeleteLabelStep::execute(StepParameter& param)
     auto label_name = validator_->ConsumeOneTokenFrom(arg_);
     if (!arg_.empty())
     {
-        return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        return ReportError(Strings::kMultipleArgumentsAreNotSupported);
     }
     Label label;
     label.set_name(label_name);

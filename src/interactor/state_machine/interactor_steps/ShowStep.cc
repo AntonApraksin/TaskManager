@@ -21,7 +21,7 @@ std::unique_ptr<Command> ShowStep::execute(StepParameter& param)
     {
         if (!arg_.empty())
         {
-            return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+            return ReportError(Strings::kMultipleArgumentsAreNotSupported);
         }
         Label label;
         label.set_name(token);

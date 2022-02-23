@@ -10,7 +10,7 @@ std::unique_ptr<Command> SaveStep::execute(StepParameter& param)
     param.ctx.event = StepEvent::kNothing;
     if (!arg_.empty())
     {
-        return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        return ReportError(Strings::kMultipleArgumentsAreNotSupported);
     }
     return std::make_unique<SaveTasksCommand>();
 }

@@ -33,7 +33,7 @@ std::unique_ptr<Command> AddLabelStep::execute(StepParameter& param)
     auto label_name = validator_->ConsumeOneTokenFrom(arg_);
     if (!arg_.empty())
     {
-        return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        return ReportError(Strings::kMultipleArgumentsAreNotSupported);
     }
 
     Label label;

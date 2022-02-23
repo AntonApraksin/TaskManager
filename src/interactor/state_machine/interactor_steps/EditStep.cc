@@ -26,7 +26,7 @@ std::unique_ptr<Command> EditStep::execute(StepParameter& param)
     auto task_id = ConsumeTaskIdFromString(*validator_, arg_);
     if (!arg_.empty())
     {
-        return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        return ReportError(Strings::kMultipleArgumentsAreNotSupported);
     }
     if (!task_id)
     {

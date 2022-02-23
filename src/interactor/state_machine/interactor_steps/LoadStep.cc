@@ -10,7 +10,7 @@ std::unique_ptr<Command> LoadStep::execute(StepParameter& param)
     param.ctx.event = StepEvent::kNothing;
     if (!arg_.empty())
     {
-        return ReportError(Strings::kMultipleArgumentDoesNotSupported);
+        return ReportError(Strings::kMultipleArgumentsAreNotSupported);
     }
 
     param.cache.clear();

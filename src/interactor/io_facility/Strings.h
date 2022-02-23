@@ -21,8 +21,8 @@ constexpr ccp kAddSubtaskTo = "AddSubtask subtask to:\n";
 constexpr ccp kOkayITreatItAsNo = "Okay, i treat it as no\n";
 constexpr ccp kUnknownCommand =
     "Unknown command. Type 'help' to display all available commands.\n";
-constexpr ccp kMultipleArgumentDoesNotSupported =
-    "Multiple arguments does not supported for this command.\n";
+constexpr ccp kMultipleArgumentsAreNotSupported =
+    "Multiple arguments are not supported for this command.\n";
 constexpr ccp kRequiredId = "Id is required for this command.\n";
 constexpr ccp kInvalidId = "Invalid id format.\n";
 constexpr ccp kRequiredLabel = "Label is required for this command.\n";
@@ -31,7 +31,7 @@ constexpr ccp kNotPresentId = "Given Id wasn`t found\n";
 constexpr ccp kHelp =
     "Usage:\n"
     "  add(a) [id]\n"
-    "    AddSubtask a new task.\n"
+    "    Add a new task.\n"
     "  edit(e) id\n"
     "    Edit a task with given id.\n"
     "  delete(d) id\n"
